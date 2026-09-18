@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "rulesetVersion": "stone-rings-v1",
+  "generatorVersion": "generator-v1",
+  "id": "example-not-for-production",
+  "difficulty": "easy",
+  "slotCount": 12,
+  "rings": [
+    {
+      "id": "inner",
+      "parts": [
+        { "kind": "emitter", "slot": 1 },
+        { "kind": "blocker", "slot": 7 }
+      ]
+    },
+    {
+      "id": "middle",
+      "parts": [
+        { "kind": "emitter", "slot": 4 },
+        { "kind": "blocker", "slot": 9 }
+      ]
+    },
+    {
+      "id": "outer",
+      "parts": [
+        { "kind": "emitter", "slot": 8 },
+        { "kind": "blocker", "slot": 2 }
+      ]
+    }
+  ],
+  "targets": [0, 3, 6, 9],
+  "initialState": {
+    "rotations": [2, 5, 8],
+    "emissionEnabled": [true, true, true]
+  },
+  "contentChecksum": "sha256:REPLACED_BY_GENERATOR",
+  "_validationExample": {
+    "shortestMoves": 5,
+    "shortestSolutionCount": 2,
+    "requiredRingIndexes": [0, 2],
+    "requiredToggleCount": 0,
+    "visitedStateCount": 624,
+    "calibrationScore": 1000,
+    "estimatedSolveTimeMs": 8000
+  },
+  "_notice": "説明用の例です。本番問題として使用しないでください。"
+}
