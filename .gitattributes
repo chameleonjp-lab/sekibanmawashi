@@ -1,0 +1,5 @@
+*.png binary
+
+# Preserve historical source documents byte-for-byte, including Markdown hard breaks.
+docs/archive/** -whitespace
+docs/research/original-logic-research.md -whitespace
