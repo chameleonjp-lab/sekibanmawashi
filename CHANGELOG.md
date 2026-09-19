@@ -1,5 +1,11 @@
 # 資料の変更履歴
 
+## 1.3 — 2026-09-19
+
+- 確認用の試作プレビューを `prototype/` に追加
+- 公式の6件PR計画は変更していない
+- 試作の記録は端末内のみ。SupabaseとGitHub Pagesは未接続
+
 ## 1.2 — 2026-09-18
 
 - 対象リポジトリを`chameleonjp-lab/sekibanmawashi`へ確定

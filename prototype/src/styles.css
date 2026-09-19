@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --font-sans: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+
+  --color-stone: #16110c;
+  --color-stone-2: #241c14;
+  --color-stone-3: #3a2f22;
+  --color-ink: #0c0907;
+  --color-ink-soft: #2a231c;
+  --color-parchment: #ead9b8;
+  --color-muted: #a89478;
+  --color-edge: #6b5a45;
+  --color-edge-soft: #4a3d2e;
+  --color-ember: #d46a32;
+  --color-beam: #f0b06a;
+  --color-moss: #5d8a54;
+  --color-moss-bright: #8fbf82;
+  --color-danger: #b4564a;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100dvh;
+    background: var(--color-stone);
+    color: var(--color-parchment);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@layer components {
+  .game-shell {
+    min-height: 100dvh;
+    min-height: 100svh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, color-mix(in oklab, var(--color-stone-3) 55%, transparent), transparent 60%),
+      var(--color-stone);
+    color: var(--color-parchment);
+  }
+
+  .panel {
+    background: color-mix(in oklab, var(--color-stone-2) 88%, black);
+    border: 1px solid color-mix(in oklab, var(--color-parchment) 14%, transparent);
+    border-radius: var(--radius-xl);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition:
+      transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 150ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .btn-primary {
+    background: var(--color-parchment);
+    color: var(--color-ink);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--color-parchment) 86%, white);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-parchment);
+    border: 1px solid color-mix(in oklab, var(--color-parchment) 22%, transparent);
+  }
+
+  .btn-ember {
+    background: var(--color-ember);
+    color: var(--color-ink);
+  }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--color-danger);
+    border: 1px solid color-mix(in oklab, var(--color-danger) 40%, transparent);
+  }
+
+  .field {
+    width: 100%;
+    min-height: 48px;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in oklab, var(--color-parchment) 18%, transparent);
+    background: var(--color-ink);
+    color: var(--color-parchment);
+    padding: 0.7rem 0.9rem;
+    outline: none;
+  }
+
+  .field:focus {
+    border-color: color-mix(in oklab, var(--color-parchment) 55%, transparent);
+  }
+
+  .stat {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
