@@ -8,6 +8,8 @@
 |---|---|
 | [`prototype/`](../prototype/) | プレイ可能な確認用。公式実装の完了条件は満たさない |
 | [`prototype/NOTES.md`](../prototype/NOTES.md) | 公式計画との差 |
+| [`prototype/UPLOAD_INVENTORY.md`](prototype/UPLOAD_INVENTORY.md) | 実装のアップロード確認。入れたもの・入れないもの |
+| [`prototype/screenshots/`](prototype/screenshots/) | 試作の画面記録。本番素材ではない |
 
 ## 現在使う資料
 

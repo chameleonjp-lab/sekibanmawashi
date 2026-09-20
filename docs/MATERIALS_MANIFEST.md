@@ -18,3 +18,21 @@ SHA-256は、格納したファイルが途中で欠けていないか確認す�
 | `design/04-latest-stone-tablet-reference.png` | 3,227,706 bytes | `210e612b4ff6537e8f9724438f01519531817518460e0558b0b932287014bc58` | 採用した石板の方向 |
 
 4枚のPNGはすべて実体のある画像です。`04-latest-stone-tablet-reference.png`は1536×1024ピクセルです。画像は方向性の参考であり、本番ゲームへ画像素材として組み込みません。
+
+## 試作で追加した資料（2026-09-21）
+
+パスはリポジトリルートからです。画面記録とシェア画像は確認用で、本番ゲームへ貼り付けません。
+
+| ファイル | 容量 | SHA-256 | 扱い |
+|---|---:|---|---|
+| `prototype/public/favicon.svg` | 741 bytes | `6f7d4186a692319221332594d65fc2b760bac1487a90ca302082add6434bacb9` | 試作アイコン |
+| `prototype/public/og.jpg` | 168,261 bytes | `0cac891a39bc4dd5307380e820bb31bedf7e26d1e8f007bfed6108ad4937a5df` | 試作シェアカード |
+| `prototype/public/x-banner.jpg` | 45,178 bytes | `b6eaff6d7e84fc07940afdabf18bfe818482401f97e3cf6d65b8b88ecd28702f` | 試作Xバナー |
+| `prototype/public/site.json` | 91 bytes | `51c2d8aa13301c4481c68cd081fa701d1195f5a97b12adf08723bfb7d16c8abb` | カード用メタデータ |
+| `prototype/sql/leaderboard.preview.sql` | 953 bytes | `1ad8b889f3852899e463b8ff39622e2a9f3d96993d14476b88d89b65dde04d79` | プレビュー用順位表 |
+| `docs/prototype/screenshots/howto.png` | 118,994 bytes | `612c5c1978cc0e7591139f860b175374c5da9e5589a362cfd3481f35a2759ce6` | 遊び方の画面記録 |
+| `docs/prototype/screenshots/countdown.png` | 188,152 bytes | `d1b68b892b8665b141da8b4d922acecc86099723b236f30c61242621472c5766` | カウントダウン |
+| `docs/prototype/screenshots/play-1.png` | 205,542 bytes | `06a6d43e3a0532ae5da4fa15a4d857cf994e92c645eecc5065da9156d8853575` | 練習プレイ |
+| `docs/prototype/screenshots/play-2.png` | 207,057 bytes | `647449105e1231348b6180a91f9874f2e8f9d4f20363bce0d46260278fbb345d` | 練習プレイ（回転後） |
+| `docs/prototype/screenshots/challenge-play.png` | 203,068 bytes | `a066bed478c3646a01da8943528b30a22538225cea1ac067a2ddd9766d30096b` | 5問チャレンジ |
+

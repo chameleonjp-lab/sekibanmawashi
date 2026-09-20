@@ -1,4 +1,5 @@
 *.png binary
+*.jpg binary
 
 # Preserve historical source documents byte-for-byte, including Markdown hard breaks.
 docs/archive/** -whitespace
