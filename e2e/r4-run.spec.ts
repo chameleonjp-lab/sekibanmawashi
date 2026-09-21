@@ -412,7 +412,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     const history = await phaseHistory(page);
     expect(history.filter((phase) => phase === "countdown")).toHaveLength(1);
     expect(history.filter((phase) => phase === "intermission")).toHaveLength(4);
-    await expect(page.getByRole("heading", { name: /結果/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "結果", exact: true })).toBeVisible();
     await expect(page.locator("[data-testid='result-screen'] [data-result-question]")).toHaveCount(5);
     const total = page.locator("[data-testid='result-screen'] [data-total-time]");
     await expect(total).toBeVisible();
@@ -752,17 +752,19 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       const originalSet = Storage.prototype.setItem;
       const state = window as Window & {
         __r4StorageFixture?: { value?: string | null; throwGet?: boolean; throwSet?: boolean };
+        __r4StorageFixtureCalls?: { get: number; set: number };
       };
+      state.__r4StorageFixtureCalls = { get: 0, set: 0 };
       const fixture = (): { value?: string | null; throwGet?: boolean; throwSet?: boolean } | undefined => {
-        try {
-          return JSON.parse(window.name) as { value?: string | null; throwGet?: boolean; throwSet?: boolean };
-        } catch {
-          return state.__r4StorageFixture;
-        }
+        const value = new URLSearchParams(window.location.search).get("r4Storage");
+        if (value === null) return state.__r4StorageFixture;
+        if (value === "throw") return { throwGet: true, throwSet: true };
+        return { value };
       };
       Storage.prototype.getItem = function getItem(key: string): string | null {
         const current = fixture();
         if (current && /(run|save|setting|record|stone|sekiban)/i.test(key)) {
+          if (state.__r4StorageFixtureCalls) state.__r4StorageFixtureCalls.get += 1;
           if (current.throwGet) throw new Error("synthetic storage read failure");
           return current.value ?? null;
         }
@@ -771,29 +773,33 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       Storage.prototype.setItem = function setItem(key: string, value: string): void {
         const current = fixture();
         if (current?.throwSet && /(run|save|setting|record|stone|sekiban)/i.test(key)) {
+          if (state.__r4StorageFixtureCalls) state.__r4StorageFixtureCalls.set += 1;
           throw new Error("synthetic storage write failure");
         }
         originalSet.call(this, key, value);
       };
     });
     for (const value of ["{", "null", "[null]", "{}", '{"name":123,"best":{"timeMs":-1}}']) {
-      await page.goto("about:blank");
-      await page.evaluate((fixture) => { window.name = JSON.stringify({ value: fixture }); }, value);
-      await gotoHome(page);
+      await page.goto(`/?r4Storage=${encodeURIComponent(value)}`, { waitUntil: "networkidle" });
       await expect(page.getByRole("heading", { name: /石板回し/ })).toBeVisible();
+      await expect(home(page)).toBeVisible();
       await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
     }
 
-    await page.goto("about:blank");
-    await page.evaluate(() => { window.name = JSON.stringify({ throwGet: true, throwSet: true }); });
     await page.setViewportSize({ width: 375, height: 667 });
-    await gotoHome(page);
+    await page.goto("/?r4Storage=throw", { waitUntil: "networkidle" });
+    await expect(home(page)).toBeVisible();
     await begin(page, "challenge");
     await waitForPlaying(page);
     const gameNote = page.locator("[data-testid='game-screen'] [data-game-note]");
     await expect(gameNote).toBeVisible();
     await expect(gameNote).toHaveAttribute("data-storage-warning", "true");
     await expect(gameNote).toContainText(/保存|記録/);
+    const fixtureCalls = await page.evaluate(() => (window as Window & {
+      __r4StorageFixtureCalls?: { get: number; set: number };
+    }).__r4StorageFixtureCalls ?? { get: 0, set: 0 });
+    expect(fixtureCalls.get).toBeGreaterThan(0);
+    expect(fixtureCalls.set).toBeGreaterThan(0);
     await page.getByRole("button", { name: "中断" }).click();
     await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
     await expect(home(page)).toBeVisible();

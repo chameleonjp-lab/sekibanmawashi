@@ -978,6 +978,12 @@ figcaption {
   color: var(--danger);
 }
 
+@media (max-width: 36rem) {
+  .game-screen .status-card {
+    padding-inline: 0.45rem;
+  }
+}
+
 .reset-question {
   width: 100%;
   margin-bottom: 0.7rem;

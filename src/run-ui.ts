@@ -61,9 +61,9 @@ function query<T extends Element>(root: ParentNode, selector: string): T | null 
   return root.querySelector<T>(selector);
 }
 
-function formatElapsed(ms: number): string {
+function formatElapsed(ms: number, includeUnit = true): string {
   const safe = Number.isFinite(ms) && ms >= 0 ? Math.floor(ms) : 0;
-  return `${(Math.floor(safe / 10) / 100).toFixed(2)}秒`;
+  return `${(Math.floor(safe / 10) / 100).toFixed(2)}${includeUnit ? "秒" : ""}`;
 }
 
 function storageMessage(error: "unavailable" | "write-failed"): string {
@@ -379,7 +379,7 @@ export function renderRun(
           <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 5</strong><span class="status-subtext" data-field="difficulty" data-difficulty="easy">初級</span></div>
           <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">0 / 0</strong></div>
           <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count" data-move-count="0" data-moves="0">0</strong></div>
-          <div class="status-card"><span class="status-label">時間</span><strong data-field="time" data-time-ms="0">未計測</strong><span class="status-subtext">100分の1秒表示</span></div>
+          <div class="status-card"><span class="status-label">時間（秒）</span><strong data-field="time" data-time-ms="0">未計測</strong></div>
           <p class="status-message" data-field="state" data-state="loading" aria-live="polite">問題を準備しています</p>
         </section>
 
@@ -502,11 +502,11 @@ export function renderRun(
     if (phase === "playing" && timer) {
       const reading = timer.reading();
       currentTimeMs = Math.max(currentTimeMs, reading.elapsedMs);
-      timeElement.textContent = formatElapsed(currentTimeMs);
+      timeElement.textContent = formatElapsed(currentTimeMs, false);
       timeElement.dataset.timeMs = String(currentTimeMs);
       if (reading.abnormal) shell.dataset.clock = "abnormal";
     } else {
-      timeElement.textContent = phase === "countdown" ? "未計測" : currentTimeMs > 0 ? formatElapsed(currentTimeMs) : "未計測";
+      timeElement.textContent = phase === "countdown" ? "未計測" : currentTimeMs > 0 ? formatElapsed(currentTimeMs, false) : "未計測";
       timeElement.dataset.timeMs = String(currentTimeMs);
     }
   };

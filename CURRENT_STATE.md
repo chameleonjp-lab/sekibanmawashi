@@ -32,7 +32,7 @@ R4で5問進行・時計・保存・結果・共有を追加し、[Draft PR #9](
 
 ## 次の作業
 
-R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4を実装・検査し、独立レビューと必要な修正の後にDraft PRを作成します。こちらではマージ・公開を行いません。
+R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4のDraft PR #9で独立レビューの修正後を再検査しています。こちらではマージ・公開を行いません。R5はユーザーがR4をマージした後の最新mainから開始します。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 
