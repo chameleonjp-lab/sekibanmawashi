@@ -161,7 +161,10 @@ figcaption {
 
 .puzzle-status {
   display: grid;
-  grid-template-columns: repeat(4, minmax(7rem, 1fr)) minmax(10rem, 2fr);
+  /* Keep every track shrinkable at large text scales.  The cards may wrap
+     their labels, but the status row must not force the page wider than the
+     viewport. */
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 2fr);
   gap: 0.65rem;
   align-items: stretch;
   margin-bottom: 1.25rem;
@@ -555,7 +558,7 @@ figcaption {
   }
 
   .puzzle-status {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(8rem, 1.4fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.4fr);
     gap: 0.35rem;
     margin-bottom: 0.5rem;
   }
@@ -685,6 +688,15 @@ figcaption {
 
   .audio-setting {
     min-height: 2.6rem;
+  }
+}
+
+/* At ordinary 375px portrait width, keep the two auxiliary controls on one
+   line.  The narrower breakpoint deliberately retains wrapping so 200% text
+   at a small viewport can reflow without creating horizontal overflow. */
+@media (min-width: 22.01rem) and (max-width: 36rem) {
+  .header-actions button {
+    white-space: nowrap;
   }
 }
 

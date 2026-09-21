@@ -309,10 +309,14 @@ test.describe("R3 board rendering", () => {
       expect(visualData.filter).not.toBeNull();
       if (visualData.filter) {
         expect(visualData.filter.units).toBe("userSpaceOnUse");
-        expect(visualData.filter.x).toBeLessThanOrEqual(-50);
-        expect(visualData.filter.y).toBeLessThanOrEqual(-50);
-        expect(visualData.filter.width).toBeGreaterThanOrEqual(200);
-        expect(visualData.filter.height).toBeGreaterThanOrEqual(200);
+        // The filter must contain the actual beam endpoints plus blur/stroke
+        // padding, not an arbitrary negative origin outside the viewBox.
+        const points = expectedRenderSegments.flatMap((segment) => [segment.start, segment.end]);
+        const padding = 10;
+        expect(visualData.filter.x).toBeLessThanOrEqual(Math.min(...points.map((point) => point.x)) - padding);
+        expect(visualData.filter.y).toBeLessThanOrEqual(Math.min(...points.map((point) => point.y)) - padding);
+        expect(visualData.filter.x + visualData.filter.width).toBeGreaterThanOrEqual(Math.max(...points.map((point) => point.x)) + padding);
+        expect(visualData.filter.y + visualData.filter.height).toBeGreaterThanOrEqual(Math.max(...points.map((point) => point.y)) + padding);
       }
 
       const blockedBeamCount = expectedLight.beams.filter((beam) => beam.blockedRing !== null).length;
