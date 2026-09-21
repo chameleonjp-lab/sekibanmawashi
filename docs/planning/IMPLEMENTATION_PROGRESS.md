@@ -2,7 +2,7 @@
 
 更新日: 2026-09-21 / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
-R2の基準main: `bb229539c2727acba694653837698ed7220df4ca`（GitHub PR #6マージ後）
+R3の基準main: `58be223d918d7f8af4dec72dc948f1f66e5b3f80`（GitHub PR #7マージ後）
 
 ## 段階
 
@@ -10,8 +10,8 @@ R2の基準main: `bb229539c2727acba694653837698ed7220df4ca`（GitHub PR #6マー
 |---|---|---|
 | R0 計画 | GitHub PR #5でマージ済み | 文書段階。ゲーム完成・公開の許可とは扱わない |
 | R1 判定と基盤 | 実装・自動検査・独立レビュー済み、[PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)マージ済み | R2以降と一般公開の受入は未完了 |
-| R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[Draft PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)でマージ待ち | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
-| R3 盤面と入力 | 未着手 | 旧版の欠け・光路・入力の指摘は未修正 |
+| R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)マージ済み | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
+| R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[Draft PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)でマージ待ち | iPhone・VoiceOver・実機2本指・人の試遊は未実施。5問以降と公開の受入は未完了 |
 | R4 5問・時計・保存 | 未着手 | 進行、中断、保存失敗、離脱復帰は未修正 |
 | R5 公開品質 | 未着手 | 新版全体検査・独立レビュー・iPhone実機は未実施 |
 | R6 公開 | 保留 | 受入完了とユーザーの公開指示が必要 |
@@ -25,13 +25,25 @@ R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6�
 
 `feat/02-rotation-only-puzzles` に90問・900組と検査を実装しました。実装・複雑な検査はLuna Max、独立レビューはSol Highが担当し、未解消の実装blockerはありません。詳細は[R2検査記録](../reviews/R2_VERIFICATION.md)と[HTMLレポート](../../reports/r2/report.html)を参照してください。
 
-GitHub PRは[Draft #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)、実装・ローカル検証対象コミットは `897c3e5c709c9c83e88c169872f330ce07f972a2` です。PR番号の記録はその後の文書コミットで追加しています。最終headのCI結果はPR本文とChecksを参照してください。
+GitHub PRは[#7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)（マージ済み）、実装・ローカル検証対象コミットは `897c3e5c709c9c83e88c169872f330ce07f972a2` です。PR番号の記録はその後の文書コミットで追加しています。最終headのCI結果はPR本文とChecksを参照してください。
 
 難度・部品数・校正許容幅は生成前に保存した `r2-config-v1` を維持しました。初級313・中級330・上級385件を記録し、各300件の合格候補から30問ずつ採用しました。旧90問は全件再解析し、18問を再利用、72問を同難度の新問題へ1対1で差し替えました。
 
 Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test（32件）→ puzzles:test → build` がすべて成功しました。P02/P03は90問×1,728状態を別計算と照合し、不一致0でした。問題・問題庫・券のバイト単位の再生成一致、全900組の4種類の難度範囲と60/60/30回の出現数、固定seed10万回の抽選も成功しました。
 
 検査へ `tools/` を追加して判明した型エラー8件、近似問題の混入、旧ID対応、内容由来ID、保存解析・校正の再検査、入れ子フィールド、抽選コマンド単独の入力検証、比較図の参照を修正しました。正式ゲームの画面・5問進行・端末保存はR3以降です。検査用HTMLのブラウザ確認はブラウザ取得失敗により未実施で、試遊・iPhone実機確認も未実施です。
+
+## R3の結果
+
+`feat/03-board-input-repair` で1問のSVG盤面・入力・遊び方・中断確認を実装しました。実装と検査はLuna Max、独立レビューはSol Highが担当し、R3の自動検査範囲を合格としました。[検査記録](../reviews/R3_VERIFICATION.md)に初回以降の失敗・原因・修正と最終結果を保存しています。
+
+実装検査対象は `08d9d40e485120bf4470afb13a335217f9cbad32`。[CI 35625649578](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35625649578)で40単体テスト、P01〜P09、型検査・lint・build、Chromium/WebKitの26画面検査がすべて成功しました。画面検査は失敗・skip・flaky各0。記録追記後の最終headのCIはPR本文とChecksを参照してください。
+
+90問・12方向の描画、指定10画面寸法、文字200%、環の押し分け、主要ボタン48px以上、タップ/クリック/キー、説明・確認中の背景禁止、フォーカス、成功後の固定を検査しました。ローカルのブラウザ取得は失敗したため、画面実行はGitHub CIです。取得した代表画像も確認しました。
+
+盤面の縦横比、遮断印の重複、画面再作成時のキー受付、375×667の配置、文字拡大時の横溢れなどを修正しました。開発用Viteのみ7.3.6へ更新して依存検査0件とし、サーバーは端末内限定、CIのnpmも11.9.0へ固定しました。ゲームの規則や難度・公開データは変更していません。
+
+文字200%はルート文字サイズの模擬、複数指・キャンセルの一部はイベントによる模擬です。iPhone実機、VoiceOver、ロック復帰、人による操作感・難度の確認は未実施。5問の進行・正式時計・保存・結果・共有はR4以降です。R3のマージをゲーム全体の完成・公開許可とは扱いません。
 
 ## 各PRで記入する内容
 
@@ -41,4 +53,4 @@ Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test
 
 R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認、正式な公開名・共有画像・実験場掲載方式は後続段階です。旧版のテスト成功をv2へ持ち越しません。
 
-R2のDraft PRをユーザーがマージした最新mainからR3を開始します。マージと本番公開は行いません。
+R3のDraft PR #8をユーザーがマージした最新mainからR4へ進みます。こちらではマージと本番公開を行いません。

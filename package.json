@@ -9,7 +9,7 @@
   },
   "packageManager": "npm@11.9.0",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 5173",
+    "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "npm run typecheck && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/lint.mjs",
@@ -22,11 +22,14 @@
     "pool:validate": "node --experimental-strip-types tools/r2.ts pool:validate",
     "tickets:create": "node --experimental-strip-types tools/r2.ts tickets:create",
     "tickets:validate": "node --experimental-strip-types tools/r2.ts tickets:validate",
-    "selection:simulate": "node --experimental-strip-types tools/r2.ts selection:simulate"
+    "selection:simulate": "node --experimental-strip-types tools/r2.ts selection:simulate",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium webkit"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/node": "24.8.0",
     "typescript": "5.9.2",
-    "vite": "7.1.7"
+    "vite": "7.3.6"
   }
 }
