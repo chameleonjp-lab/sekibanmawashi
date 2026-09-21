@@ -47,14 +47,26 @@ const TEST_CLOCK_INSTALL = () => {
   // This is a browser-test clock. The app still calls the platform clocks
   // normally; only this test page's Date/performance values are controlled.
   Date.now = () => state.wall;
+  const fakePerformanceNow = () => state.mono;
   try {
     Object.defineProperty(performance, "now", {
       configurable: true,
-      value: () => state.mono,
+      writable: true,
+      value: fakePerformanceNow,
     });
   } catch {
-    // WebKit can expose a non-configurable performance.now; Date.now remains
-    // controlled and the lifecycle event assertions still run there.
+    // Some WebKit builds keep the instance method non-configurable. Try the
+    // prototype before falling back to wall-only assertions in that engine.
+    try {
+      Object.defineProperty(Object.getPrototypeOf(performance), "now", {
+        configurable: true,
+        writable: true,
+        value: fakePerformanceNow,
+      });
+    } catch {
+      // Date.now remains controlled if both browser descriptors are sealed;
+      // the timing assertions will then expose the unsupported engine.
+    }
   }
   target.__r4TestClock = {
     now: () => ({ ...state }),
@@ -183,9 +195,7 @@ async function installIntervalProbe(page: Page): Promise<void> {
 async function readPuzzleId(page: Page): Promise<string> {
   const shell = currentPuzzleShell(page);
   await expect(shell).toBeVisible();
-  const id = await shell.getAttribute("data-puzzle-id")
-    ?? await shell.getAttribute("data-current-puzzle-id")
-    ?? await shell.textContent();
+  const id = await shell.getAttribute("data-puzzle-id");
   if (!id) throw new Error("The current question does not expose its public puzzle id");
   const matched = id.match(/[a-z]+-v2-[a-z0-9-]+/i)?.[0] ?? id.trim();
   if (!puzzleById.has(matched)) throw new Error(`Unknown public puzzle id: ${matched}`);
@@ -193,12 +203,9 @@ async function readPuzzleId(page: Page): Promise<string> {
 }
 
 async function readDifficulty(page: Page): Promise<string> {
-  const value = await page.locator(
-    "[data-field='difficulty'], [data-difficulty], [data-question-difficulty]",
-  ).first().getAttribute("data-difficulty").catch(() => null);
-  const text = await page.locator(
-    "[data-field='difficulty'], [data-difficulty], [data-question-difficulty]",
-  ).first().textContent().catch(() => "");
+  const field = page.locator("[data-testid='game-screen'] [data-field='difficulty']");
+  const value = await field.getAttribute("data-difficulty");
+  const text = await field.textContent();
   const source = `${value ?? ""} ${text ?? ""}`;
   if (/上級|hard/i.test(source)) return "hard";
   if (/中級|normal|medium/i.test(source)) return "normal";
@@ -208,14 +215,7 @@ async function readDifficulty(page: Page): Promise<string> {
 
 async function waitForPlaying(page: Page): Promise<void> {
   await expect(game(page)).toBeVisible();
-  await expect.poll(async () => {
-    const phase = await game(page).getAttribute("data-phase")
-      ?? await game(page).getAttribute("data-run-phase")
-      ?? await page.locator("[data-field='state']").getAttribute("data-state");
-    if (phase) return phase;
-    const disabled = await rotateButton(page, "r").isDisabled().catch(() => true);
-    return disabled ? "waiting" : "playing";
-  }, { timeout: 12_000 }).toBe("playing");
+  await expect(game(page)).toHaveAttribute("data-phase", "playing", { timeout: 12_000 });
 }
 
 async function solveVisibleQuestion(page: Page): Promise<void> {
@@ -238,13 +238,31 @@ async function solveVisibleQuestion(page: Page): Promise<void> {
 
   await expect.poll(async () => {
     if (await result(page).isVisible().catch(() => false)) return "result";
-    const phase = await game(page).getAttribute("data-phase")
-      ?? await game(page).getAttribute("data-run-phase")
-      ?? await page.locator("[data-field='state']").getAttribute("data-state");
+    const phase = await game(page).getAttribute("data-phase");
     if (phase === "solved" || phase === "success" || phase === "intermission") return "solved";
-    if (await page.locator("[data-success]:visible, [data-intermission]:visible, [data-phase='success']:visible").count()) return "solved";
     return "playing";
   }, { timeout: 10_000 }).toMatch(/solved|result/);
+}
+
+/** Leave a question one legal move short of its offline-oracle solution. */
+async function prepareImmediatelyBeforeSuccess(page: Page): Promise<void> {
+  await waitForPlaying(page);
+  const id = await readPuzzleId(page);
+  const puzzle = puzzleById.get(id);
+  if (!puzzle) throw new Error(`No fixture for puzzle ${id}`);
+  const analysis = analyzePuzzle(puzzle);
+  expect(analysis.truncated).toBe(false);
+  expect(analysis.representativeSolution.length).toBeGreaterThan(0);
+  let state = puzzle.initialState;
+  const prefix = analysis.representativeSolution.slice(0, -1);
+  for (const move of prefix) {
+    state = applyRotation(state, move.type, move.ring);
+    expect(evaluate(puzzle, state).solved).toBe(false);
+    await page.locator(`[data-action='select-ring'][data-ring='${move.ring}']`).click();
+    await rotateButton(page, move.type).click();
+  }
+  await expect(game(page)).toHaveAttribute("data-phase", "playing");
+  await expect(page.locator("[data-testid='game-screen'] [data-field='move-count']")).toHaveAttribute("data-moves", String(prefix.length));
 }
 
 async function assertNoHorizontalOverflow(page: Page): Promise<void> {
@@ -266,8 +284,19 @@ async function assertControls(page: Page): Promise<void> {
 }
 
 async function assertPrimaryControlsInViewport(page: Page, viewport: Viewport): Promise<void> {
+  const compactPortrait = viewport.width <= 430 && viewport.height > viewport.width;
+  if (compactPortrait) await page.evaluate(() => window.scrollTo(0, 0));
+  if (compactPortrait) {
+    const board = page.locator("[data-testid='game-screen'] [data-board] svg.stone-board");
+    const boardBox = await board.boundingBox();
+    expect(boardBox).not.toBeNull();
+    if (boardBox) {
+      expect(boardBox.y).toBeGreaterThanOrEqual(-1);
+      expect(boardBox.y + boardBox.height).toBeLessThanOrEqual(viewport.height + 1);
+    }
+  }
   for (const control of await page.locator("[data-testid='game-screen'] [data-action='select-ring'], [data-testid='game-screen'] [data-action^='rotate-']").all()) {
-    await control.scrollIntoViewIfNeeded();
+    if (!compactPortrait) await control.scrollIntoViewIfNeeded();
     const box = await control.boundingBox();
     expect(box).not.toBeNull();
     if (!box) continue;
@@ -328,7 +357,9 @@ async function installPhaseObserver(page: Page): Promise<void> {
         }
       }
     });
-    observer.observe(document.documentElement, {
+    // addInitScript runs before the parser necessarily creates <html>; the
+    // Document itself is always available and observes the eventual root.
+    observer.observe(document, {
       subtree: true,
       attributes: true,
       childList: true,
@@ -344,7 +375,7 @@ async function startAndSolveChallenge(
   if (options.reducedMotion) await page.emulateMedia({ reducedMotion: "reduce" });
   await gotoHome(page);
   if (options.audioOff) {
-    const audio = page.locator("[data-action='audio'], input[type='checkbox'][name*='audio' i]").first();
+    const audio = page.locator("[data-testid='home-screen'] [data-action='audio']");
     if (await audio.isVisible().catch(() => false) && await audio.isChecked().catch(() => false)) await audio.uncheck();
   }
   await begin(page, "challenge");
@@ -357,9 +388,7 @@ async function startAndSolveChallenge(
     await solveVisibleQuestion(page);
     if (index < 4) {
       await expect.poll(async () =>
-        (await phaseLocator(page, "intermission").count()) > 0
-          || (await page.locator("[data-intermission]:visible").count()) > 0
-          || (await game(page).getAttribute("data-phase")) === "intermission",
+        (await phaseLocator(page, "intermission").count()) > 0,
         { timeout: 4_000 },
       ).toBe(true);
     }
@@ -384,8 +413,8 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     expect(history.filter((phase) => phase === "countdown")).toHaveLength(1);
     expect(history.filter((phase) => phase === "intermission")).toHaveLength(4);
     await expect(page.getByRole("heading", { name: /結果/ })).toBeVisible();
-    await expect(page.locator("[data-result-question], [data-question-result]")).toHaveCount(5);
-    const total = page.locator("[data-total-time], [data-field='total-time']").first();
+    await expect(page.locator("[data-testid='result-screen'] [data-result-question]")).toHaveCount(5);
+    const total = page.locator("[data-testid='result-screen'] [data-total-time]");
     await expect(total).toBeVisible();
     const times = await page.locator("[data-result-time-ms]").evaluateAll((elements) => elements.map((element) => {
       const raw = element.getAttribute("data-result-time-ms") ?? "";
@@ -408,8 +437,9 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     });
     await expect(game(page)).toBeVisible();
     await waitForPlaying(page);
+    expect((await phaseHistory(page)).filter((phase) => phase === "countdown")).toHaveLength(1);
     const puzzleBefore = await readPuzzleId(page);
-    const moveCount = page.locator("[data-field='move-count'], [data-moves], [data-move-count]").first();
+    const moveCount = page.locator("[data-testid='game-screen'] [data-field='move-count']");
     const beforeMoves = await moveCount.textContent();
 
     const help = page.getByRole("button", { name: /遊び方|説明|ヘルプ/ }).first();
@@ -427,6 +457,18 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await visibleDialog(page).getByRole("button", { name: /盤面へ戻る|閉じる|続ける/ }).click();
     await expect(visibleDialog(page)).toHaveCount(0);
     expect(await readPuzzleId(page)).toBe(puzzleBefore);
+
+    const beforeOrientationMoves = await moveCount.textContent();
+    const beforeOrientationTime = await page.locator("[data-testid='game-screen'] [data-field='time']").getAttribute("data-time-ms");
+    await page.setViewportSize({ width: 844, height: 390 });
+    await expect(game(page)).toBeVisible();
+    expect(await readPuzzleId(page)).toBe(puzzleBefore);
+    await expect(moveCount).toHaveText(beforeOrientationMoves ?? "");
+    await expect(page.locator("[data-testid='game-screen'] [data-field='time']")).toHaveAttribute("data-time-ms", beforeOrientationTime ?? "0");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(game(page)).toBeVisible();
+    expect(await readPuzzleId(page)).toBe(puzzleBefore);
+    await expect(moveCount).toHaveText(beforeOrientationMoves ?? "");
 
     const abort = page.getByRole("button", { name: "中断" }).first();
     await abort.click();
@@ -476,6 +518,50 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(game(page)).toHaveCount(0);
   });
 
+  test("F03/F04: every question boundary cancels stale work before and after success", async ({ page }) => {
+    test.setTimeout(300_000);
+    const abortAndWait = async (): Promise<void> => {
+      await page.getByRole("button", { name: "中断" }).first().click();
+      await expect(visibleDialog(page)).toBeVisible();
+      await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+      await expect(home(page)).toBeVisible();
+      await page.waitForTimeout(1_200);
+      await expect(game(page)).toHaveCount(0);
+    };
+    const solveThrough = async (targetIndex: number): Promise<void> => {
+      for (let index = 0; index < targetIndex; index += 1) await solveVisibleQuestion(page);
+      await waitForPlaying(page);
+    };
+
+    for (let targetIndex = 0; targetIndex < 5; targetIndex += 1) {
+      // Cancel immediately before the target question succeeds.
+      await gotoHome(page);
+      await begin(page, "challenge");
+      await solveThrough(targetIndex);
+      await prepareImmediatelyBeforeSuccess(page);
+      const assignmentBefore = await readAssignmentPuzzleIds(page);
+      expect(assignmentBefore).toHaveLength(5);
+      await abortAndWait();
+      expect(await readAssignmentPuzzleIds(page)).toEqual(assignmentBefore);
+
+      // Re-start the held ticket, solve through the same target, and cancel
+      // immediately after success (intermission), except the fifth question,
+      // where result -> retry is the stale-transition boundary.
+      await begin(page, "challenge");
+      await solveThrough(targetIndex);
+      await solveVisibleQuestion(page);
+      if (targetIndex < 4) {
+        await expect(phaseLocator(page, "intermission")).toBeVisible();
+        await abortAndWait();
+      } else {
+        await expect(result(page)).toBeVisible();
+        await page.locator("[data-action='retry']").click();
+        await expect(game(page)).toBeVisible();
+        await abortAndWait();
+      }
+    }
+  });
+
   test("F05: reload reports an unfinished run, keeps its assignment, and practice resets only the current puzzle", async ({ page }) => {
     await installIntervalProbe(page);
     await gotoHome(page);
@@ -493,24 +579,55 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await gotoHome(page);
     await begin(page, "practice");
     await waitForPlaying(page);
-    const practicePuzzle = await readPuzzleId(page);
-    const moves = page.locator("[data-field='move-count'], [data-moves], [data-move-count]").first();
-    const practiceDefinition = puzzleById.get(practicePuzzle);
-    if (!practiceDefinition) throw new Error(`No fixture for practice puzzle ${practicePuzzle}`);
-    const safeMove = ([("l" as const), ("r" as const)] as MoveType[]).flatMap((type) => [0, 1, 2].map((ring) => ({ type, ring }))).find(({ type, ring }) =>
-      !evaluate(practiceDefinition, applyRotation(practiceDefinition.initialState, type, ring)).solved,
-    );
-    if (!safeMove) throw new Error(`No non-solving practice move for ${practicePuzzle}`);
-    await page.locator(`[data-action='select-ring'][data-ring='${safeMove.ring}']`).click();
-    await rotateButton(page, safeMove.type).click();
-    await expect(moves).toContainText("1");
+    const moves = page.locator("[data-testid='game-screen'] [data-field='move-count']");
+    const reset = page.locator("[data-testid='game-screen'] [data-action='reset-question']");
+    const safeMoveFor = (puzzleId: string): { type: MoveType; ring: number } => {
+      const definition = puzzleById.get(puzzleId);
+      if (!definition) throw new Error(`No fixture for practice puzzle ${puzzleId}`);
+      const safeMove = (["l", "r"] as const).flatMap((type) => [0, 1, 2].map((ring) => ({ type, ring }))).find(({ type, ring }) =>
+        !evaluate(definition, applyRotation(definition.initialState, type, ring)).solved,
+      );
+      if (!safeMove) throw new Error(`No non-solving practice move for ${puzzleId}`);
+      return safeMove;
+    };
+
+    const practiceQuestionOne = await readPuzzleId(page);
+    await solveVisibleQuestion(page);
+    await expect(phaseLocator(page, "intermission")).toBeVisible();
+    const questionOneMoves = Number((await moves.getAttribute("data-moves")) ?? "NaN");
+    expect(Number.isSafeInteger(questionOneMoves)).toBe(true);
+    // Reset is not available during the success/intermission display. An
+    // adversarial activation of the hidden control must still be a no-op.
+    await expect(reset).toBeHidden();
+    await reset.evaluate((element) => (element as HTMLButtonElement).click());
+    expect(await moves.getAttribute("data-moves")).toBe(String(questionOneMoves));
+    await expect(phaseLocator(page, "intermission")).toBeVisible();
+
+    await waitForPlaying(page);
+    const practiceQuestionTwo = await readPuzzleId(page);
+    const secondSafeMove = safeMoveFor(practiceQuestionTwo);
+    await page.locator(`[data-action='select-ring'][data-ring='${secondSafeMove.ring}']`).click();
+    await rotateButton(page, secondSafeMove.type).click();
+    await expect(moves).toHaveAttribute("data-moves", "1");
+    const assignmentDuringPractice = await readAssignmentPuzzleIds(page);
+    expect(assignmentDuringPractice).toEqual(assignmentBeforeReload);
     const activeBeforeReset = await page.evaluate(() => (window as Window & { __r4ActiveIntervals?: () => number }).__r4ActiveIntervals?.() ?? -1);
     expect(activeBeforeReset).toBeGreaterThan(0);
-    await page.locator("[data-action='reset-question']").click();
+    await reset.click();
     const activeAfterReset = await page.evaluate(() => (window as Window & { __r4ActiveIntervals?: () => number }).__r4ActiveIntervals?.() ?? -1);
     expect(activeAfterReset).toBe(activeBeforeReset);
-    await expect(moves).toContainText("0");
-    expect(await readPuzzleId(page)).toBe(practicePuzzle);
+    await expect(moves).toHaveAttribute("data-moves", "0");
+    expect(await readPuzzleId(page)).toBe(practiceQuestionTwo);
+    expect(await readAssignmentPuzzleIds(page)).toEqual(assignmentBeforeReload);
+
+    await solveVisibleQuestion(page);
+    for (let index = 2; index < 5; index += 1) await solveVisibleQuestion(page);
+    await expect(result(page)).toBeVisible();
+    const resultPuzzleIds = await page.locator("[data-result-question]").evaluateAll((elements) => elements.map((element) => element.getAttribute("data-puzzle-id")));
+    const resultMoves = await page.locator("[data-result-moves]").evaluateAll((elements) => elements.map((element) => Number(element.getAttribute("data-result-moves"))));
+    expect(resultPuzzleIds[0]).toBe(practiceQuestionOne);
+    expect(resultMoves[0]).toBe(questionOneMoves);
+    expect(await page.locator("[data-result-question]")).toHaveCount(5);
     expect(assigned).not.toBe("");
   });
 
@@ -565,6 +682,14 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     const expectedTimes = [1_500, 200, 300, 400, 500];
     await solveVisibleQuestion(page);
     for (const duration of expectedTimes.slice(1)) {
+      // The one-second intermission is not owned by a question timer. Advance
+      // it deliberately and sample the stopped display before the next timer
+      // starts, so a test clock cannot accidentally charge the next record.
+      const intermissionBefore = await readClock();
+      await advance(1_000, 1_000);
+      await dispatchLifecycle(page, false, true);
+      expect(await readClock()).toBe(intermissionBefore);
+      await waitForPlaying(page);
       await advance(duration, duration);
       await solveVisibleQuestion(page);
     }
@@ -660,18 +785,30 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     }
 
     await page.goto("about:blank");
-    await page.evaluate(() => { window.name = JSON.stringify({ throwGet: true }); });
+    await page.evaluate(() => { window.name = JSON.stringify({ throwGet: true, throwSet: true }); });
+    await page.setViewportSize({ width: 375, height: 667 });
     await gotoHome(page);
+    await begin(page, "challenge");
+    await waitForPlaying(page);
+    const gameNote = page.locator("[data-testid='game-screen'] [data-game-note]");
+    await expect(gameNote).toBeVisible();
+    await expect(gameNote).toHaveAttribute("data-storage-warning", "true");
+    await expect(gameNote).toContainText(/保存|記録/);
+    await page.getByRole("button", { name: "中断" }).click();
+    await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+    await expect(home(page)).toBeVisible();
   });
 
   test("S03: a second tab observes a completed best and cannot move it backwards", async ({ page, context }) => {
     const second = await context.newPage();
     try {
+      await installClock(second);
+      await installPhaseObserver(second);
       await gotoHome(second);
       const firstRun = await startAndSolveChallenge(page);
       expect(firstRun.ids).toHaveLength(5);
       await second.reload({ waitUntil: "networkidle" });
-      const best = second.locator("[data-best-time], [data-field='best-time'], [data-best-record]").first();
+      const best = second.locator("[data-testid='home-screen'] [data-best-time]");
       await expect(best).toBeVisible();
       const readBestMs = async (): Promise<number> => {
         const raw = await best.getAttribute("data-best-time-ms") ?? await best.textContent() ?? "";
@@ -682,7 +819,18 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       const bestBefore = await readBestMs();
       expect(Number.isFinite(bestBefore)).toBe(true);
 
-      await startAndSolveChallenge(second);
+      // Deliberately make the second tab slower. The first tab's frozen test
+      // clock records zero, so this proves a worse concurrent candidate cannot
+      // replace the existing best rather than merely comparing equal values.
+      await gotoHome(second);
+      await begin(second, "challenge");
+      await waitForPlaying(second);
+      await second.evaluate(() => {
+        const state = window as Window & { __r4TestClock?: { advance: (wall: number, mono?: number) => void } };
+        state.__r4TestClock?.advance(10_000, 10_000);
+      });
+      await solveVisibleQuestion(second);
+      for (let index = 1; index < 5; index += 1) await solveVisibleQuestion(second);
       await second.getByRole("button", { name: /ホーム/ }).first().click();
       await expect(home(second)).toBeVisible();
       const bestAfter = await readBestMs();
@@ -766,6 +914,50 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await begin(page, "challenge");
     for (let index = 0; index < 5; index += 1) await solveVisibleQuestion(page);
     await expect(result(page)).toBeVisible();
+
+    const share = page.getByRole("button", { name: /共有|シェア/ }).first();
+    await page.evaluate(() => {
+      const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
+      const state = window as Window & { __r4ShareResolvers?: Array<() => void> };
+      state.__r4ShareResolvers = [];
+      Object.defineProperty(nav, "share", {
+        configurable: true,
+        value: () => new Promise<void>((resolve) => state.__r4ShareResolvers?.push(resolve)),
+      });
+    });
+    await share.click();
+    const shareArea = page.locator("[data-testid='result-screen'] [data-share-area]");
+    await expect.poll(() => page.evaluate(() => (window as Window & { __r4ShareResolvers?: unknown[] }).__r4ShareResolvers?.length ?? 0)).toBe(1);
+    if (await share.isDisabled()) {
+      // A disabled control is a valid duplicate-submit defense.
+      await page.evaluate(() => (window as Window & { __r4ShareResolvers?: Array<() => void> }).__r4ShareResolvers?.[0]?.());
+      await expect(shareArea).toBeVisible();
+      await expect(shareArea).toContainText(/共有しました/);
+    } else {
+      // Otherwise an attempt token must prevent the first completion from
+      // restoring stale UI after a second share is already pending.
+      await share.click();
+      await expect.poll(() => page.evaluate(() => (window as Window & { __r4ShareResolvers?: unknown[] }).__r4ShareResolvers?.length ?? 0)).toBe(2);
+      await page.evaluate(() => (window as Window & { __r4ShareResolvers?: Array<() => void> }).__r4ShareResolvers?.[0]?.());
+      await expect(shareArea).toBeHidden();
+      await page.evaluate(() => (window as Window & { __r4ShareResolvers?: Array<() => void> }).__r4ShareResolvers?.[1]?.());
+      await expect(shareArea).toBeVisible();
+      await expect(shareArea).toContainText(/共有しました/);
+    }
+
+    // A later cancellation must clear the previous success/selectable state;
+    // otherwise a stale result can falsely report that the second share won.
+    await page.evaluate(() => {
+      const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
+      Object.defineProperty(nav, "share", {
+        configurable: true,
+        value: async () => { throw new DOMException("cancelled", "AbortError"); },
+      });
+    });
+    await share.click();
+    await expect(shareArea).toBeHidden();
+    await expect(shareArea).toHaveText("");
+
     await page.evaluate(() => {
       const nav = navigator as Navigator & {
         share?: (data: ShareData) => Promise<void>;
@@ -777,7 +969,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
         value: { writeText: async () => undefined },
       });
     });
-    await page.getByRole("button", { name: /共有|シェア/ }).first().click();
+    await share.click();
     await expect(page.locator("[data-share-status], [data-share-message]").first()).toContainText(/コピー|共有/);
 
     await page.evaluate(() => {
@@ -787,7 +979,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
         value: { writeText: async () => { throw new Error("synthetic clipboard failure"); } },
       });
     });
-    await page.getByRole("button", { name: /共有|シェア/ }).first().click();
+    await share.click();
     const fallback = page.locator("[data-share-text], [data-share-textarea], textarea[readonly], [data-share-message]").first();
     await expect(fallback).toBeVisible();
     const fallbackData = await fallback.evaluate((element) => ({
@@ -818,11 +1010,26 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(page.getByRole("link", { name: /実験場/ }).first()).toBeVisible();
     await expect(page.getByRole("link", { name: /実験場/ }).first()).toHaveAttribute("href", /./);
     await expect(result(page)).toContainText("<img src=x>");
+
+    // Exercise the result actions as real transitions, not only as visible
+    // labels: retry -> challenge, practice -> practice, and home -> home.
+    await page.locator("[data-action='retry']").click();
+    await expect(game(page)).toHaveAttribute("data-mode", "challenge");
+    for (let index = 0; index < 5; index += 1) await solveVisibleQuestion(page);
+    await expect(result(page)).toBeVisible();
+    await page.locator("[data-action='result-practice']").click();
+    await expect(game(page)).toHaveAttribute("data-mode", "practice");
+    for (let index = 0; index < 5; index += 1) await solveVisibleQuestion(page);
+    await expect(result(page)).toBeVisible();
+    await page.locator("[data-action='result-home']").click();
+    await expect(home(page)).toBeVisible();
   });
 
   test("R4 responsive acceptance: home, game, and result have no horizontal overflow at every prescribed viewport", async ({ page }, testInfo: TestInfo) => {
     test.setTimeout(240_000);
     for (const viewport of VIEWPORTS) {
+      const representative = viewport.name === "w390-h844" || viewport.name === "w375-h667";
+      const capture200 = viewport.name === "w390-h844";
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await gotoHome(page);
       await assertNoHorizontalOverflow(page);
@@ -830,9 +1037,11 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await page.evaluate(() => { document.documentElement.style.fontSize = "100%"; });
       await assertNoHorizontalOverflow(page);
       await assertControls(page);
+      if (representative) await page.screenshot({ path: testInfo.outputPath(`r4-${viewport.name}-home-normal.png`), fullPage: true });
       await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
       await assertNoHorizontalOverflow(page);
       await assertControls(page);
+      if (capture200) await page.screenshot({ path: testInfo.outputPath(`r4-${viewport.name}-home-200.png`), fullPage: true });
       await page.evaluate(() => { document.documentElement.style.fontSize = "100%"; });
 
       // Start one real challenge at each viewport. Check both text scales on
@@ -842,11 +1051,14 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await assertNoHorizontalOverflow(page);
       await assertControls(page);
       await assertNoControlOverlap(page);
+      await waitForPlaying(page);
       await assertPrimaryControlsInViewport(page, viewport);
+      if (representative) await page.screenshot({ path: testInfo.outputPath(`r4-${viewport.name}-game-normal.png`), fullPage: true });
       await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
       await assertNoHorizontalOverflow(page);
       await assertControls(page);
       await assertNoControlOverlap(page);
+      if (capture200) await page.screenshot({ path: testInfo.outputPath(`r4-${viewport.name}-game-200.png`), fullPage: true });
       for (let index = 0; index < 5; index += 1) await solveVisibleQuestion(page);
       await expect(result(page)).toBeVisible();
       await assertNoHorizontalOverflow(page);
@@ -857,6 +1069,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await assertNoHorizontalOverflow(page);
       await assertControls(page);
       await assertNoControlOverlap(page);
+      if (representative) await page.screenshot({ path: testInfo.outputPath(`r4-${viewport.name}-result-normal.png`), fullPage: true });
     }
   });
 });

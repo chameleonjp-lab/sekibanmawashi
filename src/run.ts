@@ -119,6 +119,7 @@ export class RunTimer {
 
   /** Mark a page lifecycle boundary without adding an elapsed interval. */
   lifecycle(event: "hidden" | "visible" | "pagehide" | "pageshow"): void {
+    if (!this.started || this.stopped) return;
     if (event === "hidden" || event === "pagehide") {
       // Capture the visible interval immediately before entering suspension.
       // visibilitychange and pagehide can both fire for one transition, so a
@@ -133,7 +134,7 @@ export class RunTimer {
   }
 
   observe(): TimerReading {
-    if (!this.started) return this.lastReading;
+    if (!this.started || this.stopped) return this.lastReading;
     const { mono, wall } = this.sample();
     return this.readAt(mono, wall);
   }

@@ -224,6 +224,7 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
   }
 
   const controller = new AbortController();
+  let shareRequestSerial = 0;
   const setNameError = (message = ""): void => {
     nameError.textContent = message;
     nameError.hidden = message.length === 0;
@@ -283,22 +284,27 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     }
   }, { signal: controller.signal });
   homeShare.addEventListener("click", () => {
+    const status = query<HTMLElement>(root, "[data-home-share-status]");
+    if (status) status.textContent = "";
+    homeShareArea.hidden = true;
+    homeShareArea.replaceChildren();
     const message = shareText();
     const originShell = shell;
+    const requestSerial = ++shareRequestSerial;
     void shareOrCopy(message).then((result) => {
-      if (!originShell.isConnected || !root.contains(originShell)) return;
+      if (requestSerial !== shareRequestSerial || !originShell.isConnected || !root.contains(originShell)) return;
       if (result.status === "cancelled") return;
-      const status = query<HTMLElement>(root, "[data-home-share-status]");
-      if (!status) return;
+      const currentStatus = query<HTMLElement>(root, "[data-home-share-status]");
+      if (!currentStatus) return;
       if (result.status === "selectable") {
         homeShareArea.hidden = false;
         homeShareArea.innerHTML = `<label for="home-share-text">共有文（選択してコピーできます）</label><textarea id="home-share-text" data-share-text readonly rows="4"></textarea>`;
         const field = query<HTMLTextAreaElement>(homeShareArea, "[data-share-text]");
         if (field) field.value = result.text;
-        status.textContent = "共有文を選択できます。";
+        currentStatus.textContent = "共有文を選択できます。";
         return;
       }
-      status.textContent = result.status === "copied" ? "共有文をコピーしました。" : "共有しました。";
+      currentStatus.textContent = result.status === "copied" ? "共有文をコピーしました。" : "共有しました。";
     });
   }, { signal: controller.signal });
   teardownByRoot.set(root, () => controller.abort());
@@ -403,7 +409,7 @@ export function renderRun(
             <label class="audio-setting"><input type="checkbox" data-action="audio" id="audio" /> 音を有効にする</label>
           </section>
         </div>
-        <p class="game-note">記録はこの端末に保存されます。問題の時間は操作可能になった時点から成功入力までです。</p>
+        <p class="game-note" data-game-note role="status">記録はこの端末に保存されます。問題の時間は操作可能になった時点から成功入力までです。</p>
       </div>
 
       <div class="modal-layer" data-modal="help" hidden>
@@ -443,6 +449,7 @@ export function renderRun(
   const resetButton = query<HTMLButtonElement>(root, "[data-action='reset-question']");
   const helpLayer = query<HTMLElement>(root, "[data-modal='help']");
   const abortLayer = query<HTMLElement>(root, "[data-modal='abort']");
+  const gameNote = query<HTMLElement>(root, "[data-game-note]");
   const helpButton = query<HTMLButtonElement>(root, "[data-action='help']");
   const abortButton = query<HTMLButtonElement>(root, "[data-action='abort']");
   const closeHelpButton = query<HTMLButtonElement>(root, "[data-action='close-help']");
@@ -450,7 +457,7 @@ export function renderRun(
   const confirmAbortButton = query<HTMLButtonElement>(root, "[data-action='confirm-abort']");
   const leftButton = query<HTMLButtonElement>(root, "[data-action='rotate-left']");
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
-  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !intermissionBanner || !audio || !resetButton || !helpLayer || !abortLayer || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
+  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !intermissionBanner || !audio || !resetButton || !helpLayer || !abortLayer || !gameNote || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
 
   shell.dataset.runId = assignment.runId;
   const settingsSnapshot = loadSave({ prepared });
@@ -538,7 +545,7 @@ export function renderRun(
     rightButton.disabled = !accepting;
     helpButton.disabled = phase === "result" || phase === "cancelled";
     abortButton.disabled = phase === "result" || phase === "cancelled";
-    resetButton.hidden = assignment.mode !== "practice" || (phase !== "playing" && phase !== "intermission");
+    resetButton.hidden = assignment.mode !== "practice" || phase !== "playing";
     resetButton.disabled = !accepting;
     for (const button of Array.from(root.querySelectorAll<HTMLButtonElement>("[data-action='select-ring']"))) {
       const ring = Number(button.dataset.ring);
@@ -556,10 +563,13 @@ export function renderRun(
       boardHost.replaceChildren();
       return;
     }
+    const renderedQuestion = questionIndex;
+    const renderedGeneration = generation;
     boardHost.replaceChildren(createBoardSvg(currentPuzzle, session.state, {
       selectedRing,
       disabled: !isInputOpen(),
       onSelectRing: (ring) => {
+        if (disposed || renderedQuestion !== questionIndex || renderedGeneration !== generation) return;
         if (!controller.boardSelection(ring)) return;
         query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus();
       },
@@ -575,7 +585,11 @@ export function renderRun(
     if (!message) return;
     storageWarning = storageWarning || message;
     shell.dataset.storage = "warning";
+    gameNote.textContent = "この端末に保存できません。今回は参考記録として表示します。未完了の割当を保持できない場合があります。";
+    gameNote.dataset.storageWarning = "true";
   };
+
+  if (storageWarning) setStorageWarning(storageWarning);
 
   const persistAssignmentSeen = (): void => {
     if (assignment.mode !== "challenge" || !assignment.incomplete) return;
@@ -744,18 +758,7 @@ export function renderRun(
   });
 
   const resetQuestion = (): void => {
-    if (assignment.mode !== "practice" || (phase !== "playing" && phase !== "intermission") || !currentPuzzle) return;
-    if (phase === "intermission") {
-      const previous = runState.records.slice(0, questionIndex);
-      runState = {
-        ...runState,
-        phase: "playing",
-        records: previous,
-        totalMoves: previous.reduce((sum, record) => sum + record.moves, 0),
-        abnormalClock: previous.some((record) => record.abnormalClock),
-        overLimits: previous.some((record) => record.overLimits),
-      };
-    }
+    if (assignment.mode !== "practice" || phase !== "playing" || !currentPuzzle) return;
     clearScheduled();
     stopTimerDisplay();
     timer?.reset();
@@ -916,7 +919,7 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
           <div><span class="status-label">合計手数</span><strong data-total-moves="${result.totalMoves}">${result.totalMoves}手</strong></div>
         </section>
         <p class="result-notice" data-result-notice role="status" hidden></p>
-        <p class="result-note">記録はこの端末に保存されます。順位や送信完了を表示する機能はありません。</p>
+        <p class="result-note">記録はこの端末に保存されます。</p>
         <section class="result-list" aria-labelledby="question-results-title">
           <h2 id="question-results-title">問題ごとの結果</h2>
           ${result.records.map((record, index) => `
@@ -947,6 +950,7 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
   if (!retry || !practice || !home || !share || !shareArea || !resultPlayer) return;
   resultPlayer.textContent = playerName;
   if (initialNotice) updateResultNotice(root, initialNotice);
+  let shareRequestSerial = 0;
 
   const startAgain = (mode: RunMode): void => {
     renderHome(root, prepared, { prefill: playerName });
@@ -963,10 +967,14 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
   practice.addEventListener("click", () => startAgain("practice"), { signal: listeners.signal });
   home.addEventListener("click", () => renderHome(root, prepared), { signal: listeners.signal });
   share.addEventListener("click", () => {
+    shareArea.hidden = true;
+    shareArea.replaceChildren();
+    shareArea.removeAttribute("data-share-status");
     const message = shareText({ result });
     const originShell = query<HTMLElement>(root, "[data-testid='result-screen']");
+    const requestSerial = ++shareRequestSerial;
     void shareOrCopy(message).then((shared) => {
-      if (!originShell?.isConnected || !root.contains(originShell)) return;
+      if (requestSerial !== shareRequestSerial || !originShell?.isConnected || !root.contains(originShell)) return;
       if (shared.status === "cancelled") return;
       if (shared.status === "selectable") {
         shareArea.hidden = false;

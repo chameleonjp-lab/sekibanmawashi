@@ -48,6 +48,22 @@ test("R4 timer can freeze the exact accepted reading without resampling", () => 
   assert.equal(timer.elapsed(), 25);
 });
 
+test("R4 lifecycle notifications cannot mutate a stopped timer", () => {
+  let now = 0;
+  const timer = new RunTimer({ clocks: { monotonicMs: () => now, wallMs: () => now } });
+  timer.start();
+  now = 100;
+  const stopped = timer.stop();
+  now = 1_100;
+  for (const event of ["hidden", "visible", "pagehide", "pageshow", "pageshow"] as const) {
+    timer.lifecycle(event);
+    assert.deepEqual(timer.reading(), stopped);
+  }
+  assert.deepEqual(timer.observe(), stopped);
+  assert.deepEqual(timer.reading(), stopped);
+  assert.deepEqual(timer.stop(), stopped);
+});
+
 test("R4 timer samples hide boundary and flags a rollback during suspension", () => {
   let mono = 0;
   let wall = 0;
