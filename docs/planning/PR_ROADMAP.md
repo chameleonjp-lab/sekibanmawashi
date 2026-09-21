@@ -4,7 +4,7 @@
 
 | 段階 | ブランチ例 | 対応範囲 | 次へ進む条件 |
 |---|---|---|---|
-| R0 | `docs/rotation-only-remediation-plan-v2` | 今回。計画と最新仕様への案内のみ | 文書検査成功、ユーザーがマージ |
+| R0 | `docs/rotation-only-remediation-plan-v2` | 計画と最新仕様への案内のみ。GitHub PR #5マージ済み | 文書検査成功、ユーザーがマージ |
 | R1 | `feat/01-rotation-only-core` | 常時発光の判定・型・履歴・形式・最小構成・軽い自動検査 | K01〜K07、型検査・lint・test・build成功 |
 | R2 | `feat/02-rotation-only-puzzles` | 難度検証、候補・90問・900券、再現可能な検査レポート | P01〜P09成功、確定した数値と採用理由を保存 |
 | R3 | `feat/03-board-input-repair` | 受光紋と光路、入力、1問の画面、小画面・補助操作 | V/I検査の自動部分成功、未実機項目を明記 |

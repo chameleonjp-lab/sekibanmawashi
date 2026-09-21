@@ -1,0 +1,70 @@
+:root {
+  color: #e5e7eb;
+  background: #111827;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.shell {
+  box-sizing: border-box;
+  max-width: 44rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.eyebrow,
+.note {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.status,
+.controls,
+.rings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.status span {
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+fieldset {
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+button {
+  min-width: 7rem;
+  min-height: 3rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.5rem;
+  background: #1f2937;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+button[aria-pressed="true"] {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 2px #fbbf24;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.setting {
+  display: block;
+  margin: 1.5rem 0;
+}
