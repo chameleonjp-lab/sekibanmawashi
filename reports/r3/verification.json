@@ -1,0 +1,38 @@
+{
+  "stage": "R3",
+  "baseCommit": "58be223d918d7f8af4dec72dc948f1f66e5b3f80",
+  "codeCommit": "08d9d40e485120bf4470afb13a335217f9cbad32",
+  "codeTree": "5f9c7e1de951eecddf5475fa46c3e0d0e95fc9dc",
+  "pullRequest": 8,
+  "workflowRun": 35625649578,
+  "workflowJob": 106419233635,
+  "artifact": 10652626478,
+  "result": "passed-automated-r3-scope",
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "playwright": "1.63.0",
+    "vite": "7.3.6",
+    "browserHost": "GitHub Actions Ubuntu",
+    "browsers": ["chromium", "webkit"]
+  },
+  "unit": { "passed": 40, "failed": 0, "skipped": 0 },
+  "puzzles": { "checks": ["P01", "P02", "P03", "P04", "P05", "P06", "P07", "P08", "P09"], "passed": true },
+  "e2e": { "passed": 26, "failed": 0, "skipped": 0, "flaky": 0, "durationMs": 256242.323 },
+  "layout": {
+    "viewports": [[320,568],[375,667],[390,844],[402,874],[430,932],[844,390],[1280,720],[393,852],[852,393],[1440,900]],
+    "textPercent": [100,200],
+    "puzzleCountPerBrowser": 90,
+    "directionCount": 12,
+    "minimumHtmlButtonPx": 48,
+    "textScaleMethod": "root-font-size, not iPhone text zoom"
+  },
+  "independentReview": { "role": "Sol High", "unresolvedCodeBlockers": 0, "automatedScopeAccepted": true },
+  "localBrowserAssertionsExecuted": false,
+  "physicalIPhoneTested": false,
+  "voiceOverTested": false,
+  "physicalMultiTouchTested": false,
+  "humanPlaytestCompleted": false,
+  "publicReleaseReady": false,
+  "published": false
+}
