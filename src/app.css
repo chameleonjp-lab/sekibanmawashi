@@ -611,6 +611,7 @@ figcaption {
   .app-header {
     align-items: center;
     gap: 0.45rem;
+    margin-bottom: 0.5rem;
   }
 
   .app-header > div:first-child {
