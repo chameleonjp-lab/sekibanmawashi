@@ -13,6 +13,7 @@ import {
   canAcceptInput,
   InputController,
   isActivationKey,
+  isEditableTarget,
   type InputPhase,
 } from "./input.ts";
 import "./app.css";
@@ -204,7 +205,13 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     boardHost.replaceChildren(createBoardSvg(puzzle, session.state, {
       selectedRing,
       disabled: !accepting,
-      onSelectRing: (ring) => { controller.boardSelection(ring); },
+      onSelectRing: (ring) => {
+        if (!controller.boardSelection(ring)) return;
+        // The SVG is rebuilt after every selection. Move focus to the
+        // equivalent labelled HTML control so touch selection never strands
+        // keyboard focus on a removed path.
+        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus();
+      },
     }));
   };
 
@@ -297,7 +304,9 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     // Let a focused button perform its normal single activation. Suppress
     // only repeated native activations caused by a held Enter/Space key.
     if (isActivationKey(event.key)) {
-      if (event.repeat) event.preventDefault();
+      const target = event.target;
+      const isOwnButton = target instanceof HTMLButtonElement && shell.contains(target);
+      if (event.repeat && !event.isComposing && isOwnButton && !isEditableTarget(target)) event.preventDefault();
       return;
     }
     controller.keyboard(event);

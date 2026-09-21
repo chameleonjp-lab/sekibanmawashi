@@ -13,16 +13,16 @@ type Puzzle = {
 };
 
 const VIEWPORTS: Viewport[] = [
-  { name: "iphone-se", width: 320, height: 568 },
-  { name: "iphone-8", width: 375, height: 667 },
-  { name: "iphone-14", width: 390, height: 844 },
-  { name: "iphone-16-pro", width: 402, height: 874 },
-  { name: "iphone-17-pro", width: 430, height: 932 },
-  { name: "iphone-landscape", width: 844, height: 390 },
-  { name: "desktop-small", width: 1280, height: 720 },
-  { name: "iphone-replay", width: 393, height: 852 },
-  { name: "iphone-landscape-replay", width: 852, height: 393 },
-  { name: "desktop-wide", width: 1440, height: 900 },
+  { name: "w320-h568", width: 320, height: 568 },
+  { name: "w375-h667", width: 375, height: 667 },
+  { name: "w390-h844", width: 390, height: 844 },
+  { name: "w402-h874", width: 402, height: 874 },
+  { name: "w430-h932", width: 430, height: 932 },
+  { name: "w844-h390", width: 844, height: 390 },
+  { name: "w1280-h720", width: 1280, height: 720 },
+  { name: "w393-h852", width: 393, height: 852 },
+  { name: "w852-h393", width: 852, height: 393 },
+  { name: "w1440-h900", width: 1440, height: 900 },
 ];
 
 const puzzles = JSON.parse(
@@ -257,6 +257,64 @@ test.describe("R3 board rendering", () => {
         seenDestinationSlots.add(beam.endSlot);
       }
 
+      const visualData = await board(page).locator("svg.stone-board").evaluate((svg) => {
+        const children = Array.from(svg.children);
+        const layerIndex = (selector: string): number => {
+          const element = svg.querySelector(selector);
+          return element ? children.indexOf(element) : -1;
+        };
+        const beamStyles = Array.from(svg.querySelectorAll<SVGLineElement>(".board-beams .beam")).map((element) => {
+          const style = getComputedStyle(element);
+          return {
+            display: style.display,
+            visibility: style.visibility,
+            opacity: Number.parseFloat(style.opacity),
+            stroke: style.stroke,
+            strokeWidth: Number.parseFloat(style.strokeWidth),
+          };
+        });
+        const filter = svg.querySelector("#beam-glow");
+        return {
+          layers: {
+            beams: layerIndex(".board-beams"),
+            parts: layerIndex(".board-parts"),
+            stops: layerIndex(".beam-stops"),
+            receivers: layerIndex(".board-receivers"),
+            hits: layerIndex(".board-ring-hits"),
+          },
+          beamStyles,
+          filter: filter ? {
+            units: filter.getAttribute("filterUnits"),
+            x: Number.parseFloat(filter.getAttribute("x") ?? "NaN"),
+            y: Number.parseFloat(filter.getAttribute("y") ?? "NaN"),
+            width: Number.parseFloat(filter.getAttribute("width") ?? "NaN"),
+            height: Number.parseFloat(filter.getAttribute("height") ?? "NaN"),
+          } : null,
+        };
+      });
+      expect(visualData.layers.beams).toBeGreaterThanOrEqual(0);
+      expect(visualData.layers.beams).toBeLessThan(visualData.layers.parts);
+      expect(visualData.layers.parts).toBeLessThan(visualData.layers.stops);
+      expect(visualData.layers.stops).toBeLessThan(visualData.layers.receivers);
+      expect(visualData.layers.receivers).toBeLessThan(visualData.layers.hits);
+      expect(visualData.beamStyles).toHaveLength(expectedRenderSegments.length);
+      for (const style of visualData.beamStyles) {
+        expect(style.display).not.toBe("none");
+        expect(style.visibility).not.toBe("hidden");
+        expect(style.opacity).toBeGreaterThan(0);
+        expect(style.stroke).not.toBe("none");
+        expect(style.stroke).not.toBe("transparent");
+        expect(style.strokeWidth).toBeGreaterThan(0);
+      }
+      expect(visualData.filter).not.toBeNull();
+      if (visualData.filter) {
+        expect(visualData.filter.units).toBe("userSpaceOnUse");
+        expect(visualData.filter.x).toBeLessThanOrEqual(-50);
+        expect(visualData.filter.y).toBeLessThanOrEqual(-50);
+        expect(visualData.filter.width).toBeGreaterThanOrEqual(200);
+        expect(visualData.filter.height).toBeGreaterThanOrEqual(200);
+      }
+
       const blockedBeamCount = expectedLight.beams.filter((beam) => beam.blockedRing !== null).length;
       await expect(board(page).locator("[data-stop-slot]")).toHaveCount(blockedBeamCount);
 
@@ -420,14 +478,25 @@ test.describe("R3 input contract", () => {
     });
     expect(await readMoves(page)).toBe(1);
 
+    // Explicit cancellation and lost capture must leave the next real click usable.
+    await right.evaluate((element) => {
+      const pointer = { bubbles: true, pointerId: 43, pointerType: "touch", isPrimary: true } as PointerEventInit;
+      element.dispatchEvent(new PointerEvent("pointerdown", pointer));
+      element.dispatchEvent(new PointerEvent("pointercancel", pointer));
+      element.dispatchEvent(new Event("lostpointercapture", { bubbles: true }));
+    });
+    expect(await readMoves(page)).toBe(1);
+    await right.click();
+    expect(await readMoves(page)).toBe(2);
+
     // Pointer cancellation and leaving the target must not block the next input.
     await page.mouse.move(rightBox.x + rightBox.width / 2, rightBox.y + rightBox.height / 2);
     await page.mouse.down();
     await page.mouse.move(rightBox.x - 20, rightBox.y - 20);
     await page.mouse.up();
-    expect(await readMoves(page)).toBe(1);
-    await right.click();
     expect(await readMoves(page)).toBe(2);
+    await right.click();
+    expect(await readMoves(page)).toBe(3);
 
     // A held native key produces one activation, not an interval of activations.
     await right.focus();
@@ -438,6 +507,81 @@ test.describe("R3 input contract", () => {
     await page.waitForTimeout(800);
     await page.keyboard.up("Enter");
     expect(await readMoves(page)).toBe(beforeEnter + 1);
+  });
+
+  test("I04 keeps focus on the accessible HTML ring control after the SVG is replaced", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openGame(page, SOLVING_PUZZLE_ID);
+    const control = ringButtons(page).nth(0);
+    await control.focus();
+    await expect(control).toBeFocused();
+    expect(await readMoves(page)).toBe(0);
+
+    // SVG paths are pointer-only; the equivalent HTML buttons are the
+    // keyboard/assistive route and persist while the SVG is replaced.
+    await page.keyboard.press("Enter");
+    const replacement = ringHitRegions(page).nth(0);
+    await expect(replacement).toHaveAttribute("aria-pressed", "true");
+    await expect(replacement).toHaveAttribute("tabindex", "-1");
+    await expect(replacement).toHaveAttribute("aria-hidden", "true");
+    await expect(control).toBeFocused();
+    expect(await readMoves(page)).toBe(0);
+  });
+
+  test("I04 does not prevent held Enter/Space in input, textarea, or contenteditable targets", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openGame(page, SOLVING_PUZZLE_ID);
+    const before = await readMoves(page);
+    await page.evaluate(() => {
+      const fixture = document.createElement("div");
+      fixture.dataset.activationGuardFixture = "true";
+      fixture.style.cssText = "position:fixed;left:4px;bottom:4px;z-index:20;display:flex;gap:2px;background:#27282a;padding:2px";
+      fixture.innerHTML = "<input aria-label='activation input' /><textarea aria-label='activation textarea'></textarea><div aria-label='activation editor' contenteditable='true' tabindex='0'></div>";
+      document.body.append(fixture);
+      const state = window as Window & { __activationEvents?: { key: string; repeat: boolean; defaultPrevented: boolean }[] };
+      state.__activationEvents = [];
+      window.addEventListener("keydown", (event) => {
+        state.__activationEvents?.push({ key: event.key, repeat: event.repeat, defaultPrevented: event.defaultPrevented });
+      });
+    });
+
+    for (const selector of [
+      "[aria-label='activation input']",
+      "[aria-label='activation textarea']",
+      "[aria-label='activation editor']",
+    ]) {
+      const editable = page.locator(selector);
+      await editable.focus();
+      for (const key of ["Enter", "Space"]) {
+        await page.evaluate(() => {
+          const state = window as Window & { __activationEvents?: { key: string; repeat: boolean; defaultPrevented: boolean }[] };
+          state.__activationEvents = [];
+        });
+        await page.keyboard.down(key);
+        await page.keyboard.down(key);
+        await page.keyboard.up(key);
+        const events = await page.evaluate(() => (window as Window & { __activationEvents?: { key: string; repeat: boolean; defaultPrevented: boolean }[] }).__activationEvents ?? []);
+        expect(events.filter((event) => event.key === (key === "Space" ? " " : key)).length).toBeGreaterThanOrEqual(1);
+        expect(events.every((event) => !event.defaultPrevented), `${selector} ${key} must retain its default`).toBe(true);
+        expect(await readMoves(page)).toBe(before);
+      }
+    }
+
+    // A composing keydown is protected even when it carries repeat=true.
+    const composingResults = await page.evaluate(() => {
+      const target = document.querySelector<HTMLElement>("[aria-label='activation editor']");
+      if (!target) return [];
+      target.focus();
+      const results: boolean[] = [];
+      for (const key of ["Enter", " "]) {
+        const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true, isComposing: true, repeat: true });
+        target.dispatchEvent(event);
+        results.push(event.defaultPrevented);
+      }
+      return results;
+    });
+    expect(composingResults).toEqual([false, false]);
+    expect(await readMoves(page)).toBe(before);
   });
 
   test("I02/I04 keep the board fixed during dialogs and protect editable controls from shortcuts", async ({ page }) => {

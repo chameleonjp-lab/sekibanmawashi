@@ -232,7 +232,7 @@ figcaption {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(100%, 37rem);
+  width: min(100%, 37rem, 70svh);
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -550,7 +550,7 @@ figcaption {
   }
 
   .header-actions button {
-    min-height: 2.75rem;
+    min-height: 3rem;
     min-width: 5rem;
   }
 
@@ -576,7 +576,7 @@ figcaption {
   }
 
   .board-host {
-    max-height: min(64svh, 19rem);
+    width: min(100%, 64svh, 19rem);
   }
 
   figcaption,
@@ -652,8 +652,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 30rem);
-    max-height: min(40svh, 22rem);
+    width: min(100%, 40svh, 22rem);
   }
 
   figcaption,
@@ -715,7 +714,7 @@ figcaption {
   }
 
   .board-host {
-    max-height: min(30svh, 11rem);
+    width: min(100%, 30svh, 11rem);
   }
 
   .game-layout {
@@ -753,7 +752,7 @@ figcaption {
   }
 
   .board-host {
-    max-height: min(64svh, 20rem);
+    width: min(100%, 64svh, 20rem);
   }
 
   .control-panel {
