@@ -22,9 +22,12 @@
     "pool:validate": "node --experimental-strip-types tools/r2.ts pool:validate",
     "tickets:create": "node --experimental-strip-types tools/r2.ts tickets:create",
     "tickets:validate": "node --experimental-strip-types tools/r2.ts tickets:validate",
-    "selection:simulate": "node --experimental-strip-types tools/r2.ts selection:simulate"
+    "selection:simulate": "node --experimental-strip-types tools/r2.ts selection:simulate",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium webkit"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/node": "24.8.0",
     "typescript": "5.9.2",
     "vite": "7.1.7"

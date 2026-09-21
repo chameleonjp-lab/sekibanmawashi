@@ -4,9 +4,9 @@
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。PR #5の計画に従い、R1はPR #6でマージ済みです。R2の90問・900組は実装・必須検査・独立レビューを完了し、[Draft PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)でマージ待ちです。**
+最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2の90問・900組は[PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)でマージ済みです。現在はR3（1問の盤面と入力）を実装・検査しています。**
 
-R2の基準mainは `bb229539c2727acba694653837698ed7220df4ca`（GitHub PR #6マージ後）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
+R3の基準mainは `58be223d918d7f8af4dec72dc948f1f66e5b3f80`（GitHub PR #7マージ後）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
 
 | 項目 | 決定・状態 |
 |---|---|
@@ -32,7 +32,7 @@ R2で新90問・900組、難度条件、重複排除、再生成、独立計算�
 
 ## 次の作業
 
-R2のDraft PRをユーザーがマージした最新mainから、R3（盤面と入力）を開始します。後続は[ロードマップ](docs/planning/PR_ROADMAP.md)と[進捗表](docs/planning/IMPLEMENTATION_PROGRESS.md)に従います。
+R3の実装・検査・独立レビューを行い、Draft PRを作成します。結果は[R3検査記録](docs/reviews/R3_VERIFICATION.md)へ記録します。後続のR4（5問進行・時計・保存）は、R3のPRをユーザーがマージした最新mainから開始します。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 

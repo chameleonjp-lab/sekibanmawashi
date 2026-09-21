@@ -20,6 +20,8 @@
 | [R2の問題庫・抽選券](spec/R2_POOL_TICKETS.md) | 90問・900組の形式、事前校正、出現回数、抽選 |
 | [R2の検査・レビュー記録](reviews/R2_VERIFICATION.md) | P01〜P09、独立照合、修正結果、未確認 |
 | [R2のHTML検査レポート](../reports/r2/report.html) | 90問の盤面、採否、校正範囲と抽選統計 |
+| [R3の盤面と入力](spec/R3_BOARD_INPUT.md) | 1問の操作、表示・入力の境界、画面寸法と検査範囲 |
+| [R3の検査・レビュー記録](reviews/R3_VERIFICATION.md) | V/I検査の結果、指摘対応、実機などの未確認 |
 
 ## 試作とデータ例
 
