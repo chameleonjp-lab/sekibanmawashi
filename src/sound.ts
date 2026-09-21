@@ -174,8 +174,8 @@ export class SoundController {
         this.failed = true;
         return false;
       }
-      if (this.context.state === "suspended") await this.context.resume();
-      if (this.context.state === "closed") {
+      if (this.context.state !== "running" && this.context.state !== "closed") await this.context.resume();
+      if (this.context.state !== "running") {
         this.failed = true;
         return false;
       }

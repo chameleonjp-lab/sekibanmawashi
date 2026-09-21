@@ -1,6 +1,6 @@
 # R5 公開品質検査記録
 
-更新日: 2026-09-21 / 対象ブランチ: `chore/05-release-readiness`
+更新日: 2026-09-21 / 対象ブランチ: `chore/05-release-readiness` / 提出先: [Draft PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)
 
 R5は、R4を取り込んだ基準main `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5` から、共有・音・例外復旧・性能計測・権利記録・Pages手順・全体検査の準備を行う段階です。正式名と共有カード画像は未確定なので、表示名「石板回し」は仮表示として扱い、共有画像は設定していません。R6の公開指示、Pagesの設定変更、ランキング・Supabase・実験場本番データ変更はこの段階で行いません。
 
@@ -48,7 +48,7 @@ Node `24.19.0` / npm `11.9.0` / Linuxで次を実行しました。
 
 ## main保護の提案（R5では設定しない）
 
-GitHub APIで確認した今回の基準mainは保護されていません。R5では設定を変更せず、公開承認を得た別作業で次を提案します。mainへの直接pushと強制pushを禁止し、PR経由だけを許可し、承認1件以上・会話解決・ブランチ更新を必須にします。必須ステータスチェックは現行Workflowの表示名 **`CI / verify`**（`.github/workflows/ci.yml` の `CI` Workflow、`verify` job）です。このjobにtypecheck、lint、ライセンス、72単体、P01〜P09、build、性能出力、Chromium/WebKit readinessを含め、設定後はGitHubのPR Checksで表示名が一致することを確認します。保護設定の変更と有効性確認はR6公開承認の前に別記録へ残します。
+GitHub APIで確認した今回の基準mainは保護されていません。R5では設定を変更せず、公開承認を得た別作業で次を提案します。mainへの直接pushと強制pushを禁止し、PR経由だけを許可し、承認1件以上・会話解決・ブランチ更新を必須にします。必須ステータスチェックのAPI contextは **`verify`**（GitHub Actions、`.github/workflows/ci.yml` の `CI` Workflow、`verify` job）で、GitHub画面では **`CI / verify`** と表示されます。このjobにtypecheck、lint、ライセンス、72単体、P01〜P09、build、性能出力、Chromium/WebKit readinessを含め、設定後はAPIのcontextとPR Checksの表示名が一致することを確認します。保護設定の変更と有効性確認はR6公開承認の前に別記録へ残します。
 
 ## 未実施・公開境界
 

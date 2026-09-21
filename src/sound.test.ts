@@ -78,17 +78,32 @@ test("all six sound actions are distinct calls and muting stops active tones", a
   sound.dispose();
 });
 
-test("a rejected resume is contained and a stale unlock cannot play after dispose", async () => {
+test("a failed or incomplete resume is contained and a stale unlock cannot play after dispose", async () => {
   const failedState: FakeState = { resumes: 0, starts: 0, stops: 0, disconnects: 0, oscillators: [], suspended: true };
   const failed = new SoundController({ contextFactory: () => fakeContext(failedState, true) });
   assert.equal(await failed.unlockFromGesture(), false);
   failed.play("error");
   assert.equal(failedState.starts, 0);
 
+  const incompleteState: FakeState = { resumes: 0, starts: 0, stops: 0, disconnects: 0, oscillators: [], suspended: true };
+  const incompleteContext = fakeContext(incompleteState);
+  incompleteContext.resume = async () => { incompleteState.resumes += 1; };
+  const incomplete = new SoundController({ contextFactory: () => incompleteContext });
+  assert.equal(await incomplete.unlockFromGesture(), false);
+  assert.equal(incompleteState.resumes, 1);
+  incomplete.play("start");
+  assert.equal(incompleteState.starts, 0);
+  incomplete.dispose();
+
   let resolveResume: (() => void) | undefined;
   const lateState: FakeState = { resumes: 0, starts: 0, stops: 0, disconnects: 0, oscillators: [], suspended: true };
   const lateContext = fakeContext(lateState);
-  lateContext.resume = () => new Promise<void>((resolve) => { resolveResume = resolve; });
+  lateContext.resume = () => new Promise<void>((resolve) => {
+    resolveResume = () => {
+      lateContext.state = "running";
+      resolve();
+    };
+  });
   const late = new SoundController({ contextFactory: () => lateContext });
   const unlock = late.unlockFromGesture();
   late.dispose();

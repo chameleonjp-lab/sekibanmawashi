@@ -11,7 +11,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # The first R5 run took 22.5 minutes despite failing the long flows early.
+    # Allow the full 20-run and ten-viewport acceptance in both engines.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,6 +32,8 @@ jobs:
       - run: npm run performance:r5
       - name: Install Playwright browsers
         run: npm run test:e2e:install
+      - name: Check browser transitions and compact layout
+        run: npx playwright test --grep 'V02 keeps the primary controls|Q02/U04'
       - name: Run browser tests
         run: npm run test:e2e
       - name: Upload browser test artifacts
@@ -40,5 +44,16 @@ jobs:
           path: |
             test-results/
             playwright-report/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload browser images and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-evidence-${{ github.run_id }}
+          path: |
+            test-results/**/*.png
+            test-results/**/error-context.md
+            test-results/results.json
           if-no-files-found: warn
           retention-days: 14

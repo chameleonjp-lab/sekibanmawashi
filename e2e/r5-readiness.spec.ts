@@ -560,13 +560,24 @@ async function solveVisibleQuestion(page: Page): Promise<{ id: string; moves: nu
   const moves = page.locator("[data-testid='game-screen'] [data-field='move-count']");
   let expectedMoves = Number(await moves.getAttribute("data-moves") ?? "0");
   expect(Number.isSafeInteger(expectedMoves)).toBe(true);
+  const readCommittedMoves = async (): Promise<string | null> => {
+    if (await result(page).isVisible().catch(() => false)) {
+      const resultRow = page.locator(`[data-result-question][data-puzzle-id="${id}"]`).first();
+      return resultRow.locator("[data-result-moves]").getAttribute("data-result-moves");
+    }
+    if (await moves.count() === 0) return null;
+    return moves.getAttribute("data-moves");
+  };
   for (const move of solution) {
     const ring = page.locator(`[data-testid='game-screen'] [data-action='select-ring'][data-ring='${move.ring}']`);
     await expect(ring).toBeVisible();
     await ring.click();
     await rotateButton(page, move.type).click();
     expectedMoves += 1;
-    await expect(moves).toHaveAttribute("data-moves", String(expectedMoves));
+    // The fifth question is committed by replacing the game DOM with the
+    // result screen immediately. Read its authoritative result row in that
+    // case; intermediate questions still assert the live game counter.
+    await expect.poll(readCommittedMoves, { timeout: 12_000 }).toBe(String(expectedMoves));
   }
   await expect.poll(async () => {
     if (await result(page).isVisible().catch(() => false)) return "result";
@@ -1003,26 +1014,55 @@ test.describe("R5 release readiness", () => {
     const diagnostics = installDiagnostics(page);
     await installUnhandledProbe(page);
     await page.addInitScript(() => {
-      const globals = window as Window & { AudioContext?: unknown; webkitAudioContext?: unknown };
-      const blocked = function blockedAudioContext(): never {
-        throw new Error("R5 synthetic audio resume failure");
+      const probe = { resumeAttempts: 0 };
+      class BlockedAudioContext {
+        state = "suspended";
+        currentTime = 0;
+        destination = {};
+        resume = (): Promise<void> => {
+          probe.resumeAttempts += 1;
+          return Promise.reject(new Error("R5 synthetic audio resume failure"));
+        };
+        createOscillator = (): Record<string, unknown> => ({
+          type: "sine",
+          frequency: { value: 0, setValueAtTime: () => undefined, exponentialRampToValueAtTime: () => undefined },
+          connect: () => undefined,
+          start: () => undefined,
+          stop: () => undefined,
+          disconnect: () => undefined,
+        });
+        createGain = (): Record<string, unknown> => ({
+          gain: { value: 0, setValueAtTime: () => undefined, exponentialRampToValueAtTime: () => undefined },
+          connect: () => undefined,
+          disconnect: () => undefined,
+        });
       };
-      Object.defineProperty(globals, "AudioContext", { configurable: true, value: blocked });
-      Object.defineProperty(globals, "webkitAudioContext", { configurable: true, value: blocked });
+      const globals = window as Window & { AudioContext?: unknown; webkitAudioContext?: unknown };
+      Object.defineProperty(globals, "AudioContext", { configurable: true, writable: true, value: BlockedAudioContext });
+      Object.defineProperty(globals, "webkitAudioContext", { configurable: true, writable: true, value: BlockedAudioContext });
+      (window as Window & { __r5ResumeProbe?: () => { resumeAttempts: number } }).__r5ResumeProbe = () => ({
+        resumeAttempts: probe.resumeAttempts,
+      });
     });
     await gotoHome(page);
     const audio = page.locator("[data-testid='home-screen'] [data-action='audio']");
     await expect(audio).toBeChecked();
-    // Keep the setting ON for the first run so a real AudioContext resume
-    // attempt is covered. The second run verifies the persisted OFF path.
+    const readResumeAttempts = async (): Promise<number> => page.evaluate(() => (
+      (window as Window & { __r5ResumeProbe?: () => { resumeAttempts: number } }).__r5ResumeProbe?.().resumeAttempts ?? 0
+    ));
+    const beforeAudioOnRun = await readResumeAttempts();
     await runChallenge(page, "音声再開失敗");
+    const afterAudioOnRun = await readResumeAttempts();
+    expect(afterAudioOnRun).toBeGreaterThan(beforeAudioOnRun);
     await expect(result(page)).toBeVisible();
     await page.locator("[data-action='result-home']").click();
     await expect(home(page)).toBeVisible();
     const audioAfterRecovery = page.locator("[data-testid='home-screen'] [data-action='audio']");
     await audioAfterRecovery.uncheck();
     await expect(audioAfterRecovery).not.toBeChecked();
+    const beforeAudioOffRun = await readResumeAttempts();
     await runChallenge(page, "無音検査");
+    expect(await readResumeAttempts()).toBe(beforeAudioOffRun);
     await expect(result(page)).toBeVisible();
     await assertNoBrowserDiagnostics(page, diagnostics);
   });
