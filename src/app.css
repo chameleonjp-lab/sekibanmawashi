@@ -676,9 +676,9 @@ figcaption {
   }
 
   .puzzle-status {
-    /* Four cards fit at the normal text size; doubling rem makes the 4rem
-       minimum wide enough for only two cards, keeping values readable. */
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
+    /* At most four tracks fit with gaps. Doubling rem raises the minimum
+       to 128px, leaving two readable cards per row on narrow screens. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, max(4rem, 20%)), 1fr));
     gap: 0.4rem;
     margin-bottom: 0.45rem;
   }
