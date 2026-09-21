@@ -4,7 +4,7 @@
 
 ## 対象と範囲
 
-PR #5でマージされた[対応実装計画書 v2.0](../planning/IMPLEMENTATION_PLAN.md)のR1を対象とします。基準mainは `3bb2295efa81f5b18bf57d515c16050c40ffe5be`、作業ブランチは `feat/01-rotation-only-core` です。
+PR #5でマージされた[対応実装計画書 v2.0](../planning/IMPLEMENTATION_PLAN.md)のR1を対象とします。基準mainは `3bb2295efa81f5b18bf57d515c16050c40ffe5be`、作業ブランチは `feat/01-rotation-only-core`、提出先は[Draft PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)です。実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。
 
 対応する主な指摘はD01（常時発光）、B03（形式・版・内容検証のR1部分）、Q01（自動検査基盤）、Q02（進捗案内）です。到達方向・最初の遮断点・通過区間を返し、後続の盤面描画が独自に遮断を再計算しなくてよい土台を用意します。表示自体のA01〜A03受入はR3で行います。
 
@@ -32,6 +32,8 @@ Node版は実行環境と[公式配布](https://nodejs.org/download/release/v24.
 | `npm run build` | 成功。最小アプリを生成。ゲーム全体の公開ビルド受入ではない |
 | K01〜K07 | 成功。回転・光路・成功・符号化・履歴・異常値・常時発光と音設定を確認 |
 | 文書リンク・差分 | 変更Markdown 13件・相対リンク49件の欠落0。`git diff --check`成功 |
+
+GitHubでも実装コミット `4174e3019516f67c110b787455bdae886061a505` の [CI / verify](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35599116610) が成功しました。依存導入・型検査・lint・テスト・ビルドの全ステップが成功しています。
 
 ## レビューと修正
 
