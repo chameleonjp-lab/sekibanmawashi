@@ -2,7 +2,7 @@
 
 更新日: 2026-09-21 / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
-R4の基準main: `7bef5632092443401dffc9765a3687fc53a3d2b5`（GitHub PR #8マージ後）
+R5の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）
 
 ## 段階
 
@@ -12,8 +12,8 @@ R4の基準main: `7bef5632092443401dffc9765a3687fc53a3d2b5`（GitHub PR #8マー
 | R1 判定と基盤 | 実装・自動検査・独立レビュー済み、[PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)マージ済み | R2以降と一般公開の受入は未完了 |
 | R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)マージ済み | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
-| R4 5問・時計・保存 | [Draft PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)、実装・自動検査・独立レビュー済み、マージ待ち | 実機ロック復帰の受入は未完了 |
-| R5 公開品質 | 実装中（Draft PR準備） | 新版全体検査・独立レビュー・iPhone実機は未実施。正式名・共有画像は未確定 |
+| R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
+| R5 公開品質 | [Draft PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)で実装・CI検査中 | 新版全体検査・独立レビュー・iPhone実機は未実施。正式名・共有画像は未確定 |
 | R6 公開 | 保留 | 受入完了とユーザーの公開指示が必要 |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
@@ -51,7 +51,7 @@ Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test
 
 ローカルでは68単体テスト、型検査・lint・P01〜P09・buildが成功。停止後の復帰通知、時計逆行、保存例外、共有取消しと古い応答、上限後の参考結果などを修正・検査しました。実装検査対象 `8fd3fb627611d1789f35e9d96e280ed59d1fa6a3` の[CI 35636775163](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35636775163)で、Chromium/WebKitの54画面検査もすべて成功しました。失敗・skip・flaky各0。初回以降の検査初期化、小画面の時間欄、保存例外注入などを修正し、Sol Highが集計JSONと代表画像を確認してR4の自動検査範囲を承認しました。未解消のコードblockerはありません。実行時間枠だけを調整した `c7fea6709dd12d5776699a6525935560e23e622c` の[CI 35637796323](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35637796323)でも68単体・54画面検査と全基本検査が成功しました。記録追記後のCIはPRのChecksを参照してください。
 
-iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名・画像、音の実装、公開品質と公開手順はR5以降に残し、本番公開・ランキング関連・実験場側の変更は行っていません。R4をユーザーがマージした後、最新mainからR5へ進みます。
+iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名・画像、音の実装、公開品質と公開手順はR5以降に残していましたが、R5で公開準備と音を実装しました。本番公開・ランキング関連・実験場側の変更は行っていません。R4のPR #9をマージした最新mainからR5へ進みました。
 
 ## 各PRで記入する内容
 
@@ -61,10 +61,10 @@ iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名�
 
 R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認、正式な公開名・共有画像・実験場掲載方式は後続段階です。旧版のテスト成功をv2へ持ち越しません。
 
-R3のPR #8をユーザーがマージした最新mainからR4を開始しました。こちらではマージと本番公開を行いません。
+R4のPR #9をユーザーがマージした最新main `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5` からR5を開始しました。こちらではマージと本番公開を行いません。
 
 ## R5の実装状況
 
 `chore/05-release-readiness` で、仮タイトル・予定URL・説明・faviconの設定元を共通化し、音6種の安全なWeb Audio制御、音設定の初期ON・保存・gesture解除、共有/結果/実験場の共通導線、起動・読込・予期しない例外の復旧画面、性能測定、依存ライセンス記録、手動Pages公開手順を追加しています。旧試作OG画像は採用せず、正式な共有画像は未確定のため設定していません。詳細は[R5検査記録](../reviews/R5_VERIFICATION.md)です。
 
-単体71件、P01〜P09、lint、ライセンスメタデータ、ViteのPages baseビルドと性能測定はローカルで成功しました。R5追加ブラウザ検査の型修正とChromium/WebKit CI結果は担当確認後に追記します。iPhone実機、VoiceOver、ロック復帰、正式名・共有画像の確定は未実施です。R5の独立観点レビュー完了前に公開可とは扱いません。
+単体72件、P01〜P09、lint、ライセンスメタデータ、ViteのPages baseビルドと性能測定はローカルで成功しました。追加readinessブラウザ検査の実ブラウザ結果はDraft PR #10のCIで確認中です。iPhone実機、VoiceOver、ロック復帰、正式名・共有画像の確定は未実施です。R5の独立観点レビュー完了前に公開可とは扱いません。

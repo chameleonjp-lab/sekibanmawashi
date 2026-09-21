@@ -46,7 +46,10 @@ const report = {
   distGzipJavascriptBytes: javascript.reduce((sum, entry) => sum + gzipSync(entry.content).byteLength, 0),
   distJavascriptBytes: javascript.reduce((sum, entry) => sum + entry.bytes, 0),
   puzzleJsonBytes: puzzleContent.byteLength,
+  // The catalog is bundled into the entry JavaScript by Vite. This is a
+  // standalone compression diagnostic, not a separate network response.
   puzzleJsonGzipBytes: gzipSync(puzzleContent).byteLength,
+  puzzleJsonTransport: "embedded-in-javascript; standalone gzip diagnostic",
   puzzleCount: puzzles.length,
   maxParts: Math.max(...partCounts),
   evaluateSamples: samples.length,

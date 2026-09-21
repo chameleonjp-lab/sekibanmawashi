@@ -35,9 +35,13 @@ const puzzles = JSON.parse(
 // intentionally read from the single publication config instead of copying a
 // provisional URL into the test.
 const siteConfigSource = readFileSync(resolve(process.cwd(), "site.config.ts"), "utf8");
+const siteTitle = siteConfigSource.match(/title:\s*"([^"]+)"/u)?.[1];
+const siteDescription = siteConfigSource.match(/description:\s*"([^"]+)"/u)?.[1];
 const publicUrl = siteConfigSource.match(/publicUrl:\s*"([^"]+)"/u)?.[1];
-if (!publicUrl) throw new Error("site.config.ts must define publicUrl");
+const labUrl = siteConfigSource.match(/labUrl:\s*"([^"]+)"/u)?.[1];
+if (!siteTitle || !siteDescription || !publicUrl || !labUrl) throw new Error("site.config.ts metadata is incomplete");
 const PUBLIC_GAME_URL = publicUrl;
+const LAB_URL = labUrl;
 const SHARE_IMAGE_URL = siteConfigSource.match(/shareImageUrl:\s*"([^"]+)"/u)?.[1] ?? null;
 const puzzleById = new Map(puzzles.map((puzzle) => [puzzle.id, puzzle]));
 
@@ -56,6 +60,9 @@ type ResourceSnapshot = {
   listeners: number;
   audioContexts: number;
   audioNodes: number;
+  audioProbeSupported: boolean;
+  audioStops: number;
+  audioDisconnects: number;
   activeAudioNodes: number;
   activeOscillators: number;
   resources: number;
@@ -157,14 +164,21 @@ async function installResourceProbe(page: Page): Promise<void> {
       listener: EventListenerOrEventListenerObject;
       active: boolean;
     };
+    type AudioRecord = {
+      kind: "oscillator" | "gain";
+      stopped: boolean;
+      disconnected: boolean;
+    };
     type Probe = {
       timeoutIds: Set<number>;
       intervalIds: Set<number>;
       listeners: ListenerRecord[];
       audioContexts: number;
       audioNodes: number;
-      activeAudioNodes: number;
-      activeOscillators: number;
+      audioRecords: AudioRecord[];
+      audioProbeSupported: boolean;
+      audioStops: number;
+      audioDisconnects: number;
     };
     const probe: Probe = {
       timeoutIds: new Set<number>(),
@@ -172,8 +186,10 @@ async function installResourceProbe(page: Page): Promise<void> {
       listeners: [],
       audioContexts: 0,
       audioNodes: 0,
-      activeAudioNodes: 0,
-      activeOscillators: 0,
+      audioRecords: [],
+      audioProbeSupported: false,
+      audioStops: 0,
+      audioDisconnects: 0,
     };
     const target = window as Window & {
       __r5ResourceSnapshot?: () => ResourceSnapshot;
@@ -248,19 +264,22 @@ async function installResourceProbe(page: Page): Promise<void> {
       if (nativeCreateOscillator) {
         context.createOscillator = (): any => {
           const oscillator = nativeCreateOscillator();
+          const record: AudioRecord = { kind: "oscillator", stopped: false, disconnected: false };
+          probe.audioRecords.push(record);
           probe.audioNodes += 1;
-          probe.activeAudioNodes += 1;
-          probe.activeOscillators += 1;
-          let stopped = false;
           if (typeof oscillator.stop === "function") {
             const nativeStop = oscillator.stop.bind(oscillator);
             oscillator.stop = (when?: number): void => {
-              if (!stopped) {
-                stopped = true;
-                probe.activeOscillators = Math.max(0, probe.activeOscillators - 1);
-                probe.activeAudioNodes = Math.max(0, probe.activeAudioNodes - 2);
-              }
+              if (!record.stopped) { record.stopped = true; probe.audioStops += 1; }
               nativeStop(when);
+            };
+          }
+          if (typeof oscillator.disconnect === "function") {
+            const nativeDisconnect = oscillator.disconnect.bind(oscillator);
+            oscillator.disconnect = (...args: unknown[]): void => {
+              try { nativeDisconnect(...args); } finally {
+                if (!record.disconnected) { record.disconnected = true; probe.audioDisconnects += 1; }
+              }
             };
           }
           return oscillator;
@@ -270,9 +289,19 @@ async function installResourceProbe(page: Page): Promise<void> {
         ? context.createGain.bind(context) : null;
       if (nativeCreateGain) {
         context.createGain = (): any => {
+          const gain = nativeCreateGain();
+          const record: AudioRecord = { kind: "gain", stopped: true, disconnected: false };
+          probe.audioRecords.push(record);
           probe.audioNodes += 1;
-          probe.activeAudioNodes += 1;
-          return nativeCreateGain();
+          if (typeof gain.disconnect === "function") {
+            const nativeDisconnect = gain.disconnect.bind(gain);
+            gain.disconnect = (...args: unknown[]): void => {
+              try { nativeDisconnect(...args); } finally {
+                if (!record.disconnected) { record.disconnected = true; probe.audioDisconnects += 1; }
+              }
+            };
+          }
+          return gain;
         };
       }
     };
@@ -291,6 +320,7 @@ async function installResourceProbe(page: Page): Promise<void> {
           }
         }
         Object.defineProperty(globals, name, { configurable: true, writable: true, value: ProbedAudioContext });
+        probe.audioProbeSupported = true;
       } catch {
         // Some WebKit builds expose a non-configurable constructor. The rest
         // of the timer/listener probe remains valid in that engine.
@@ -304,8 +334,11 @@ async function installResourceProbe(page: Page): Promise<void> {
       listeners: probe.listeners.filter((entry) => entry.active && connected(entry.target)).length,
       audioContexts: probe.audioContexts,
       audioNodes: probe.audioNodes,
-      activeAudioNodes: probe.activeAudioNodes,
-      activeOscillators: probe.activeOscillators,
+      audioProbeSupported: probe.audioProbeSupported,
+      audioStops: probe.audioStops,
+      audioDisconnects: probe.audioDisconnects,
+      activeAudioNodes: probe.audioRecords.filter((record) => !(record.stopped && record.disconnected)).length,
+      activeOscillators: probe.audioRecords.filter((record) => record.kind === "oscillator" && !(record.stopped && record.disconnected)).length,
       resources: performance.getEntriesByType("resource").length,
     });
   });
@@ -450,6 +483,9 @@ async function readResourceSnapshot(page: Page): Promise<ResourceSnapshot> {
       listeners: -1,
       audioContexts: -1,
       audioNodes: -1,
+      audioProbeSupported: false,
+      audioStops: -1,
+      audioDisconnects: -1,
       activeAudioNodes: -1,
       activeOscillators: -1,
       resources: performance.getEntriesByType("resource").length,
@@ -596,6 +632,45 @@ async function assertButtonsReachable(page: Page, viewport: Viewport): Promise<v
   }
 }
 
+async function assertLinksReachable(page: Page, viewport: Viewport): Promise<void> {
+  for (const link of await page.locator("a:visible").all()) {
+    await link.scrollIntoViewIfNeeded();
+    const box = await link.boundingBox();
+    expect(box, "visible recovery link remains reachable").not.toBeNull();
+    if (!box) continue;
+    expect(box.x).toBeGreaterThanOrEqual(-1);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(box.y).toBeGreaterThanOrEqual(-1);
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+    expect(box.width).toBeGreaterThan(0);
+    expect(box.height).toBeGreaterThan(0);
+  }
+}
+
+async function assertGameStatusReadableAt200(page: Page): Promise<void> {
+  const status = await page.evaluate(() => {
+    const lineCount = (element: Element): number => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const tops = new Set(Array.from(range.getClientRects()).map((rect) => Math.round(rect.top * 10) / 10));
+      return tops.size;
+    };
+    return Array.from(document.querySelectorAll<HTMLElement>("[data-testid='game-screen'] .status-card")).map((card) => ({
+      label: card.querySelector<HTMLElement>(".status-label")?.textContent?.trim() ?? "",
+      labelLines: card.querySelector<HTMLElement>(".status-label") ? lineCount(card.querySelector<HTMLElement>(".status-label") as HTMLElement) : 0,
+      value: card.querySelector<HTMLElement>("[data-field]")?.textContent?.trim() ?? "",
+      valueLines: card.querySelector<HTMLElement>("[data-field]") ? lineCount(card.querySelector<HTMLElement>("[data-field]") as HTMLElement) : 0,
+    }));
+  });
+  expect(status, "the four game status cards are present").toHaveLength(4);
+  for (const card of status) {
+    expect(card.label.length, "status labels remain visible").toBeGreaterThan(0);
+    expect(card.labelLines, `${card.label} label is not one-character-per-line`).toBeLessThanOrEqual(2);
+    expect(card.value.length, `${card.label} value remains visible`).toBeGreaterThan(0);
+    expect(card.valueLines, `${card.label} value remains on one visual line`).toBe(1);
+  }
+}
+
 async function assertBoardVisible(page: Page): Promise<void> {
   const board = page.locator("[data-testid='game-screen'] svg.stone-board");
   await expect(board).toBeVisible();
@@ -668,17 +743,22 @@ test.describe("R5 release readiness", () => {
       title: document.title,
       description: document.querySelector<HTMLMetaElement>("meta[name='description']")?.content ?? "",
       icon: document.querySelector<HTMLLinkElement>("link[rel~='icon']")?.href ?? "",
+      ogTitle: document.querySelector<HTMLMetaElement>("meta[property='og:title']")?.content ?? "",
+      ogDescription: document.querySelector<HTMLMetaElement>("meta[property='og:description']")?.content ?? "",
       ogUrl: document.querySelector<HTMLMetaElement>("meta[property='og:url']")?.content ?? "",
-      ogImage: document.querySelector<HTMLMetaElement>("meta[property='og:image']")?.content ?? "",
+      ogImage: document.querySelector<HTMLMetaElement>("meta[property='og:image']")?.content ?? null,
       heading: document.querySelector("[data-testid='home-screen'] h1")?.textContent?.trim() ?? "",
     }));
     expect(metadata.lang).toBe("ja");
-    expect(metadata.title.length).toBeGreaterThan(0);
-    expect(metadata.description.length).toBeGreaterThan(0);
-    expect(metadata.heading.length).toBeGreaterThan(0);
+    expect(metadata.title).toBe(siteTitle);
+    expect(metadata.description).toBe(siteDescription);
+    expect(metadata.ogTitle).toBe(siteTitle);
+    expect(metadata.ogDescription).toBe(siteDescription);
+    expect(metadata.heading).toBe(siteTitle);
     expect(metadata.icon, "a public page needs a resolvable favicon").toMatch(/^https?:\/\//);
     expect(metadata.ogUrl, "share URL metadata").toBe(PUBLIC_GAME_URL);
     if (SHARE_IMAGE_URL) expect(metadata.ogImage).toBe(SHARE_IMAGE_URL);
+    else expect(metadata.ogImage, "share-image metadata must be absent while no image is approved").toBeNull();
 
     // Exercise the home share route with both browser sharing APIs disabled;
     // this reaches the selectable fallback and proves its URL is current.
@@ -696,6 +776,58 @@ test.describe("R5 release readiness", () => {
     await page.locator("[data-action='home-share']").press("Escape").catch(() => undefined);
     await runChallenge(page, "診断検査");
     await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("startup fallback remains actionable when the entry module fails to load", async ({ page }) => {
+    test.setTimeout(60_000);
+    const failedRequests: string[] = [];
+    page.on("requestfailed", (request) => failedRequests.push(request.url()));
+    await page.route("**/src/app.ts", (route) => route.abort("failed"));
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const fallback = page.locator("#static-load-error-title");
+    await expect(fallback).toBeVisible();
+    await expect(fallback).toHaveText(siteTitle);
+    await expect(page.getByText(/ゲームを読み込んでいます|ゲームを読み込めませんでした/u)).toBeVisible();
+    await expect(page.getByRole("link", { name: "もう一度読み込む" })).toHaveAttribute("href", /\/$/u);
+    await expect(page.getByRole("link", { name: "ホームへ戻る" })).toHaveAttribute("href", /\/$/u);
+    await expect(page.getByRole("link", { name: "実験場へ戻る" })).toHaveAttribute("href", LAB_URL);
+    expect(failedRequests.some((url) => /\/src\/app\.ts(?:\?|$)/u.test(url)), "the induced entry failure was observed").toBe(true);
+    await page.unroute("**/src/app.ts");
+  });
+
+  test("fatal boundary recovers and handles a second independent exception", async ({ page }) => {
+    test.setTimeout(60_000);
+    await gotoHome(page);
+
+    const triggerExpectedFailure = async (kind: "error" | "rejection", message: string): Promise<void> => {
+      await page.evaluate(({ kind: failureKind, message: failureMessage }) => {
+        if (failureKind === "error") {
+          queueMicrotask(() => { throw new Error(failureMessage); });
+        } else {
+          void Promise.reject(new Error(failureMessage));
+        }
+      }, { kind, message });
+    };
+    const assertFatalActions = async (internalMessage: string): Promise<void> => {
+      const fatal = page.locator("[data-fatal-error]");
+      await expect(fatal).toBeVisible();
+      await expect(fatal).toContainText("画面を表示できません");
+      await expect(fatal).not.toContainText(internalMessage);
+      await expect(fatal.getByRole("button", { name: "もう一度読み込む" })).toBeVisible();
+      await expect(fatal.getByRole("link", { name: "ホームへ戻る" })).toHaveAttribute("href", /\/$/u);
+      await expect(fatal.getByRole("link", { name: "実験場へ戻る" })).toHaveAttribute("href", LAB_URL);
+    };
+
+    const firstMessage = "R5 expected first exception";
+    await triggerExpectedFailure("error", firstMessage);
+    await assertFatalActions(firstMessage);
+    await page.locator("[data-fatal-error] [data-action='retry']").click();
+    await expect(home(page)).toBeVisible();
+    await expect(page.locator("[data-fatal-error]")).toHaveCount(0);
+
+    const secondMessage = "R5 expected second rejection";
+    await triggerExpectedFailure("rejection", secondMessage);
+    await assertFatalActions(secondMessage);
   });
 
   test("R5 state matrix: all required screens stay usable at every viewport and at 200% text", async ({ page }, testInfo: TestInfo) => {
@@ -743,6 +875,7 @@ test.describe("R5 release readiness", () => {
       await assertHitTargets(page);
       await assertNonColorControls(page);
       await assertButtonsReachable(page, viewport);
+      await assertGameStatusReadableAt200(page);
       await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-game-200.png`), fullPage: true });
       await setFontScale(page, 100);
 
@@ -782,15 +915,20 @@ test.describe("R5 release readiness", () => {
     await assertNoBrowserDiagnostics(page, diagnostics);
   });
 
-  test("load and save failures preserve usable recovery screens", async ({ page }) => {
-    test.setTimeout(180_000);
+  test("load and save failures preserve usable recovery screens at every prescribed viewport", async ({ page }, testInfo: TestInfo) => {
+    test.setTimeout(720_000);
     const diagnostics = installDiagnostics(page);
     await installUnhandledProbe(page);
     await page.addInitScript(() => {
       const originalSet = Storage.prototype.setItem;
-      const state = window as Window & { __r5FailWrites?: boolean; __r5EnableWriteFailure?: () => void };
+      const state = window as Window & {
+        __r5FailWrites?: boolean;
+        __r5EnableWriteFailure?: () => void;
+        __r5SetWriteFailure?: (enabled: boolean) => void;
+      };
       state.__r5FailWrites = false;
       state.__r5EnableWriteFailure = () => { state.__r5FailWrites = true; };
+      state.__r5SetWriteFailure = (enabled: boolean) => { state.__r5FailWrites = enabled; };
       Storage.prototype.setItem = function setItem(key: string, value: string): void {
         if (state.__r5FailWrites && /(sekibanmawashi|run|save|record|assignment|best)/i.test(key)) {
           throw new Error("R5 synthetic storage write failure");
@@ -799,19 +937,64 @@ test.describe("R5 release readiness", () => {
       };
     });
 
-    await page.goto("/?puzzleId=r5-missing-puzzle", { waitUntil: "networkidle" });
-    const loadError = page.locator("[data-testid='load-error'], .load-error-screen, [role='alert']").first();
-    await expect(loadError).toBeVisible();
-    await expect(loadError).toContainText(/読み込めません|確認できません/);
-    await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
+    for (const viewport of VIEWPORTS) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto(`/?puzzleId=r5-missing-puzzle-${viewport.name}`, { waitUntil: "networkidle" });
+      const loadError = page.locator("[data-testid='load-error'], .load-error-screen, [role='alert']").first();
+      await expect(loadError).toBeVisible();
+      await expect(loadError).toContainText(/読み込めません|確認できません/);
+      await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertLinksReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-load-error.png`), fullPage: true });
+      await setFontScale(page, 200);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertLinksReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-load-error-200.png`), fullPage: true });
+      await setFontScale(page, 100);
 
-    await gotoHome(page);
-    await begin(page, "challenge", "保存失敗確認");
-    await page.evaluate(() => (window as Window & { __r5EnableWriteFailure?: () => void }).__r5EnableWriteFailure?.());
-    await runChallengeAfterBegin(page);
-    await expect(result(page)).toBeVisible();
-    await expect(page.getByText(/保存できません|参考記録/).first()).toBeVisible();
-    await expect(page.getByRole("button", { name: /共有|シェア/ }).first()).toBeVisible();
+      // Retry is intentionally exercised on the failing route; the home link
+      // must then perform a real recovery to the playable R4 home screen.
+      const retry = page.getByRole("button", { name: /もう一度読み込む/ }).first();
+      await expect(retry).toBeVisible();
+      await retry.click();
+      await expect(page.locator(".load-error-screen, [role='alert']").first()).toBeVisible();
+      const homeLink = page.getByRole("link", { name: "ホームへ戻る" }).first();
+      await expect(homeLink).toBeVisible();
+      await expect(homeLink).toHaveAttribute("href", /\/$/u);
+      const labLink = page.getByRole("link", { name: "実験場へ戻る" }).first();
+      await expect(labLink).toBeVisible();
+      await expect(labLink).toHaveAttribute("href", LAB_URL);
+      await homeLink.click();
+      await expect(home(page)).toBeVisible();
+      await assertNoHorizontalOverflow(page);
+
+      // Enable the synthetic write failure only after assignment creation, so
+      // the game can start and the in-memory final result can still render.
+      await page.evaluate(() => (window as Window & { __r5SetWriteFailure?: (enabled: boolean) => void }).__r5SetWriteFailure?.(false));
+      await begin(page, "challenge", `保存失敗${viewport.name}`);
+      await page.evaluate(() => (window as Window & { __r5EnableWriteFailure?: () => void }).__r5EnableWriteFailure?.());
+      await runChallengeAfterBegin(page);
+      await expect(result(page)).toBeVisible();
+      await expect(page.locator("[data-result-notice]")).toBeVisible();
+      await expect(page.locator("[data-result-notice]")).toContainText(/保存できません|参考記録|保存/);
+      await expect(page.getByRole("button", { name: /共有|シェア/ }).first()).toBeVisible();
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-save-error-result.png`), fullPage: true });
+      await setFontScale(page, 200);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertButtonsReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-save-error-result-200.png`), fullPage: true });
+      await setFontScale(page, 100);
+      await page.locator("[data-action='result-home']").click();
+      await expect(home(page)).toBeVisible();
+      await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
+      await page.evaluate(() => (window as Window & { __r5SetWriteFailure?: (enabled: boolean) => void }).__r5SetWriteFailure?.(false));
+    }
     await assertNoBrowserDiagnostics(page, diagnostics);
   });
 
@@ -906,8 +1089,10 @@ test.describe("R5 release readiness", () => {
     await expect(audio).toBeChecked();
     await page.waitForTimeout(350);
     const baseline = await readResourceSnapshot(page);
+    expect(baseline.audioProbeSupported, "AudioContext instrumentation must be available in the acceptance browser").toBe(true);
     let previous = baseline;
     let bestMs: number | null = null;
+    let audioContextObserved = baseline.audioContexts > 0;
 
     for (let run = 0; run < 20; run += 1) {
       const challenge = await runChallenge(page, `連続検査${run + 1}`);
@@ -944,7 +1129,7 @@ test.describe("R5 release readiness", () => {
       if (bestMs !== null) expect(currentBest, "a slower run cannot move self-best backwards").toBeLessThanOrEqual(bestMs);
       bestMs = bestMs === null ? currentBest : Math.min(bestMs, currentBest);
 
-      await page.waitForTimeout(350);
+      await page.waitForTimeout(500);
       const snapshot = await readResourceSnapshot(page);
       // Intervals and listener/timer ownership must return to the home-state
       // baseline. Small bounded slack covers browser/framework listeners that
@@ -953,8 +1138,12 @@ test.describe("R5 release readiness", () => {
       expect(snapshot.timeouts).toBeLessThanOrEqual(baseline.timeouts + 2);
       expect(snapshot.listeners).toBeLessThanOrEqual(baseline.listeners + 12);
       expect(snapshot.audioContexts).toBeLessThanOrEqual(baseline.audioContexts + 1);
-      expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(baseline.activeAudioNodes + 2);
-      expect(snapshot.activeOscillators).toBeLessThanOrEqual(1);
+      expect(snapshot.audioProbeSupported).toBe(true);
+      expect(snapshot.audioContexts).toBeGreaterThanOrEqual(baseline.audioContexts);
+      audioContextObserved ||= snapshot.audioContexts > 0;
+      expect(snapshot.audioDisconnects, "every oscillator and gain must be disconnected").toBeGreaterThanOrEqual(snapshot.audioStops * 2);
+      expect(snapshot.activeAudioNodes, "stopped tones must also be disconnected").toBeLessThanOrEqual(baseline.activeAudioNodes);
+      expect(snapshot.activeOscillators).toBeLessThanOrEqual(baseline.activeOscillators);
       expect(snapshot.domNodes).toBeLessThanOrEqual(baseline.domNodes + 28);
       expect(snapshot.resources).toBeLessThanOrEqual(baseline.resources + 3);
       // Compare consecutive settled snapshots as well, which catches a slow
@@ -962,10 +1151,11 @@ test.describe("R5 release readiness", () => {
       expect(snapshot.domNodes).toBeLessThanOrEqual(previous.domNodes + 8);
       expect(snapshot.listeners).toBeLessThanOrEqual(previous.listeners + 4);
       expect(snapshot.timeouts).toBeLessThanOrEqual(previous.timeouts + 1);
-      expect(snapshot.activeOscillators).toBeLessThanOrEqual(previous.activeOscillators + 1);
-      expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(previous.activeAudioNodes + 2);
+      expect(snapshot.activeOscillators).toBeLessThanOrEqual(previous.activeOscillators);
+      expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(previous.activeAudioNodes);
       previous = snapshot;
     }
+    expect(audioContextObserved, "audio ON must create an observable AudioContext").toBe(true);
     await assertNoBrowserDiagnostics(page, diagnostics);
   });
 });

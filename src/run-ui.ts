@@ -693,12 +693,11 @@ export function renderRun(
     runState = { ...runState, phase: "result" };
     const result = finalizeRun(runState);
     const resultUnlock = sound.unlockFromGesture();
-    renderResult(root, prepared, result, playerName, storageWarning);
+    const resultSound = new SoundController({ enabled: sound.isEnabled() });
+    renderResult(root, prepared, result, playerName, storageWarning, resultSound);
     // Rendering the result tears down the game controller. Emit the terminal
     // effect from the result surface so teardown cannot cut it off.
-    const resultSound = new SoundController({ enabled: sound.isEnabled() });
     void resultUnlock.then((ready) => { if (ready) resultSound.play("success"); });
-    window.setTimeout(() => resultSound.dispose(), 260);
     const best = storageWarning ? null : bestFromResult(result, playerName);
     if (storageWarning) {
       updateResultNotice(root, storageWarning);
@@ -944,7 +943,7 @@ function resultActionButton(root: HTMLElement, selector: string): HTMLButtonElem
 }
 
 /** Render a finalized in-memory result before attempting storage writes. */
-export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = ""): void {
+export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = "", terminalSound: SoundController | null = null): void {
   teardownRoot(root);
   root.innerHTML = `
     <section class="app-shell result-screen" data-testid="result-screen" data-screen="result" data-mode="${result.mode}">
@@ -990,7 +989,17 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
   const share = resultActionButton(root, "[data-action='result-share']");
   const shareArea = query<HTMLElement>(root, "[data-share-area]");
   const resultPlayer = query<HTMLElement>(root, "[data-result-player]");
-  if (!retry || !practice || !home || !share || !shareArea || !resultPlayer) return;
+  if (!retry || !practice || !home || !share || !shareArea || !resultPlayer) {
+    terminalSound?.dispose();
+    return;
+  }
+  let terminalSoundTimer: number | null = null;
+  if (terminalSound) {
+    terminalSoundTimer = window.setTimeout(() => {
+      terminalSoundTimer = null;
+      terminalSound.dispose();
+    }, 260);
+  }
   resultPlayer.textContent = playerName;
   if (initialNotice) updateResultNotice(root, initialNotice);
   let shareRequestSerial = 0;
@@ -1031,5 +1040,9 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
       shareArea.dataset.shareStatus = "done";
     });
   }, { signal: listeners.signal });
-  teardownByRoot.set(root, () => listeners.abort());
+  teardownByRoot.set(root, () => {
+    listeners.abort();
+    if (terminalSoundTimer !== null) window.clearTimeout(terminalSoundTimer);
+    terminalSound?.dispose();
+  });
 }

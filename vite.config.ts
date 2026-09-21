@@ -16,6 +16,9 @@ const siteMetadata = {
   description: escapeHtml(siteConfig.description),
   publicUrl: escapeHtml(siteConfig.publicUrl),
   labUrl: escapeHtml(siteConfig.labUrl),
+  ogImage: siteConfig.shareImageUrl
+    ? `<meta property="og:image" content="${escapeHtml(siteConfig.shareImageUrl)}" />`
+    : "",
 };
 
 const metadataPlugin = {
@@ -25,7 +28,8 @@ const metadataPlugin = {
       .replaceAll("%SITE_TITLE%", siteMetadata.title)
       .replaceAll("%SITE_DESCRIPTION%", siteMetadata.description)
       .replaceAll("%SITE_URL%", siteMetadata.publicUrl)
-      .replaceAll("%SITE_LAB_URL%", siteMetadata.labUrl);
+      .replaceAll("%SITE_LAB_URL%", siteMetadata.labUrl)
+      .replaceAll("%SITE_OG_IMAGE%", siteMetadata.ogImage);
   },
 };
 
@@ -33,5 +37,8 @@ const metadataPlugin = {
 // opts in to the repository subpath; no workflow calls this automatically.
 export default defineConfig({
   base: process.env.PAGES_BUILD === "1" ? "/sekibanmawashi/" : "/",
+  build: {
+    target: "es2022",
+  },
   plugins: [metadataPlugin],
 });

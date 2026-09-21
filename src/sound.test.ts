@@ -97,3 +97,40 @@ test("a rejected resume is contained and a stale unlock cannot play after dispos
   late.play("success");
   assert.equal(lateState.starts, 0);
 });
+
+test("a failed scheduled stop disconnects a started tone", async () => {
+  let stopCalls = 0;
+  let disconnects = 0;
+  let throwScheduledStop = true;
+  const context: AudioContextLike = {
+    currentTime: 0,
+    destination: {},
+    state: "running",
+    resume: async () => undefined,
+    createOscillator: () => ({
+      type: "sine",
+      frequency: { value: 0 },
+      connect: () => undefined,
+      start: () => undefined,
+      stop: () => {
+        stopCalls += 1;
+        if (throwScheduledStop) {
+          throwScheduledStop = false;
+          throw new Error("scheduled stop failed");
+        }
+      },
+      disconnect: () => { disconnects += 1; },
+    }),
+    createGain: () => ({
+      gain: { value: 0 },
+      connect: () => undefined,
+      disconnect: () => { disconnects += 1; },
+    }),
+  };
+  const sound = new SoundController({ contextFactory: () => context });
+  assert.equal(await sound.unlockFromGesture(), true);
+  sound.play("rotate");
+  assert.equal(stopCalls, 2);
+  assert.equal(disconnects, 2);
+  sound.dispose();
+});

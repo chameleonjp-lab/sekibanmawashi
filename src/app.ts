@@ -14,7 +14,7 @@ import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
 import { preparePoolArtifacts } from "./run.ts";
 import { renderHome } from "./run-ui.ts";
-import { loadSave } from "./storage.ts";
+import { loadSave, saveAudioEnabled } from "./storage.ts";
 import {
   canAcceptInput,
   InputController,
@@ -246,6 +246,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   shell.setAttribute("data-puzzle-id", puzzle.id);
   audio.checked = settings.audioEnabled;
   const sound = new SoundController({ enabled: audio.checked });
+  const listenerController = new AbortController();
 
   const getInputState = () => ({
     phase,
@@ -363,6 +364,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
 
   const confirmAbort = (): void => {
     if (!activeModal || activeModal !== "abort") return;
+    sound.invalidate();
     sessionActive = false;
     phase = "cancelled";
     statusMessage = "この問題を中断しました。";
@@ -374,7 +376,10 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     settings = setAudioEnabled(settings, audio.checked);
     sound.setEnabled(settings.audioEnabled);
     if (settings.audioEnabled) void sound.unlockFromGesture();
+    const saved = saveAudioEnabled(settings.audioEnabled);
+    if (!saved.ok) statusMessage = "音設定を保存できませんでした。";
     shell.dataset.audio = settings.audioEnabled ? "on" : "off";
+    refresh();
   });
   helpButton.addEventListener("click", () => openModal("help", helpButton));
   abortButton.addEventListener("click", () => openModal("abort", abortButton));
@@ -387,6 +392,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     button.addEventListener("click", () => controller.selectRing(Number(button.dataset.ring)));
   }
 
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) sound.invalidate();
+  }, { signal: listenerController.signal });
+  window.addEventListener("pagehide", () => sound.invalidate(), { signal: listenerController.signal });
+
   const keyHandler = (event: KeyboardEvent): void => {
     // Let a focused button perform its normal single activation. Suppress
     // only repeated native activations caused by a held Enter/Space key.
@@ -398,7 +408,6 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     }
     controller.keyboard(event);
   };
-  const listenerController = new AbortController();
   window.addEventListener("keydown", keyHandler, { signal: listenerController.signal });
   teardownByRoot.set(root, () => {
     listenerController.abort();
@@ -481,7 +490,7 @@ if (root) {
   root.addEventListener("click", (event) => {
     const target = event.target;
     if (target instanceof HTMLElement && target.matches("[data-fatal-error] [data-action='retry']")) boundaryActive = false;
-  });
+  }, true);
   window.addEventListener("error", (event) => {
     if (event.error || event.message) {
       event.preventDefault();

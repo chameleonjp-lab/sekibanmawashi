@@ -23,13 +23,13 @@ Node `24.19.0` / npm `11.9.0` / Linuxで次を実行しました。
 | `npm run typecheck` | 成功 | srcと追加readiness e2eを含む全体を検査 |
 | `npm run lint` | 成功 | 39 source files |
 | `npm run licenses:check` | 成功 | Apache-2.0:4、BSD-3-Clause:1、ISC:1、MIT:64 |
-| `npm test` | 成功 | 71 tests, 0 failures |
+| `npm test` | 成功 | 72 tests, 0 failures |
 | `npm run puzzles:test` | 成功 | P01-P09、fixed-seed 100,000 draws |
-| `npm run build` | 成功 | Vite production build、JavaScript gzip 43,409 bytes |
+| `npm run build` | 成功 | Vite production build、JavaScript gzip 43,516 bytes |
 | `npm run performance:r5` | 成功 | 90問×1,728状態、155,520 samples |
 | `npm run test:e2e` | CI/ブラウザ担当で実行 | ローカルのpin版ブラウザは未取得。実行結果を下表へ追記する |
 
-性能測定の観測値（`dist`を先にビルドした状態、2026-09-21）は、JavaScript gzip 43,409 bytes、dist全体295,767 bytes、問題JSONの原文109,681 bytes・gzip 5,691 bytes、最大部品数11、判定時間p50 0.0323ms / p95 0.0647ms / max 3.1622msでした。JavaScript圧縮後250KB、初回総転送700KB、判定5ms未満、最大12部品の目標はこの測定条件で満たしました。問題JSON 10KB以下の旧目標は、90問を一括で保持する原文には適用できず未達です。gzip転送は5,691 bytesで、目標の意味と配信方法をR6で再確認します。
+性能測定の観測値（通常 `npm run build` 後の `dist`、Node 24.19.0 / Linux、2026-09-21）は、JavaScript gzip 43,516 bytes、dist全体297,488 bytes、問題JSONの原文109,681 bytes・単独gzip診断値5,691 bytes、最大部品数11、判定時間p50 0.0327ms / p95 0.0573ms / max 3.6411msでした。問題JSONはViteによりJavaScriptへ内包されるため、5,691 bytesは別ネットワーク転送量ではありません。JavaScript圧縮後250KB、初回総転送700KB、判定5ms未満、最大12部品の目標はこの測定条件で満たしました。問題JSON 10KB以下の旧目標は、90問を一括で保持する原文には適用できず未達です。`performance:r5` は閾値で失敗させるゲートではなく測定出力であり、目標判定はこの記録の測定条件と分けて扱います。
 
 ## R5必須検査の状態
 
@@ -40,11 +40,15 @@ Node `24.19.0` / npm `11.9.0` / Linuxで次を実行しました。
 | U03 | R4自動検査済み / R5音境界追加 | 共有取消し・コピー失敗・選択可能文面、予定URL |
 | U04 | 部分確認 | 仮タイトル・説明・言語・予定URL・faviconは共通化。正式名と共有画像は未確定 |
 | U05 | 自動単体済み / e2e追記待ち | 6種音、初期ON、gesture unlock、OFF、resume失敗、境界失効 |
-| Q01 | 標準自動検査済み | typecheck、lint、71単体、P01-P09、build、license、性能測定 |
+| Q01 | 標準自動検査済み | typecheck、lint、72単体、P01-P09、build、license、性能測定 |
 | Q02 | ブラウザ担当/CI追記待ち | Chromium/WebKit全体、例外・Promise拒否・404 |
 | Q03 | ブラウザ担当/CI追記待ち | 5問チャレンジ20回連続の状態・資源観測 |
 | Q04 | 部分確認 | 正式版参照に旧切替・外部素材・秘密値なし、依存ライセンス記録 |
 | Q05 | 未実施 | iPhone 17 Pro Safari、VoiceOver、ロック復帰、実機音 |
+
+## main保護の提案（R5では設定しない）
+
+GitHub APIで確認した今回の基準mainは保護されていません。R5では設定を変更せず、公開承認を得た別作業で次を提案します。mainへの直接pushと強制pushを禁止し、PR経由だけを許可し、承認1件以上・会話解決・ブランチ更新を必須にします。必須ステータスチェックは現行Workflowの表示名 **`CI / verify`**（`.github/workflows/ci.yml` の `CI` Workflow、`verify` job）です。このjobにtypecheck、lint、ライセンス、72単体、P01〜P09、build、性能出力、Chromium/WebKit readinessを含め、設定後はGitHubのPR Checksで表示名が一致することを確認します。保護設定の変更と有効性確認はR6公開承認の前に別記録へ残します。
 
 ## 未実施・公開境界
 

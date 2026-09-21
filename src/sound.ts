@@ -215,6 +215,7 @@ export class SoundController {
     const serial = ++this.serial;
     let oscillator: OscillatorLike | null = null;
     let gain: GainLike | null = null;
+    let started = false;
     try {
       oscillator = context.createOscillator();
       gain = context.createGain();
@@ -228,6 +229,7 @@ export class SoundController {
       oscillator.connect(gain);
       gain.connect(context.destination);
       oscillator.start(startAt);
+      started = true;
       oscillator.stop(endAt);
       const timer = globalThis.setTimeout(() => {
         this.stopOne(serial);
@@ -240,6 +242,12 @@ export class SoundController {
       }
     } catch {
       // create/connect/start can fail on a suspended or restricted browser.
+      // If start succeeded but a scheduled stop failed, make one immediate
+      // stop attempt before disconnecting both nodes.  The active map is only
+      // populated after this setup block, so failed tones need local cleanup.
+      if (started) {
+        try { oscillator?.stop(); } catch { /* already stopped or unsupported */ }
+      }
       try { oscillator?.disconnect?.(); } catch { /* unsupported */ }
       try { gain?.disconnect?.(); } catch { /* unsupported */ }
     }
