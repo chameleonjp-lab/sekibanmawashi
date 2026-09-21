@@ -261,9 +261,11 @@ export function createSession(inputPuzzle: Puzzle): CoreSession {
   };
 }
 
-export function acceptRotation(session: CoreSession, type: MoveType, ring: number, timeMs: number): SessionMoveResult {
+export function acceptRotation(session: CoreSession, type: MoveType, ring: number, timeMs: number, actionNumber = session.history.length + 1): SessionMoveResult {
   if (session.status === "solved") return { accepted: false, session, reason: "solved" };
-  if (!Number.isInteger(timeMs) || !Number.isSafeInteger(timeMs) || timeMs < 0 || (session.history.at(-1)?.t ?? 0) > timeMs) {
+  if (!Number.isInteger(timeMs) || !Number.isSafeInteger(timeMs) || timeMs < 0 ||
+      !Number.isInteger(actionNumber) || !Number.isSafeInteger(actionNumber) || actionNumber < 1 ||
+      (session.history.at(-1)?.t ?? 0) > timeMs) {
     return { accepted: false, session, reason: "invalid-time" };
   }
   if (type !== "l" && type !== "r") return { accepted: false, session, reason: "bad-type" };
@@ -273,7 +275,7 @@ export function acceptRotation(session: CoreSession, type: MoveType, ring: numbe
   const action: HistoryAction = {
     puzzleId: session.puzzle.id,
     rulesetVersion: RULESET_VERSION,
-    n: session.history.length + 1,
+    n: actionNumber,
     t: timeMs,
     type,
     ring,

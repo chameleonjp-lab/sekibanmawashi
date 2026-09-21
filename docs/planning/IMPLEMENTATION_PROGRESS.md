@@ -2,7 +2,7 @@
 
 更新日: 2026-09-21 / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
-R3の基準main: `58be223d918d7f8af4dec72dc948f1f66e5b3f80`（GitHub PR #7マージ後）
+R4の基準main: `7bef5632092443401dffc9765a3687fc53a3d2b5`（GitHub PR #8マージ後）
 
 ## 段階
 
@@ -11,8 +11,8 @@ R3の基準main: `58be223d918d7f8af4dec72dc948f1f66e5b3f80`（GitHub PR #7マー
 | R0 計画 | GitHub PR #5でマージ済み | 文書段階。ゲーム完成・公開の許可とは扱わない |
 | R1 判定と基盤 | 実装・自動検査・独立レビュー済み、[PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)マージ済み | R2以降と一般公開の受入は未完了 |
 | R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)マージ済み | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
-| R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[Draft PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)でマージ待ち | iPhone・VoiceOver・実機2本指・人の試遊は未実施。5問以降と公開の受入は未完了 |
-| R4 5問・時計・保存 | 未着手 | 進行、中断、保存失敗、離脱復帰は未修正 |
+| R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
+| R4 5問・時計・保存 | [Draft PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)、実装・自動検査・独立レビュー済み、マージ待ち | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | 未着手 | 新版全体検査・独立レビュー・iPhone実機は未実施 |
 | R6 公開 | 保留 | 受入完了とユーザーの公開指示が必要 |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
@@ -45,6 +45,14 @@ Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test
 
 文字200%はルート文字サイズの模擬、複数指・キャンセルの一部はイベントによる模擬です。iPhone実機、VoiceOver、ロック復帰、人による操作感・難度の確認は未実施。5問の進行・正式時計・保存・結果・共有はR4以降です。R3のマージをゲーム全体の完成・公開許可とは扱いません。
 
+## R4の結果
+
+`feat/04-run-timer-storage` で5問進行、最初だけ3秒・問題間1秒、2種類の時計、30分割当保持、端末内保存、結果・共有を実装しました。実装・検査はLuna Max、独立レビューはSol Highが担当しました。[R4検査記録](../reviews/R4_VERIFICATION.md)に指摘と修正・再検査を記録しています。
+
+ローカルでは68単体テスト、型検査・lint・P01〜P09・buildが成功。停止後の復帰通知、時計逆行、保存例外、共有取消しと古い応答、上限後の参考結果などを修正・検査しました。実装検査対象 `8fd3fb627611d1789f35e9d96e280ed59d1fa6a3` の[CI 35636775163](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35636775163)で、Chromium/WebKitの54画面検査もすべて成功しました。失敗・skip・flaky各0。初回以降の検査初期化、小画面の時間欄、保存例外注入などを修正し、Sol Highが集計JSONと代表画像を確認してR4の自動検査範囲を承認しました。未解消のコードblockerはありません。実行時間枠だけを調整した `c7fea6709dd12d5776699a6525935560e23e622c` の[CI 35637796323](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35637796323)でも68単体・54画面検査と全基本検査が成功しました。記録追記後のCIはPRのChecksを参照してください。
+
+iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名・画像、音の実装、公開品質と公開手順はR5以降に残し、本番公開・ランキング関連・実験場側の変更は行っていません。R4をユーザーがマージした後、最新mainからR5へ進みます。
+
 ## 各PRで記入する内容
 
 段階、GitHub PR番号、基準main/作業コミット、対応ID、実装内容、検査コマンドと成功/失敗件数、環境、証跡、独立した観点からの指摘と再検査、未実施項目、実機有無、次の段階を追記します。自動検査・部分検査・実機確認を同じ欄で合算しません。
@@ -53,4 +61,4 @@ Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test
 
 R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認、正式な公開名・共有画像・実験場掲載方式は後続段階です。旧版のテスト成功をv2へ持ち越しません。
 
-R3のDraft PR #8をユーザーがマージした最新mainからR4へ進みます。こちらではマージと本番公開を行いません。
+R3のPR #8をユーザーがマージした最新mainからR4を開始しました。こちらではマージと本番公開を行いません。

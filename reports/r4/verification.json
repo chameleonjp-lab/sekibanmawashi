@@ -1,0 +1,141 @@
+{
+  "stage": "R4",
+  "baseCommit": "7bef5632092443401dffc9765a3687fc53a3d2b5",
+  "codeCommit": "8fd3fb627611d1789f35e9d96e280ed59d1fa6a3",
+  "codeTree": "1060182b7191eb840407d93b020ef8b2e9897ca2",
+  "pullRequest": 9,
+  "workflowRun": 35636775163,
+  "workflowJob": 106456014276,
+  "artifact": 10657676129,
+  "result": "passed-automated-r4-scope",
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "playwright": "1.63.0",
+    "vite": "7.3.6",
+    "browserHost": "GitHub Actions Ubuntu",
+    "browsers": [
+      "chromium",
+      "webkit"
+    ]
+  },
+  "unit": {
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0
+  },
+  "puzzles": {
+    "checks": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09"
+    ],
+    "passed": true
+  },
+  "e2e": {
+    "passed": 54,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "durationMs": 968359.124,
+    "r3RegressionTests": 26,
+    "r4Tests": 28
+  },
+  "layout": {
+    "viewports": [
+      [
+        320,
+        568
+      ],
+      [
+        375,
+        667
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        402,
+        874
+      ],
+      [
+        430,
+        932
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        1280,
+        720
+      ],
+      [
+        393,
+        852
+      ],
+      [
+        852,
+        393
+      ],
+      [
+        1440,
+        900
+      ]
+    ],
+    "textPercent": [
+      100,
+      200
+    ],
+    "screens": [
+      "home",
+      "game",
+      "result"
+    ],
+    "minimumHtmlButtonPx": 48,
+    "textScaleMethod": "root-font-size, not iPhone text zoom",
+    "verticalScrollAt200Percent": true,
+    "screenshotClock": "frozen test fixture, not real play time"
+  },
+  "independentReview": {
+    "role": "Sol High",
+    "unresolvedCodeBlockers": 0,
+    "automatedScopeAccepted": true
+  },
+  "localBrowserAssertionsExecuted": false,
+  "physicalIPhoneTested": false,
+  "voiceOverTested": false,
+  "physicalLockResumeTested": false,
+  "humanPlaytestCompleted": false,
+  "T05Complete": false,
+  "publicReleaseReady": false,
+  "published": false,
+  "budgetConfirmation": {
+    "commit": "c7fea6709dd12d5776699a6525935560e23e622c",
+    "tree": "ac56a7e2ff307cfb8cf78f1362ad84214dcd2443",
+    "workflowRun": 35637796323,
+    "workflowJob": 106459414502,
+    "artifact": 10657567470,
+    "onlyChangesSinceCodeCommit": [
+      "responsive-test timeout 240s to 360s",
+      "CI job timeout 20min to 25min",
+      "verification notes"
+    ],
+    "allBasicGatesPassed": true,
+    "unitPassed": 68,
+    "e2e": {
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 854817.852
+    }
+  }
+}

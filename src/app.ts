@@ -9,6 +9,10 @@ import { createDefaultSettings, setAudioEnabled, type UserSettings } from "./cor
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { validatePuzzle } from "./core/validation.ts";
 import { createBoardSvg } from "./board.ts";
+import poolManifest from "../content/pool-v2.json";
+import ticketManifest from "../content/tickets-v2.json";
+import { preparePoolArtifacts } from "./run.ts";
+import { renderHome } from "./run-ui.ts";
 import {
   canAcceptInput,
   InputController,
@@ -353,12 +357,26 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
 }
 
 export function boot(root: HTMLElement, definition: unknown): void {
-  const result = validatePuzzle(definition);
-  if (!result.ok) {
-    renderLoadError(root, result.issues);
+  const requestedId = typeof window === "undefined"
+    ? null
+    : new URLSearchParams(window.location.search).get("puzzleId");
+  // The explicit puzzleId path is a stable R3 inspection surface. The normal
+  // URL now opens the name/mode home screen and owns the five-question run.
+  if (requestedId !== null) {
+    const result = validatePuzzle(definition);
+    if (!result.ok) {
+      renderLoadError(root, result.issues);
+      return;
+    }
+    renderPuzzle(root, result.puzzle);
     return;
   }
-  renderPuzzle(root, result.puzzle);
+  const prepared = preparePoolArtifacts(puzzlePool, poolManifest, ticketManifest);
+  if (!prepared.ok) {
+    renderLoadError(root, prepared.issues);
+    return;
+  }
+  renderHome(root, prepared.prepared);
 }
 
 const root = document.querySelector<HTMLElement>("#app");

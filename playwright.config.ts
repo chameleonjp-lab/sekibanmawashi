@@ -9,7 +9,9 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: isCi,
   retries: isCi ? 1 : 0,
-  ...(isCi ? { workers: 1 } : {}),
+  // Specs use isolated browser contexts and output paths. Two workers keep
+  // the expanded R3/R4 suite within CI's limit without shortening game waits.
+  ...(isCi ? { workers: 2 } : {}),
   timeout: 120_000,
   expect: {
     timeout: 10_000,
