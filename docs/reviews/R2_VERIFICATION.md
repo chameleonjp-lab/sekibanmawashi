@@ -6,6 +6,8 @@
 
 [計画v2.0](../planning/IMPLEMENTATION_PLAN.md)のR2を対象とします。R1は[PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)でマージ済みです。作業ブランチは `feat/02-rotation-only-puzzles` です。
 
+提出先は[Draft PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)、実装・ローカル検証対象コミットは `897c3e5c709c9c83e88c169872f330ce07f972a2` です。PR番号は後続の文書コミットで追記しました。最終headのCI結果はPR本文とChecksに記録します。
+
 固定する内容は、常時発光・左右回転、12方向・3環、初級/中級/上級各30問、初級2・中級2・上級1の5問構成です。数値の初期案は生成前に設定へ保存し、変更が必要なら設定版と理由を残します。生成後の実測に合わせた合格範囲への変更はしません。
 
 初期案は `r2-config-v1` として、候補・問題・券の生成前に [設定保存コミット `9f31d2c`](https://github.com/chameleonjp-lab/sekibanmawashi/commit/9f31d2cac271929eb880f1cb49cd5a83fcb7f07e)へ保存しました。計画4.2の難度表、4.3のC式、4種類の±10%、各難度300候補、10万回抽選を維持しています。券の基準値は採用90問から算出し、券の生成前に別途保存します。
@@ -13,6 +15,8 @@
 ## 担当と境界
 
 実装と複雑な検査はLuna Max、独立レビューはSol Highが担当します。今回の画面成果物は検査用レポートです。ゲームの盤面と入力はR3、5問の進行・時計・保存はR4の範囲です。
+
+独立レビューは完了し、未解消の実装blockerはありません。
 
 旧 `prototype/` は変更しません。公開問題・問題庫・券と、解法・採否理由・統計などの検査資料を分けます。人による難しさや読みやすさの確認、iPhone実機確認は自動検査とは別で、未実施なら未確認と記録します。
 

@@ -10,7 +10,7 @@ R2の基準main: `bb229539c2727acba694653837698ed7220df4ca`（GitHub PR #6マー
 |---|---|---|
 | R0 計画 | GitHub PR #5でマージ済み | 文書段階。ゲーム完成・公開の許可とは扱わない |
 | R1 判定と基盤 | 実装・自動検査・独立レビュー済み、[PR #6](https://github.com/chameleonjp-lab/sekibanmawashi/pull/6)マージ済み | R2以降と一般公開の受入は未完了 |
-| R2 問題庫 | 実装・P01〜P09・独立レビュー済み、Draft PR作成段階 | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
+| R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[Draft PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)でマージ待ち | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
 | R3 盤面と入力 | 未着手 | 旧版の欠け・光路・入力の指摘は未修正 |
 | R4 5問・時計・保存 | 未着手 | 進行、中断、保存失敗、離脱復帰は未修正 |
 | R5 公開品質 | 未着手 | 新版全体検査・独立レビュー・iPhone実機は未実施 |
@@ -24,6 +24,8 @@ R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6�
 ## R2の結果
 
 `feat/02-rotation-only-puzzles` に90問・900組と検査を実装しました。実装・複雑な検査はLuna Max、独立レビューはSol Highが担当し、未解消の実装blockerはありません。詳細は[R2検査記録](../reviews/R2_VERIFICATION.md)と[HTMLレポート](../../reports/r2/report.html)を参照してください。
+
+GitHub PRは[Draft #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)、実装・ローカル検証対象コミットは `897c3e5c709c9c83e88c169872f330ce07f972a2` です。PR番号の記録はその後の文書コミットで追加しています。最終headのCI結果はPR本文とChecksを参照してください。
 
 難度・部品数・校正許容幅は生成前に保存した `r2-config-v1` を維持しました。初級313・中級330・上級385件を記録し、各300件の合格候補から30問ずつ採用しました。旧90問は全件再解析し、18問を再利用、72問を同難度の新問題へ1対1で差し替えました。
 

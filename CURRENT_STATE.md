@@ -4,7 +4,7 @@
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。PR #5の計画に従い、R1はPR #6でマージ済みです。R2の90問・900組は実装・必須検査・独立レビューを完了しました。**
+最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。PR #5の計画に従い、R1はPR #6でマージ済みです。R2の90問・900組は実装・必須検査・独立レビューを完了し、[Draft PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)でマージ待ちです。**
 
 R2の基準mainは `bb229539c2727acba694653837698ed7220df4ca`（GitHub PR #6マージ後）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
 
