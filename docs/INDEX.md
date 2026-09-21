@@ -1,50 +1,34 @@
 # 資料一覧
 
-このページは、資料の役割と現在使うべき版を示します。
-
-## 試作プレビュー
-
-| 資料 | 役割 |
-|---|---|
-| [`prototype/`](../prototype/) | プレイ可能な確認用。公式実装の完了条件は満たさない |
-| [`prototype/NOTES.md`](../prototype/NOTES.md) | 公式計画との差 |
-| [`prototype/UPLOAD_INVENTORY.md`](prototype/UPLOAD_INVENTORY.md) | 実装のアップロード確認。入れたもの・入れないもの |
-| [`prototype/screenshots/`](prototype/screenshots/) | 試作の画面記録。本番素材ではない |
+最新は**文書版2.0、常時発光・回転のみ**です。正式版の実装はこれからです。
 
 ## 現在使う資料
 
-| 資料 | 役割 |
+| 資料 | 用途 |
 |---|---|
-| [`CURRENT_STATE.md`](../CURRENT_STATE.md) | 現在の決定、進み具合、未決定事項 |
-| [`spec/CURRENT_GAME_SPEC.md`](spec/CURRENT_GAME_SPEC.md) | プレイヤーから見えるゲーム仕様 |
-| [`planning/IMPLEMENTATION_PLAN.md`](planning/IMPLEMENTATION_PLAN.md) | 文書版1.2。6件のPull Request、検査、公開、安全対策の正本 |
-| [`planning/PR_ROADMAP.md`](planning/PR_ROADMAP.md) | 6件の順序を短く確認する表 |
+| [現在の状態](../CURRENT_STATE.md) | 決定済みと未実装を分ける |
+| [現在のゲーム仕様](spec/CURRENT_GAME_SPEC.md) | プレイヤーから見た変更後の仕様 |
+| [対応実装計画書](planning/IMPLEMENTATION_PLAN.md) | 指摘対応、固定条件、初期検証案、検査、公開の境界 |
+| [PRロードマップ](planning/PR_ROADMAP.md) | R0〜R6と次へ進む条件 |
+| [進捗表](planning/IMPLEMENTATION_PROGRESS.md) | 実装・検査・受入の状況 |
+| [2026-09-21の決定](history/DECISION_2026-09-21.md) | 発光切替廃止と今回の依頼範囲 |
+| [レビュー基準記録](reviews/REVIEW_BASELINE_2026-09-21.md) | 旧版の確認結果と未確認の区別 |
 
-仕様が食い違う場合は、実装計画書の固定仕様を優先し、勝手にどちらかへ合わせず差異を報告します。
+## 試作とデータ例
 
-## データ形式の例
+[prototype/](../prototype/)は旧規則の比較資料です。[差分の案内](../prototype/NOTES.md)を確認し、正式版へ丸ごとコピーしません。[アップロード一覧](prototype/UPLOAD_INVENTORY.md)と[画面記録](prototype/screenshots/)は旧試作の記録で、本番素材ではありません。
 
-| 資料 | 注意 |
+[データ例の案内](examples/README.md)に示す既存JSONは発光切替のある旧形式です。文書PRでは書き換えず、R1で新版用の例を別途整備します。
+
+## 調査・履歴・デザイン
+
+[背景調査](research/original-logic-research.md)、[デザイン判断](design/DESIGN_HISTORY.md)、[以前の会話決定](history/CHAT_DECISIONS.md)、[資料マニフェスト](MATERIALS_MANIFEST.md)は参照資料です。画像や調査内容は現行の固定仕様を上書きしません。旧素材のマニフェスト値を今回検証済みとは扱いません。
+
+| 旧版 | 現在の扱い |
 |---|---|
-| [`examples/puzzle-definition.example.json`](examples/puzzle-definition.example.json) | 1問の形式例。本番問題ではありません |
-| [`examples/problem-pool.example.json`](examples/problem-pool.example.json) | 90問問題庫の形式例。本番問題庫ではありません |
+| [v1.0計画](archive/v1.0/IMPLEMENTATION_PLAN.md) | 3問・16方向などの初期案。履歴のみ |
+| [v1.1計画](archive/v1.1/IMPLEMENTATION_PLAN.md) | 5問・90問へ改定した旧版。履歴のみ |
+| [v1.1変更記録](archive/v1.1/CHANGELOG.md)・[案内](archive/v1.1/PACKAGE_README.md) | 旧資料配布時の記録 |
+| [v1.2計画](archive/v1.2/IMPLEMENTATION_PLAN.md)・[保存理由](archive/v1.2/README.md) | 変更前の原文を保存。切替・旧難度・ランキング工程は現行へ混ぜない |
 
-## 調査とデザイン
-
-| 資料 | 状態 |
-|---|---|
-| [`research/original-logic-research.md`](research/original-logic-research.md) | 背景調査。現在の仕様や実装名の正本ではありません |
-| [`design/DESIGN_HISTORY.md`](design/DESIGN_HISTORY.md) | 画面案の採否と注意点 |
-| [`history/CHAT_DECISIONS.md`](history/CHAT_DECISIONS.md) | 会話で変更した判断の順序 |
-| [`MATERIALS_MANIFEST.md`](MATERIALS_MANIFEST.md) | 保存資料のファイル名、容量、SHA-256 |
-
-## 旧版
-
-| 版 | 内容 | 現在の扱い |
-|---|---|---|
-| [`archive/v1.0/IMPLEMENTATION_PLAN.md`](archive/v1.0/IMPLEMENTATION_PLAN.md) | 3問、16方向、3〜4環の初期計画 | 不採用。履歴のみ |
-| [`archive/v1.1/IMPLEMENTATION_PLAN.md`](archive/v1.1/IMPLEMENTATION_PLAN.md) | 5問、12方向、3環、90問問題庫へ更新した計画 | v1.2の直前版 |
-| [`archive/v1.1/CHANGELOG.md`](archive/v1.1/CHANGELOG.md) | v1.1作成時の変更記録 | 履歴のみ |
-| [`archive/v1.1/PACKAGE_README.md`](archive/v1.1/PACKAGE_README.md) | 会話で渡した計画書一式の案内 | 履歴のみ |
-
-`docs/archive/`の内容を、最新計画へ自動的に混ぜないでください。
+現行仕様の優先順位は対応実装計画書に従います。
