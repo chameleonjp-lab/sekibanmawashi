@@ -1,0 +1,10 @@
+[
+  {
+    "leftId": "legacy-easy-11",
+    "rightId": "candidate-easy-00043",
+    "relation": "initial-angle-only",
+    "keptId": "legacy-easy-11",
+    "droppedId": "candidate-easy-00043",
+    "reason": "same normalized geometry or physical initial board"
+  }
+]

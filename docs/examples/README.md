@@ -6,4 +6,6 @@ R1の新しい形式例は [rotation-only-v2.json](../../content/examples/rotati
 
 [v2形式文書](../spec/ROTATION_ONLY_V2_FORMAT.md)に公開問題と左右だけの操作履歴の契約を記載しています。この形式例は判定・読込を確認するためのもので、R2で採用する90問や難度の合格実績ではありません。[旧検査からの移行記録](../history/R1_TEST_MIGRATION.md)も参照してください。
 
+R2の正式データは [90問](../../content/puzzles-v2.json)、[問題庫](../../content/pool-v2.json)、[900組の抽選券](../../content/tickets-v2.json)です。解法と採否理由は公開データへ混ぜず、[検査資料](../../reports/r2/)に分けます。結果と未確認は[R2検査記録](../reviews/R2_VERIFICATION.md)を参照してください。
+
 旧形式を新規則へ黙って読み替える処理は作りません。最新条件は[対応実装計画書](../planning/IMPLEMENTATION_PLAN.md)の第1・3・4節を使います。

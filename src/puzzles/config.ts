@@ -5,6 +5,7 @@ export const R2_CONFIG_VERSION = "r2-config-v1" as const;
 export const R2_GENERATOR_SEED = 20260919 as const;
 export const R2_CANDIDATES_PER_DIFFICULTY = 300 as const;
 export const R2_ADOPTED_PER_DIFFICULTY = 30 as const;
+export const R2_MAX_ATTEMPTS_PER_DIFFICULTY = 15_000 as const;
 
 export type DifficultyBand = {
   difficulty: Difficulty;
@@ -86,4 +87,3 @@ export function difficultyBand(difficulty: Difficulty): DifficultyBand {
   if (!band) throw new Error(`unknown difficulty ${difficulty}`);
   return band;
 }
-

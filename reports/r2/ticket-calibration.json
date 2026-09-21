@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "calibrationVersion": "r2-calibration-v1",
+  "poolVersion": "pool-v2",
+  "puzzleChecksum": "05c1cb2416d69bca",
+  "metric": "calibrationScore",
+  "means": {
+    "easy": 619.5,
+    "normal": 995,
+    "hard": 1395
+  },
+  "thresholds": {
+    "easyPair": {
+      "baseline": 1239,
+      "tolerance": 0.1,
+      "min": 1115.1000000000001,
+      "max": 1362.9
+    },
+    "normalPair": {
+      "baseline": 1990,
+      "tolerance": 0.1,
+      "min": 1791,
+      "max": 2189
+    },
+    "hardSingle": {
+      "baseline": 1395,
+      "tolerance": 0.1,
+      "min": 1255.5,
+      "max": 1534.5000000000002
+    },
+    "overall": {
+      "baseline": 4624,
+      "tolerance": 0.1,
+      "min": 4161.6,
+      "max": 5086.400000000001
+    }
+  },
+  "generatedBeforeTickets": true
+}

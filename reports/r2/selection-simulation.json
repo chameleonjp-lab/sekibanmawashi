@@ -1,0 +1,7125 @@
+{
+  "schemaVersion": 2,
+  "poolVersion": "pool-v2",
+  "seed": 1375865088,
+  "runs": 100000,
+  "randomMethod": "uint32-rejection-sampling",
+  "ticketExpected": 111.11111111111111,
+  "ticketFrequency": [
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 135,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 23.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 135,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 23.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 77,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -34.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 90,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -21.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 139,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 27.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 90,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -21.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 136,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 24.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 87,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -24.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 81,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -30.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 132,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 20.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 134,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 22.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 128,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 16.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 85,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -26.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 128,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 16.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 138,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 26.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 128,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 16.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 90,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -21.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 136,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 24.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 138,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 26.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 95,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -16.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 132,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 20.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 132,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 20.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 84,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -27.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 134,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 22.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 90,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -21.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 137,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 25.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 75,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -36.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 95,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -16.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 132,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 20.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 134,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 22.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 144,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 32.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 89,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -22.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 85,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -26.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 134,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 22.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 97,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -14.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 87,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -24.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 123,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 11.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 90,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -21.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 91,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -20.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 133,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 21.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 108,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -3.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 99,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -12.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 131,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 19.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 135,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 23.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 124,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 12.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 105,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -6.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 103,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -8.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 95,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -16.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 93,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -18.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 102,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -9.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 95,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -16.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 130,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 18.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 92,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -19.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 120,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 8.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 100,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -11.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 126,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 14.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 107,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -4.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 86,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -25.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 136,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 24.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 121,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 9.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 111,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -0.11111111111111427,
+      "within5Sigma": true
+    },
+    {
+      "observed": 125,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 13.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 110,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -1.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 119,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 7.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 112,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 0.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 118,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 6.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 127,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 15.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 104,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -7.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 116,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 4.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 101,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -10.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 122,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 10.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 128,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 16.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 98,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -13.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 95,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -16.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 117,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 5.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 109,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -2.1111111111111143,
+      "within5Sigma": true
+    },
+    {
+      "observed": 96,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -15.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 113,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 1.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 115,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 3.8888888888888857,
+      "within5Sigma": true
+    },
+    {
+      "observed": 94,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -17.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 106,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": -5.111111111111114,
+      "within5Sigma": true
+    },
+    {
+      "observed": 129,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 17.888888888888886,
+      "within5Sigma": true
+    },
+    {
+      "observed": 114,
+      "expected": 111.11111111111111,
+      "sigma": 10.535067836563163,
+      "deviation": 2.8888888888888857,
+      "within5Sigma": true
+    }
+  ],
+  "puzzleFrequency": [
+    {
+      "puzzleId": "easy-v2-01-355098e2a030861f",
+      "difficulty": "easy",
+      "observed": 6581,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -85.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-02-909205dcd99f818d",
+      "difficulty": "easy",
+      "observed": 6808,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 141.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-03-bd9a13470a8b8014",
+      "difficulty": "easy",
+      "observed": 6530,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -136.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-04-5a9e409a422ed84c",
+      "difficulty": "easy",
+      "observed": 6612,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -54.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-05-95101e0ffad1955c",
+      "difficulty": "easy",
+      "observed": 6571,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -95.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-06-f2d9bc464c83d979",
+      "difficulty": "easy",
+      "observed": 6673,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 6.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-07-1bf57db589684c9d",
+      "difficulty": "easy",
+      "observed": 6580,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -86.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-08-622d9bea96a7f059",
+      "difficulty": "easy",
+      "observed": 6708,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 41.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-09-1985cd0432a765c4",
+      "difficulty": "easy",
+      "observed": 6681,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 14.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-10-bce2a61ba2903fce",
+      "difficulty": "easy",
+      "observed": 6641,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -25.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-11-7fb6f7dec5499cf4",
+      "difficulty": "easy",
+      "observed": 6722,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 55.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-12-77773bc62ecea5ff",
+      "difficulty": "easy",
+      "observed": 6757,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 90.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-13-2c01a173e788835d",
+      "difficulty": "easy",
+      "observed": 6642,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -24.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-14-753135aadf2b8b48",
+      "difficulty": "easy",
+      "observed": 6731,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 64.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-15-b25c969dff8956d4",
+      "difficulty": "easy",
+      "observed": 6593,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -73.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-16-876fb9f083ef24a2",
+      "difficulty": "easy",
+      "observed": 6625,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -41.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-17-225edd73dd7d8e12",
+      "difficulty": "easy",
+      "observed": 6789,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 122.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-18-dd64e5ead8a11acf",
+      "difficulty": "easy",
+      "observed": 6572,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -94.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-19-d8dacb1676ca16ba",
+      "difficulty": "easy",
+      "observed": 6727,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 60.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-20-230b9cea63e16d90",
+      "difficulty": "easy",
+      "observed": 6740,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 73.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-21-be43747bd541067d",
+      "difficulty": "easy",
+      "observed": 6650,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -16.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-22-7e9c90624f9c37ce",
+      "difficulty": "easy",
+      "observed": 6714,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 47.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-23-6eadcd3c9bfe220f",
+      "difficulty": "easy",
+      "observed": 6562,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -104.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-24-3b91f98129086094",
+      "difficulty": "easy",
+      "observed": 6553,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -113.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-25-d99dcf18e1359402",
+      "difficulty": "easy",
+      "observed": 6822,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 155.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-26-10132a6e487a5334",
+      "difficulty": "easy",
+      "observed": 6711,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 44.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-27-bcff185c01a3f893",
+      "difficulty": "easy",
+      "observed": 6485,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -181.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-28-57c243bc54b3bab9",
+      "difficulty": "easy",
+      "observed": 6703,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 36.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-29-dbf22e326811ee3a",
+      "difficulty": "easy",
+      "observed": 6676,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 9.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "easy-v2-30-826b6a094f55979d",
+      "difficulty": "easy",
+      "observed": 6841,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 174.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-01-6a456160373b834c",
+      "difficulty": "normal",
+      "observed": 6599,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -67.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-02-f53b63b9f59a6e61",
+      "difficulty": "normal",
+      "observed": 6608,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -58.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-03-32263bb7a952e855",
+      "difficulty": "normal",
+      "observed": 6600,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -66.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-04-c6bcd6baeb1bcfa1",
+      "difficulty": "normal",
+      "observed": 6613,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -53.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-05-8db54ddba2c9beab",
+      "difficulty": "normal",
+      "observed": 6676,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 9.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-06-5828df96e3387ba1",
+      "difficulty": "normal",
+      "observed": 6720,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 53.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-07-b3f2dfb648251e89",
+      "difficulty": "normal",
+      "observed": 6781,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 114.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-08-bef26d9257f8b873",
+      "difficulty": "normal",
+      "observed": 6748,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 81.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-09-083b124f8b8e5db6",
+      "difficulty": "normal",
+      "observed": 6710,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 43.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-10-456ad40d4923a26c",
+      "difficulty": "normal",
+      "observed": 6524,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -142.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-11-c54fd6672024e59a",
+      "difficulty": "normal",
+      "observed": 6705,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 38.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-12-44edcd9a2cc0b162",
+      "difficulty": "normal",
+      "observed": 6640,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -26.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-13-fb5483202671d80a",
+      "difficulty": "normal",
+      "observed": 6662,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -4.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-14-8cda91c0301c6269",
+      "difficulty": "normal",
+      "observed": 6625,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -41.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-15-bd8f53461cb5e16e",
+      "difficulty": "normal",
+      "observed": 6819,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 152.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-16-5ad401de552a8846",
+      "difficulty": "normal",
+      "observed": 6649,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -17.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-17-274d3e26a195f6bd",
+      "difficulty": "normal",
+      "observed": 6677,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 10.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-18-e07369783dbadacf",
+      "difficulty": "normal",
+      "observed": 6814,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 147.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-19-b0abc0b647219c70",
+      "difficulty": "normal",
+      "observed": 6640,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -26.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-20-22d4abf38585286e",
+      "difficulty": "normal",
+      "observed": 6737,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 70.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-21-1c93f1305e3f98e6",
+      "difficulty": "normal",
+      "observed": 6637,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -29.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-22-268afb278fdd19d2",
+      "difficulty": "normal",
+      "observed": 6691,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 24.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-23-ce17a98724877ee8",
+      "difficulty": "normal",
+      "observed": 6768,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 101.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-24-9eaa654e8e1dda36",
+      "difficulty": "normal",
+      "observed": 6613,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -53.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-25-449a80f3616e59b3",
+      "difficulty": "normal",
+      "observed": 6699,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 32.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-26-8141deef9af546d0",
+      "difficulty": "normal",
+      "observed": 6603,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -63.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-27-8ca65ad17c09b276",
+      "difficulty": "normal",
+      "observed": 6701,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 34.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-28-7389523f3276be60",
+      "difficulty": "normal",
+      "observed": 6566,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -100.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-29-5060734f22d776f5",
+      "difficulty": "normal",
+      "observed": 6444,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": -222.66666666666697,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "normal-v2-30-e600145e6eb260ca",
+      "difficulty": "normal",
+      "observed": 6731,
+      "expected": 6666.666666666667,
+      "sigma": 78.88106377466156,
+      "deviation": 64.33333333333303,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-01-fe30d6ec2ec65e81",
+      "difficulty": "hard",
+      "observed": 3355,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 21.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-02-7e3bf8c1838d9760",
+      "difficulty": "hard",
+      "observed": 3410,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 76.66666666666652,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-03-0581abf7e83857ff",
+      "difficulty": "hard",
+      "observed": 3364,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 30.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-04-42d1694068543b1b",
+      "difficulty": "hard",
+      "observed": 3320,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -13.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-05-8e855d5f61e8cf4a",
+      "difficulty": "hard",
+      "observed": 3321,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -12.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-06-c6988e2e452bee4b",
+      "difficulty": "hard",
+      "observed": 3322,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -11.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-07-afe53f0579f287ca",
+      "difficulty": "hard",
+      "observed": 3344,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 10.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-08-2074abceb8464c5c",
+      "difficulty": "hard",
+      "observed": 3358,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 24.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-09-1ddc3f5cb88710e6",
+      "difficulty": "hard",
+      "observed": 3251,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -82.33333333333348,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-10-7d277384981ad373",
+      "difficulty": "hard",
+      "observed": 3327,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -6.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-11-aacb466f91e4df7a",
+      "difficulty": "hard",
+      "observed": 3431,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 97.66666666666652,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-12-a25f1da87593f923",
+      "difficulty": "hard",
+      "observed": 3282,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -51.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-13-0b5fee646a6be49d",
+      "difficulty": "hard",
+      "observed": 3358,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 24.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-14-4aa384f67e1894f3",
+      "difficulty": "hard",
+      "observed": 3305,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -28.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-15-a25f45025fe0afad",
+      "difficulty": "hard",
+      "observed": 3254,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -79.33333333333348,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-16-4636a7378a5d028c",
+      "difficulty": "hard",
+      "observed": 3335,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 1.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-17-a2416a6a33b1785b",
+      "difficulty": "hard",
+      "observed": 3409,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 75.66666666666652,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-18-f4082d8869e79dfa",
+      "difficulty": "hard",
+      "observed": 3270,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -63.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-19-39f9f1fb5573d810",
+      "difficulty": "hard",
+      "observed": 3397,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 63.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-20-4a5d953fe04ed2b0",
+      "difficulty": "hard",
+      "observed": 3339,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 5.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-21-f1d947cf649d0c91",
+      "difficulty": "hard",
+      "observed": 3366,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 32.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-22-052a34d9fdcbcf75",
+      "difficulty": "hard",
+      "observed": 3330,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -3.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-23-48fbaaf6d009e095",
+      "difficulty": "hard",
+      "observed": 3173,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -160.33333333333348,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-24-bd8cc3fd99c5c22c",
+      "difficulty": "hard",
+      "observed": 3413,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 79.66666666666652,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-25-b0c339013da5c302",
+      "difficulty": "hard",
+      "observed": 3197,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -136.33333333333348,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-26-91f1b5b57e40ed47",
+      "difficulty": "hard",
+      "observed": 3475,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 141.66666666666652,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-27-10961d64501076d1",
+      "difficulty": "hard",
+      "observed": 3318,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -15.333333333333485,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-28-c8cc4df8fc8cdbe7",
+      "difficulty": "hard",
+      "observed": 3382,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 48.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-29-c72cfa5c75d8df8f",
+      "difficulty": "hard",
+      "observed": 3383,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": 49.666666666666515,
+      "within5Sigma": true
+    },
+    {
+      "puzzleId": "hard-v2-30-48dc80e47381f3a8",
+      "difficulty": "hard",
+      "observed": 3211,
+      "expected": 3333.3333333333335,
+      "sigma": 56.76462121975467,
+      "deviation": -122.33333333333348,
+      "within5Sigma": true
+    }
+  ],
+  "passed": true,
+  "generatedAtPolicy": "deterministic-no-timestamp",
+  "note": "5σ is a bias-detection gate, not a proof of mathematical fairness."
+}
