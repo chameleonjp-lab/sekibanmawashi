@@ -1032,7 +1032,9 @@ test.describe("R4 run, timer, and storage acceptance", () => {
   });
 
   test("R4 responsive acceptance: home, game, and result have no horizontal overflow at every prescribed viewport", async ({ page }, testInfo: TestInfo) => {
-    test.setTimeout(240_000);
+    // Ten real five-question runs already take about 260s on CI WebKit.
+    // Keep each action/assertion bounded separately and budget the whole matrix.
+    test.setTimeout(360_000);
     for (const viewport of VIEWPORTS) {
       const representative = viewport.name === "w390-h844" || viewport.name === "w375-h667";
       const capture200 = viewport.name === "w390-h844";
