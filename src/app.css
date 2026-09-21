@@ -522,6 +522,42 @@ figcaption {
   text-align: center;
 }
 
+.fatal-error-screen {
+  gap: 0.8rem;
+}
+
+.fatal-error-screen p {
+  max-width: 34rem;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+.fatal-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.fatal-error-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7rem;
+  min-height: 3rem;
+  border: 1px solid #96958b;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  color: var(--parchment);
+  text-decoration: none;
+  background: #2f3031;
+}
+
+.fatal-error-actions a:focus-visible {
+  outline: 3px solid var(--beam);
+  outline-offset: 3px;
+}
+
 @media (max-width: 58rem) {
   .game-layout {
     grid-template-columns: minmax(0, 1fr);

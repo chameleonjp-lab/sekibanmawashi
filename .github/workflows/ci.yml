@@ -23,9 +23,11 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
+      - run: npm run licenses:check
       - run: npm test
       - run: npm run puzzles:test
       - run: npm run build
+      - run: npm run performance:r5
       - name: Install Playwright browsers
         run: npm run test:e2e:install
       - name: Run browser tests

@@ -1,0 +1,981 @@
+import { expect, test, type Locator, type Page, type TestInfo } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { analyzePuzzle } from "../src/puzzles/solver.ts";
+import type { MoveType, Puzzle } from "../src/core/types.ts";
+
+/**
+ * R5 deliberately exercises the app through its public routes.  The R3/R4
+ * specs own their historical acceptance checks; this file adds release
+ * readiness checks for browser diagnostics, the complete state matrix, and
+ * repeated runs.
+ */
+
+type Viewport = { name: string; width: number; height: number };
+type RunMode = "challenge" | "practice";
+type Move = { type: MoveType; ring: number };
+
+const VIEWPORTS: Viewport[] = [
+  { name: "w320-h568", width: 320, height: 568 },
+  { name: "w375-h667", width: 375, height: 667 },
+  { name: "w390-h844", width: 390, height: 844 },
+  { name: "w402-h874", width: 402, height: 874 },
+  { name: "w430-h932", width: 430, height: 932 },
+  { name: "w844-h390", width: 844, height: 390 },
+  { name: "w1280-h720", width: 1280, height: 720 },
+  { name: "w393-h852", width: 393, height: 852 },
+  { name: "w852-h393", width: 852, height: 393 },
+  { name: "w1440-h900", width: 1440, height: 900 },
+];
+
+const puzzles = JSON.parse(
+  readFileSync(resolve(process.cwd(), "content/puzzles-v2.json"), "utf8"),
+) as Puzzle[];
+// Keep the E2E runner independent of the runtime's TS module loader. This is
+// intentionally read from the single publication config instead of copying a
+// provisional URL into the test.
+const siteConfigSource = readFileSync(resolve(process.cwd(), "site.config.ts"), "utf8");
+const publicUrl = siteConfigSource.match(/publicUrl:\s*"([^"]+)"/u)?.[1];
+if (!publicUrl) throw new Error("site.config.ts must define publicUrl");
+const PUBLIC_GAME_URL = publicUrl;
+const SHARE_IMAGE_URL = siteConfigSource.match(/shareImageUrl:\s*"([^"]+)"/u)?.[1] ?? null;
+const puzzleById = new Map(puzzles.map((puzzle) => [puzzle.id, puzzle]));
+
+type BrowserDiagnostics = {
+  pageErrors: string[];
+  unhandledRejections: string[];
+  consoleErrors: string[];
+  failedRequests: string[];
+  sameOrigin4xx: string[];
+};
+
+type ResourceSnapshot = {
+  domNodes: number;
+  timeouts: number;
+  intervals: number;
+  listeners: number;
+  audioContexts: number;
+  audioNodes: number;
+  activeAudioNodes: number;
+  activeOscillators: number;
+  resources: number;
+};
+
+function home(page: Page): Locator {
+  return page.locator("[data-testid='home-screen']");
+}
+
+function game(page: Page): Locator {
+  return page.locator("[data-testid='game-screen']");
+}
+
+function result(page: Page): Locator {
+  return page.locator("[data-testid='result-screen']");
+}
+
+function visibleDialog(page: Page): Locator {
+  return page.locator("[role='dialog']:visible, dialog[open]").first();
+}
+
+function startButton(page: Page, mode: RunMode): Locator {
+  return page.locator(
+    `[data-testid='home-screen'] form[data-mode='${mode}'] button[data-action='start-${mode}']`,
+  );
+}
+
+function nameInput(page: Page): Locator {
+  return page.locator("[data-testid='home-screen'] [data-field='player-name']");
+}
+
+function rotateButton(page: Page, direction: MoveType): Locator {
+  return page.locator(
+    `[data-testid='game-screen'] [data-action='rotate-${direction === "l" ? "left" : "right"}']`,
+  );
+}
+
+function phase(page: Page, value: string): Locator {
+  return page.locator(`[data-testid='game-screen'][data-phase='${value}']`);
+}
+
+function installDiagnostics(page: Page): BrowserDiagnostics {
+  const diagnostics: BrowserDiagnostics = {
+    pageErrors: [],
+    unhandledRejections: [],
+    consoleErrors: [],
+    failedRequests: [],
+    sameOrigin4xx: [],
+  };
+  page.on("pageerror", (error) => diagnostics.pageErrors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") diagnostics.consoleErrors.push(message.text());
+  });
+  page.on("requestfailed", (request) => {
+    diagnostics.failedRequests.push(`${request.method()} ${request.url()} ${request.failure()?.errorText ?? "failed"}`);
+  });
+  page.on("response", (response) => {
+    if (response.status() < 400 || response.status() >= 500) return;
+    try {
+      const url = new URL(response.url());
+      if (url.origin === new URL("http://127.0.0.1:5173/").origin) {
+        diagnostics.sameOrigin4xx.push(`${response.status()} ${response.url()}`);
+      }
+    } catch {
+      // A malformed third-party URL cannot be a same-origin app response.
+    }
+  });
+  return diagnostics;
+}
+
+/** Install before the app boots so promise and DOM level errors are captured. */
+async function installUnhandledProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const state = window as Window & {
+      __r5Unhandled?: { rejections: string[]; errors: string[] };
+    };
+    state.__r5Unhandled = { rejections: [], errors: [] };
+    window.addEventListener("unhandledrejection", (event) => {
+      const reason = event.reason;
+      state.__r5Unhandled?.rejections.push(reason instanceof Error ? reason.message : String(reason));
+    });
+    window.addEventListener("error", (event) => {
+      if (event.error instanceof Error) state.__r5Unhandled?.errors.push(event.error.message);
+      else if (event.message) state.__r5Unhandled?.errors.push(event.message);
+    });
+  });
+}
+
+/**
+ * Observe resources that can survive a run.  The probe uses browser APIs
+ * rather than application internals: an implementation may replace its timer
+ * or audio implementation without weakening the acceptance condition.
+ */
+async function installResourceProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    type ListenerRecord = {
+      target: EventTarget;
+      type: string;
+      listener: EventListenerOrEventListenerObject;
+      active: boolean;
+    };
+    type Probe = {
+      timeoutIds: Set<number>;
+      intervalIds: Set<number>;
+      listeners: ListenerRecord[];
+      audioContexts: number;
+      audioNodes: number;
+      activeAudioNodes: number;
+      activeOscillators: number;
+    };
+    const probe: Probe = {
+      timeoutIds: new Set<number>(),
+      intervalIds: new Set<number>(),
+      listeners: [],
+      audioContexts: 0,
+      audioNodes: 0,
+      activeAudioNodes: 0,
+      activeOscillators: 0,
+    };
+    const target = window as Window & {
+      __r5ResourceSnapshot?: () => ResourceSnapshot;
+    };
+
+    const nativeSetTimeout = window.setTimeout.bind(window);
+    const nativeClearTimeout = window.clearTimeout.bind(window);
+    const nativeSetInterval = window.setInterval.bind(window);
+    const nativeClearInterval = window.clearInterval.bind(window);
+    window.setTimeout = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+      let id = 0;
+      const wrapped = (...callbackArgs: unknown[]): void => {
+        probe.timeoutIds.delete(id);
+        if (typeof handler === "function") handler(...callbackArgs);
+        else Function(handler)(...callbackArgs);
+      };
+      id = nativeSetTimeout(wrapped, timeout, ...args);
+      probe.timeoutIds.add(id);
+      return id;
+    }) as typeof window.setTimeout;
+    window.clearTimeout = ((id?: number): void => {
+      if (id !== undefined) probe.timeoutIds.delete(id);
+      nativeClearTimeout(id);
+    }) as typeof window.clearTimeout;
+    window.setInterval = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+      const id = nativeSetInterval(handler, timeout, ...args);
+      probe.intervalIds.add(id);
+      return id;
+    }) as typeof window.setInterval;
+    window.clearInterval = ((id?: number): void => {
+      if (id !== undefined) probe.intervalIds.delete(id);
+      nativeClearInterval(id);
+    }) as typeof window.clearInterval;
+
+    const nativeAdd = EventTarget.prototype.addEventListener;
+    const nativeRemove = EventTarget.prototype.removeEventListener;
+    EventTarget.prototype.addEventListener = function addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject | null,
+      options?: AddEventListenerOptions | boolean,
+    ): void {
+      if (listener) {
+        const record: ListenerRecord = { target: this, type, listener, active: true };
+        probe.listeners.push(record);
+        const signal = typeof options === "object" ? options.signal : undefined;
+        if (signal) {
+          // Use the native method to avoid counting this bookkeeping listener.
+          nativeAdd.call(signal, "abort", () => { record.active = false; }, { once: true });
+        }
+      }
+      nativeAdd.call(this, type, listener, options);
+    };
+    EventTarget.prototype.removeEventListener = function removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject | null,
+      options?: EventListenerOptions | boolean,
+    ): void {
+      for (const record of probe.listeners) {
+        if (record.target === this && record.type === type && record.listener === listener) record.active = false;
+      }
+      nativeRemove.call(this, type, listener, options);
+    };
+
+    const connected = (value: EventTarget): boolean => {
+      if (value === window || value === document) return true;
+      return !(value instanceof Node) || value.isConnected;
+    };
+    const wrapAudioContext = (context: any): void => {
+      probe.audioContexts += 1;
+      const nativeCreateOscillator = typeof context.createOscillator === "function"
+        ? context.createOscillator.bind(context) : null;
+      if (nativeCreateOscillator) {
+        context.createOscillator = (): any => {
+          const oscillator = nativeCreateOscillator();
+          probe.audioNodes += 1;
+          probe.activeAudioNodes += 1;
+          probe.activeOscillators += 1;
+          let stopped = false;
+          if (typeof oscillator.stop === "function") {
+            const nativeStop = oscillator.stop.bind(oscillator);
+            oscillator.stop = (when?: number): void => {
+              if (!stopped) {
+                stopped = true;
+                probe.activeOscillators = Math.max(0, probe.activeOscillators - 1);
+                probe.activeAudioNodes = Math.max(0, probe.activeAudioNodes - 2);
+              }
+              nativeStop(when);
+            };
+          }
+          return oscillator;
+        };
+      }
+      const nativeCreateGain = typeof context.createGain === "function"
+        ? context.createGain.bind(context) : null;
+      if (nativeCreateGain) {
+        context.createGain = (): any => {
+          probe.audioNodes += 1;
+          probe.activeAudioNodes += 1;
+          return nativeCreateGain();
+        };
+      }
+    };
+    const globals = window as Window & {
+      AudioContext?: new (...args: any[]) => any;
+      webkitAudioContext?: new (...args: any[]) => any;
+    };
+    for (const name of ["AudioContext", "webkitAudioContext"] as const) {
+      const Native = globals[name];
+      if (!Native) continue;
+      try {
+        class ProbedAudioContext extends Native {
+          constructor(...args: any[]) {
+            super(...args);
+            wrapAudioContext(this);
+          }
+        }
+        Object.defineProperty(globals, name, { configurable: true, writable: true, value: ProbedAudioContext });
+      } catch {
+        // Some WebKit builds expose a non-configurable constructor. The rest
+        // of the timer/listener probe remains valid in that engine.
+      }
+    }
+
+    target.__r5ResourceSnapshot = () => ({
+      domNodes: document.querySelectorAll("*").length,
+      timeouts: probe.timeoutIds.size,
+      intervals: probe.intervalIds.size,
+      listeners: probe.listeners.filter((entry) => entry.active && connected(entry.target)).length,
+      audioContexts: probe.audioContexts,
+      audioNodes: probe.audioNodes,
+      activeAudioNodes: probe.activeAudioNodes,
+      activeOscillators: probe.activeOscillators,
+      resources: performance.getEntriesByType("resource").length,
+    });
+  });
+}
+
+async function installPhaseProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const state = window as Window & { __r5PhaseHistory?: string[] };
+    state.__r5PhaseHistory = [];
+    const record = (element: Element): void => {
+      const value = element.getAttribute("data-phase")
+        ?? element.getAttribute("data-run-phase")
+        ?? element.getAttribute("data-screen");
+      if (value && state.__r5PhaseHistory?.at(-1) !== value) state.__r5PhaseHistory?.push(value);
+    };
+    const observer = new MutationObserver((records) => {
+      for (const entry of records) {
+        if (entry.type === "attributes" && entry.target instanceof Element) record(entry.target);
+        if (entry.type === "childList") {
+          for (const node of Array.from(entry.addedNodes)) {
+            if (!(node instanceof Element)) continue;
+            record(node);
+            for (const nested of Array.from(node.querySelectorAll("[data-phase], [data-run-phase], [data-screen]"))) record(nested);
+          }
+        }
+      }
+    });
+    observer.observe(document, {
+      subtree: true,
+      attributes: true,
+      childList: true,
+      attributeFilter: ["data-phase", "data-run-phase", "data-screen"],
+    });
+  });
+}
+
+async function readPhaseHistory(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const state = window as Window & { __r5PhaseHistory?: string[] };
+    return [...(state.__r5PhaseHistory ?? [])];
+  });
+}
+
+async function resetPhaseHistory(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const state = window as Window & { __r5PhaseHistory?: string[] };
+    state.__r5PhaseHistory = [];
+  });
+}
+
+async function installAudioHarness(page: Page, blockResume: boolean): Promise<void> {
+  await page.addInitScript((shouldBlock) => {
+    const harness = {
+      blockResume: shouldBlock,
+      resumes: 0,
+      starts: 0,
+      stops: 0,
+      frequencies: [] as number[],
+      resumeResolvers: [] as Array<() => void>,
+    };
+    class FakeAudioContext {
+      state = "suspended";
+      currentTime = 0;
+      destination = {};
+      resume = (): Promise<void> => {
+        harness.resumes += 1;
+        if (!harness.blockResume) {
+          this.state = "running";
+          return Promise.resolve();
+        }
+        this.state = "suspended";
+        return new Promise<void>((resolve) => {
+          harness.resumeResolvers.push(() => {
+            this.state = "running";
+            resolve();
+          });
+        });
+      };
+      createOscillator = (): Record<string, unknown> => {
+        const frequency = {
+          value: 0,
+          setValueAtTime: (value: number) => { harness.frequencies.push(value); frequency.value = value; },
+          exponentialRampToValueAtTime: (value: number) => { frequency.value = value; },
+        };
+        return {
+          type: "sine",
+          frequency,
+          connect: () => undefined,
+          start: () => { harness.starts += 1; },
+          stop: () => { harness.stops += 1; },
+        };
+      };
+      createGain = (): Record<string, unknown> => ({
+        gain: {
+          value: 0,
+          setValueAtTime: () => undefined,
+          exponentialRampToValueAtTime: () => undefined,
+        },
+        connect: () => undefined,
+      });
+    }
+    const globals = window as Window & { AudioContext?: unknown; webkitAudioContext?: unknown };
+    Object.defineProperty(globals, "AudioContext", { configurable: true, writable: true, value: FakeAudioContext });
+    Object.defineProperty(globals, "webkitAudioContext", { configurable: true, writable: true, value: FakeAudioContext });
+    (window as Window & {
+      __r5AudioHarness?: {
+        snapshot: () => { resumes: number; starts: number; stops: number; frequencies: number[] };
+        resolveResume: () => void;
+      };
+    }).__r5AudioHarness = {
+      snapshot: () => ({
+        resumes: harness.resumes,
+        starts: harness.starts,
+        stops: harness.stops,
+        frequencies: [...harness.frequencies],
+      }),
+      resolveResume: () => {
+        const pending = harness.resumeResolvers.splice(0);
+        for (const resolve of pending) resolve();
+        harness.blockResume = false;
+      },
+    };
+  }, blockResume);
+}
+
+async function readAudioHarness(page: Page): Promise<{ resumes: number; starts: number; stops: number; frequencies: number[] }> {
+  return page.evaluate(() => {
+    const state = window as Window & {
+      __r5AudioHarness?: { snapshot: () => { resumes: number; starts: number; stops: number; frequencies: number[] } };
+    };
+    return state.__r5AudioHarness?.snapshot() ?? { resumes: 0, starts: 0, stops: 0, frequencies: [] };
+  });
+}
+
+async function readResourceSnapshot(page: Page): Promise<ResourceSnapshot> {
+  return page.evaluate(() => {
+    const state = window as Window & { __r5ResourceSnapshot?: () => ResourceSnapshot };
+    return state.__r5ResourceSnapshot?.() ?? {
+      domNodes: document.querySelectorAll("*").length,
+      timeouts: -1,
+      intervals: -1,
+      listeners: -1,
+      audioContexts: -1,
+      audioNodes: -1,
+      activeAudioNodes: -1,
+      activeOscillators: -1,
+      resources: performance.getEntriesByType("resource").length,
+    };
+  });
+}
+
+async function readUnhandled(page: Page): Promise<{ rejections: string[]; errors: string[] }> {
+  return page.evaluate(() => {
+    const state = window as Window & { __r5Unhandled?: { rejections: string[]; errors: string[] } };
+    return {
+      rejections: [...(state.__r5Unhandled?.rejections ?? [])],
+      errors: [...(state.__r5Unhandled?.errors ?? [])],
+    };
+  });
+}
+
+async function assertNoBrowserDiagnostics(page: Page, diagnostics: BrowserDiagnostics): Promise<void> {
+  const unhandled = await readUnhandled(page);
+  diagnostics.unhandledRejections.push(...unhandled.rejections);
+  diagnostics.pageErrors.push(...unhandled.errors);
+  expect(diagnostics.pageErrors, "pageerror/window error").toEqual([]);
+  expect(diagnostics.unhandledRejections, "unhandled promise rejection").toEqual([]);
+  expect(diagnostics.consoleErrors, "console.error").toEqual([]);
+  expect(diagnostics.failedRequests, "requestfailed").toEqual([]);
+  expect(diagnostics.sameOrigin4xx, "same-origin 4xx/5xx").toEqual([]);
+}
+
+async function gotoHome(page: Page): Promise<void> {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { name: /石板回し|セキバンマワシ/ }).first()).toBeVisible();
+  await expect(home(page)).toBeVisible();
+  await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
+}
+
+async function begin(page: Page, mode: RunMode, name = "R5検査"): Promise<void> {
+  await nameInput(page).fill(name);
+  await startButton(page, mode).click();
+  await expect(game(page)).toBeVisible();
+}
+
+async function waitForPlaying(page: Page): Promise<void> {
+  await expect(game(page)).toHaveAttribute("data-phase", "playing", { timeout: 15_000 });
+}
+
+async function readPuzzleId(page: Page): Promise<string> {
+  const id = await game(page).getAttribute("data-puzzle-id");
+  if (!id) throw new Error("ゲーム画面が公開問題IDを提示していません");
+  const normalized = id.match(/[a-z]+-v2-[a-z0-9-]+/i)?.[0] ?? id.trim();
+  if (!puzzleById.has(normalized)) throw new Error(`公開問題ID ${normalized} は問題庫にありません`);
+  return normalized;
+}
+
+async function readDifficulty(page: Page): Promise<string> {
+  const field = page.locator("[data-testid='game-screen'] [data-field='difficulty']");
+  const source = `${await field.getAttribute("data-difficulty") ?? ""} ${await field.textContent() ?? ""}`;
+  if (/easy|初級/i.test(source)) return "easy";
+  if (/normal|medium|中級/i.test(source)) return "normal";
+  if (/hard|上級/i.test(source)) return "hard";
+  return source.trim();
+}
+
+async function solveVisibleQuestion(page: Page): Promise<{ id: string; moves: number }> {
+  await waitForPlaying(page);
+  const id = await readPuzzleId(page);
+  const puzzle = puzzleById.get(id);
+  if (!puzzle) throw new Error(`問題 ${id} の検査用定義がありません`);
+  const analysis = analyzePuzzle(puzzle);
+  expect(analysis.truncated, `問題 ${id} の解探索が打ち切られていない`).toBe(false);
+  expect(analysis.shortestMoves, `問題 ${id} に代表解がある`).not.toBeNull();
+  const solution = analysis.representativeSolution as Move[];
+  const moves = page.locator("[data-testid='game-screen'] [data-field='move-count']");
+  let expectedMoves = Number(await moves.getAttribute("data-moves") ?? "0");
+  expect(Number.isSafeInteger(expectedMoves)).toBe(true);
+  for (const move of solution) {
+    const ring = page.locator(`[data-testid='game-screen'] [data-action='select-ring'][data-ring='${move.ring}']`);
+    await expect(ring).toBeVisible();
+    await ring.click();
+    await rotateButton(page, move.type).click();
+    expectedMoves += 1;
+    await expect(moves).toHaveAttribute("data-moves", String(expectedMoves));
+  }
+  await expect.poll(async () => {
+    if (await result(page).isVisible().catch(() => false)) return "result";
+    const current = await game(page).getAttribute("data-phase");
+    return current === "intermission" || current === "solved" || current === "success" ? "success" : current ?? "unknown";
+  }, { timeout: 12_000 }).toMatch(/result|success/);
+  return { id, moves: expectedMoves };
+}
+
+async function runChallenge(page: Page, name = "R5検査"): Promise<{ ids: string[]; difficulties: string[]; totalMoves: number }> {
+  await begin(page, "challenge", name);
+  await expect(phase(page, "countdown")).toBeVisible();
+  const ids: string[] = [];
+  const difficulties: string[] = [];
+  let totalMoves = 0;
+  for (let index = 0; index < 5; index += 1) {
+    await waitForPlaying(page);
+    ids.push(await readPuzzleId(page));
+    difficulties.push(await readDifficulty(page));
+    const solved = await solveVisibleQuestion(page);
+    totalMoves += solved.moves;
+    if (index < 4) await expect(phase(page, "intermission")).toBeVisible();
+  }
+  await expect(result(page)).toBeVisible();
+  await expect(page.locator("[data-result-question]")).toHaveCount(5);
+  const resultIds = await page.locator("[data-result-question]").evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute("data-puzzle-id")),
+  );
+  expect(resultIds).toEqual(ids);
+  expect(new Set(ids).size, "one five-question run must not repeat a puzzle").toBe(5);
+  expect(difficulties).toEqual(["easy", "easy", "normal", "normal", "hard"]);
+  return { ids, difficulties, totalMoves };
+}
+
+async function assertNoHorizontalOverflow(page: Page): Promise<void> {
+  const metrics = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(metrics.scrollWidth - metrics.clientWidth, "horizontal overflow").toBeLessThanOrEqual(1);
+}
+
+async function assertHitTargets(page: Page): Promise<void> {
+  for (const control of await page.locator("button:visible").all()) {
+    const box = await control.boundingBox();
+    expect(box, "visible button has a hit target").not.toBeNull();
+    if (!box) continue;
+    expect(box.width, "button width").toBeGreaterThanOrEqual(48);
+    expect(box.height, "button height").toBeGreaterThanOrEqual(48);
+  }
+}
+
+async function assertButtonsReachable(page: Page, viewport: Viewport): Promise<void> {
+  for (const control of await page.locator("button:visible").all()) {
+    await control.scrollIntoViewIfNeeded();
+    const box = await control.boundingBox();
+    expect(box, "button remains reachable at every text scale").not.toBeNull();
+    if (!box) continue;
+    expect(box.x).toBeGreaterThanOrEqual(-1);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(box.y).toBeGreaterThanOrEqual(-1);
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+  }
+}
+
+async function assertBoardVisible(page: Page): Promise<void> {
+  const board = page.locator("[data-testid='game-screen'] svg.stone-board");
+  await expect(board).toBeVisible();
+  const box = await board.boundingBox();
+  expect(box, "board bounding box").not.toBeNull();
+  if (!box) return;
+  expect(box.width).toBeGreaterThan(0);
+  expect(box.height).toBeGreaterThan(0);
+}
+
+async function assertNonColorControls(page: Page): Promise<void> {
+  await expect(page.locator("[data-testid='game-screen'] [data-action='select-ring']")).toHaveCount(3);
+  await expect(page.getByRole("button", { name: /左へ回す/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /右へ回す/ })).toBeVisible();
+  await expect(page.locator("[data-testid='game-screen'] figcaption")).toContainText(/受光紋|点灯/);
+}
+
+async function assertNoButtonOverlap(page: Page): Promise<void> {
+  const boxes: Array<{ x: number; y: number; width: number; height: number }> = [];
+  for (const control of await page.locator("button:visible").all()) {
+    const box = await control.boundingBox();
+    if (box) boxes.push(box);
+  }
+  for (let left = 0; left < boxes.length; left += 1) {
+    for (let right = left + 1; right < boxes.length; right += 1) {
+      const a = boxes[left];
+      const b = boxes[right];
+      const width = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));
+      const height = Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y));
+      expect(width * height, "visible buttons do not overlap").toBe(0);
+    }
+  }
+}
+
+async function applyMonochrome(page: Page, enabled: boolean): Promise<void> {
+  await page.evaluate((active) => {
+    document.documentElement.classList.toggle("r5-monochrome", active);
+    let style = document.getElementById("r5-monochrome-style");
+    if (active && !style) {
+      style = document.createElement("style");
+      style.id = "r5-monochrome-style";
+      style.textContent = "html.r5-monochrome, html.r5-monochrome * { filter: grayscale(1) !important; }";
+      document.head.append(style);
+    }
+  }, enabled);
+}
+
+async function setFontScale(page: Page, scale: 100 | 200): Promise<void> {
+  await page.evaluate((value) => { document.documentElement.style.fontSize = `${value}%`; }, scale);
+}
+
+async function closeAbort(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "中断" }).first().click();
+  await expect(visibleDialog(page)).toBeVisible();
+  await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+  await expect(home(page)).toBeVisible();
+  await page.waitForTimeout(1_250);
+  await expect(game(page)).toHaveCount(0);
+}
+
+test.describe("R5 release readiness", () => {
+  test("Q02/U04: the normal app flow has metadata and no browser diagnostics", async ({ page }) => {
+    test.setTimeout(180_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await gotoHome(page);
+
+    const metadata = await page.evaluate(() => ({
+      lang: document.documentElement.lang,
+      title: document.title,
+      description: document.querySelector<HTMLMetaElement>("meta[name='description']")?.content ?? "",
+      icon: document.querySelector<HTMLLinkElement>("link[rel~='icon']")?.href ?? "",
+      ogUrl: document.querySelector<HTMLMetaElement>("meta[property='og:url']")?.content ?? "",
+      ogImage: document.querySelector<HTMLMetaElement>("meta[property='og:image']")?.content ?? "",
+      heading: document.querySelector("[data-testid='home-screen'] h1")?.textContent?.trim() ?? "",
+    }));
+    expect(metadata.lang).toBe("ja");
+    expect(metadata.title.length).toBeGreaterThan(0);
+    expect(metadata.description.length).toBeGreaterThan(0);
+    expect(metadata.heading.length).toBeGreaterThan(0);
+    expect(metadata.icon, "a public page needs a resolvable favicon").toMatch(/^https?:\/\//);
+    expect(metadata.ogUrl, "share URL metadata").toBe(PUBLIC_GAME_URL);
+    if (SHARE_IMAGE_URL) expect(metadata.ogImage).toBe(SHARE_IMAGE_URL);
+
+    // Exercise the home share route with both browser sharing APIs disabled;
+    // this reaches the selectable fallback and proves its URL is current.
+    await page.evaluate(() => {
+      const nav = navigator as Navigator & { share?: unknown; clipboard?: unknown };
+      Object.defineProperty(nav, "share", { configurable: true, value: undefined });
+      Object.defineProperty(nav, "clipboard", { configurable: true, value: undefined });
+    });
+    await page.locator("[data-action='home-share']").click();
+    const shareText = page.locator("[data-home-share-area] [data-share-text], [data-home-share-area] textarea").first();
+    await expect(shareText).toBeVisible();
+    const shared = await shareText.evaluate((element) => element instanceof HTMLTextAreaElement ? element.value : element.textContent ?? "");
+    expect(shared).toContain(PUBLIC_GAME_URL);
+
+    await page.locator("[data-action='home-share']").press("Escape").catch(() => undefined);
+    await runChallenge(page, "診断検査");
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("R5 state matrix: all required screens stay usable at every viewport and at 200% text", async ({ page }, testInfo: TestInfo) => {
+    test.setTimeout(720_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+
+    for (const viewport of VIEWPORTS) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await gotoHome(page);
+      await applyMonochrome(page, true);
+      await setFontScale(page, 100);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-home.png`), fullPage: true });
+
+      await setFontScale(page, 200);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertButtonsReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-home-200.png`), fullPage: true });
+      await setFontScale(page, 100);
+
+      // Countdown and explanation are checked before the first question is
+      // accepted. The modal must inert the underlying board and controls.
+      await begin(page, "challenge", "状態確認");
+      await expect(phase(page, "countdown")).toBeVisible();
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-countdown.png`), fullPage: true });
+      await page.getByRole("button", { name: /遊び方|説明/ }).first().click();
+      await expect(visibleDialog(page)).toBeVisible();
+      await expect(page.locator("[data-game-content]")).toHaveAttribute("aria-hidden", "true");
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-help.png`), fullPage: true });
+      await visibleDialog(page).getByRole("button", { name: /盤面へ戻る|閉じる|続ける/ }).click();
+      await expect(visibleDialog(page)).toHaveCount(0);
+      await waitForPlaying(page);
+      await assertBoardVisible(page);
+      await assertNonColorControls(page);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertNoButtonOverlap(page);
+
+      await setFontScale(page, 200);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertNonColorControls(page);
+      await assertButtonsReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-game-200.png`), fullPage: true });
+      await setFontScale(page, 100);
+
+      await page.getByRole("button", { name: "中断" }).first().click();
+      await expect(visibleDialog(page)).toBeVisible();
+      await expect(page.locator("[data-game-content]")).toHaveAttribute("aria-hidden", "true");
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-abort.png`), fullPage: true });
+      await visibleDialog(page).getByRole("button", { name: "続ける" }).click();
+      await expect(visibleDialog(page)).toHaveCount(0);
+
+      // A successful question is a distinct intermission state. Abort it
+      // after observing the state so scheduled transitions are also covered.
+      await solveVisibleQuestion(page);
+      await expect(phase(page, "intermission")).toBeVisible();
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-success.png`), fullPage: true });
+      await closeAbort(page);
+
+      // Run a fresh complete challenge so result layout is measured at every
+      // prescribed size, including both landscape and desktop dimensions.
+      await setFontScale(page, 100);
+      await applyMonochrome(page, true);
+      await runChallenge(page, "結果確認");
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertNoButtonOverlap(page);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-result.png`), fullPage: true });
+      await setFontScale(page, 200);
+      await assertNoHorizontalOverflow(page);
+      await assertHitTargets(page);
+      await assertButtonsReachable(page, viewport);
+      await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-result-200.png`), fullPage: true });
+      await setFontScale(page, 100);
+      await applyMonochrome(page, false);
+      await page.locator("[data-action='result-home']").click();
+      await expect(home(page)).toBeVisible();
+    }
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("load and save failures preserve usable recovery screens", async ({ page }) => {
+    test.setTimeout(180_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await page.addInitScript(() => {
+      const originalSet = Storage.prototype.setItem;
+      const state = window as Window & { __r5FailWrites?: boolean; __r5EnableWriteFailure?: () => void };
+      state.__r5FailWrites = false;
+      state.__r5EnableWriteFailure = () => { state.__r5FailWrites = true; };
+      Storage.prototype.setItem = function setItem(key: string, value: string): void {
+        if (state.__r5FailWrites && /(sekibanmawashi|run|save|record|assignment|best)/i.test(key)) {
+          throw new Error("R5 synthetic storage write failure");
+        }
+        originalSet.call(this, key, value);
+      };
+    });
+
+    await page.goto("/?puzzleId=r5-missing-puzzle", { waitUntil: "networkidle" });
+    const loadError = page.locator("[data-testid='load-error'], .load-error-screen, [role='alert']").first();
+    await expect(loadError).toBeVisible();
+    await expect(loadError).toContainText(/読み込めません|確認できません/);
+    await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
+
+    await gotoHome(page);
+    await begin(page, "challenge", "保存失敗確認");
+    await page.evaluate(() => (window as Window & { __r5EnableWriteFailure?: () => void }).__r5EnableWriteFailure?.());
+    await runChallengeAfterBegin(page);
+    await expect(result(page)).toBeVisible();
+    await expect(page.getByText(/保存できません|参考記録/).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /共有|シェア/ }).first()).toBeVisible();
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("U05: audio off and audio resume failure never block a real run", async ({ page }) => {
+    test.setTimeout(180_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await page.addInitScript(() => {
+      const globals = window as Window & { AudioContext?: unknown; webkitAudioContext?: unknown };
+      const blocked = function blockedAudioContext(): never {
+        throw new Error("R5 synthetic audio resume failure");
+      };
+      Object.defineProperty(globals, "AudioContext", { configurable: true, value: blocked });
+      Object.defineProperty(globals, "webkitAudioContext", { configurable: true, value: blocked });
+    });
+    await gotoHome(page);
+    const audio = page.locator("[data-testid='home-screen'] [data-action='audio']");
+    await expect(audio).toBeChecked();
+    // Keep the setting ON for the first run so a real AudioContext resume
+    // attempt is covered. The second run verifies the persisted OFF path.
+    await runChallenge(page, "音声再開失敗");
+    await expect(result(page)).toBeVisible();
+    await page.locator("[data-action='result-home']").click();
+    await expect(home(page)).toBeVisible();
+    const audioAfterRecovery = page.locator("[data-testid='home-screen'] [data-action='audio']");
+    await audioAfterRecovery.uncheck();
+    await expect(audioAfterRecovery).not.toBeChecked();
+    await runChallenge(page, "無音検査");
+    await expect(result(page)).toBeVisible();
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("U05: a delayed audio resume cannot play after abort, and action sounds remain distinct", async ({ page }) => {
+    test.setTimeout(240_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await installAudioHarness(page, true);
+    await gotoHome(page);
+    await begin(page, "challenge", "遅延音検査");
+    await expect(phase(page, "countdown")).toBeVisible();
+    await page.getByRole("button", { name: "中断" }).first().click();
+    await expect(visibleDialog(page)).toBeVisible();
+    await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+    await expect(home(page)).toBeVisible();
+    await page.evaluate(() => {
+      try { Object.defineProperty(document, "hidden", { configurable: true, value: true }); } catch { /* WebKit may seal it. */ }
+      document.dispatchEvent(new Event("visibilitychange"));
+      window.dispatchEvent(new Event("pagehide"));
+      try { Object.defineProperty(document, "hidden", { configurable: true, value: false }); } catch { /* WebKit may seal it. */ }
+      document.dispatchEvent(new Event("visibilitychange"));
+      window.dispatchEvent(new Event("pageshow"));
+      (window as Window & { __r5AudioHarness?: { resolveResume: () => void } }).__r5AudioHarness?.resolveResume();
+    });
+    await page.waitForTimeout(350);
+    expect((await readAudioHarness(page)).starts, "disposed run must not emit delayed audio").toBe(0);
+
+    // Resolve the harness for the next home render and exercise every
+    // semantic sound path that is observable without depending on a device.
+    await page.evaluate(() => (window as Window & { __r5AudioHarness?: { resolveResume: () => void } }).__r5AudioHarness?.resolveResume());
+    await nameInput(page).fill("   ");
+    await startButton(page, "challenge").click();
+    await expect(page.locator("[data-field='name-error'], [role='alert']").first()).toBeVisible();
+    await runChallenge(page, "音区別検査");
+    await page.waitForTimeout(350);
+    const audio = await readAudioHarness(page);
+    expect(audio.resumes).toBeGreaterThan(0);
+    expect(audio.starts).toBeGreaterThan(0);
+    // Frequencies are the harness' stable representation of each action's
+    // effect. They also ensure the implementation does not collapse all
+    // actions into one generic click sound.
+    expect(new Set(audio.frequencies).size).toBeGreaterThanOrEqual(4);
+    expect(audio.frequencies).toContain(420); // start
+    expect(audio.frequencies).toContain(190); // rotate
+    expect(audio.frequencies).toContain(280); // select
+    expect(audio.frequencies).toContain(520); // light
+    expect(audio.frequencies).toContain(760); // success
+    expect(audio.frequencies).toContain(120); // validation/error
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+
+  test("Q03: twenty consecutive five-question challenges have no duplicate progress, best regression, or persistent resource growth", async ({ page }) => {
+    test.setTimeout(1_200_000);
+    const diagnostics = installDiagnostics(page);
+    await installUnhandledProbe(page);
+    await installResourceProbe(page);
+    await installPhaseProbe(page);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await gotoHome(page);
+    const audio = page.locator("[data-testid='home-screen'] [data-action='audio']");
+    // Audio remains ON here on purpose. Q03 must observe context/node
+    // creation and cleanup in addition to the no-audio path covered by U05.
+    await expect(audio).toBeChecked();
+    await page.waitForTimeout(350);
+    const baseline = await readResourceSnapshot(page);
+    let previous = baseline;
+    let bestMs: number | null = null;
+
+    for (let run = 0; run < 20; run += 1) {
+      const challenge = await runChallenge(page, `連続検査${run + 1}`);
+      expect(challenge.ids).toHaveLength(5);
+      expect(new Set(challenge.ids).size).toBe(5);
+      expect(challenge.totalMoves).toBeGreaterThan(0);
+      const history = await readPhaseHistory(page);
+      expect(history.filter((value) => value === "countdown"), "one preparation countdown").toHaveLength(1);
+      expect(history.filter((value) => value === "intermission"), "four success boundaries").toHaveLength(4);
+      expect(history.filter((value) => value === "result"), "one final result transition").toHaveLength(1);
+      const resultRows = page.locator("[data-testid='result-screen'] [data-result-question]");
+      await expect(resultRows).toHaveCount(5);
+      const rowNumbers = await resultRows.evaluateAll((elements) => elements.map((element) => {
+        const match = element.textContent?.match(/問題\s*(\d+)/u);
+        return Number(match?.[1] ?? NaN);
+      }));
+      expect(rowNumbers).toEqual([1, 2, 3, 4, 5]);
+      const total = Number(await page.locator("[data-total-time]").getAttribute("data-total-time-ms"));
+      expect(Number.isSafeInteger(total)).toBe(true);
+
+      const homeAction = page.locator("[data-action='result-home']");
+      await expect(homeAction).toBeVisible();
+      await homeAction.click();
+      await expect(home(page)).toBeVisible();
+      await resetPhaseHistory(page);
+      const best = page.locator("[data-testid='home-screen'] [data-best-time]").first();
+      await expect(best).toBeVisible();
+      const bestAttribute = await best.getAttribute("data-best-time-ms");
+      const bestRaw = bestAttribute ?? await best.textContent() ?? "";
+      const currentBest = bestAttribute === null
+        ? Number(bestRaw.match(/\d+(?:\.\d+)?/u)?.[0] ?? NaN) * 1_000
+        : Number(bestRaw);
+      expect(Number.isFinite(currentBest) && currentBest >= 0).toBe(true);
+      if (bestMs !== null) expect(currentBest, "a slower run cannot move self-best backwards").toBeLessThanOrEqual(bestMs);
+      bestMs = bestMs === null ? currentBest : Math.min(bestMs, currentBest);
+
+      await page.waitForTimeout(350);
+      const snapshot = await readResourceSnapshot(page);
+      // Intervals and listener/timer ownership must return to the home-state
+      // baseline. Small bounded slack covers browser/framework listeners that
+      // are attached lazily once on the first run.
+      expect(snapshot.intervals).toBeLessThanOrEqual(baseline.intervals);
+      expect(snapshot.timeouts).toBeLessThanOrEqual(baseline.timeouts + 2);
+      expect(snapshot.listeners).toBeLessThanOrEqual(baseline.listeners + 12);
+      expect(snapshot.audioContexts).toBeLessThanOrEqual(baseline.audioContexts + 1);
+      expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(baseline.activeAudioNodes + 2);
+      expect(snapshot.activeOscillators).toBeLessThanOrEqual(1);
+      expect(snapshot.domNodes).toBeLessThanOrEqual(baseline.domNodes + 28);
+      expect(snapshot.resources).toBeLessThanOrEqual(baseline.resources + 3);
+      // Compare consecutive settled snapshots as well, which catches a slow
+      // monotonic leak that could hide behind one large initial allowance.
+      expect(snapshot.domNodes).toBeLessThanOrEqual(previous.domNodes + 8);
+      expect(snapshot.listeners).toBeLessThanOrEqual(previous.listeners + 4);
+      expect(snapshot.timeouts).toBeLessThanOrEqual(previous.timeouts + 1);
+      expect(snapshot.activeOscillators).toBeLessThanOrEqual(previous.activeOscillators + 1);
+      expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(previous.activeAudioNodes + 2);
+      previous = snapshot;
+    }
+    await assertNoBrowserDiagnostics(page, diagnostics);
+  });
+});
+
+/** Finish a run whose home start was already used to inject the save failure. */
+async function runChallengeAfterBegin(page: Page): Promise<void> {
+  for (let index = 0; index < 5; index += 1) {
+    await waitForPlaying(page);
+    await solveVisibleQuestion(page);
+    if (index < 4) await expect(phase(page, "intermission")).toBeVisible();
+  }
+  await expect(result(page)).toBeVisible();
+}

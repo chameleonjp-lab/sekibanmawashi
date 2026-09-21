@@ -18,9 +18,11 @@ Nodeの版は `.nvmrc` に固定しています。リポジトリ直下で次を
 npm ci
 npm run typecheck
 npm run lint
+npm run licenses:check
 npm test
 npm run puzzles:test
 npm run build
+npm run performance:r5
 npm run test:e2e:install
 npm run test:e2e
 ```

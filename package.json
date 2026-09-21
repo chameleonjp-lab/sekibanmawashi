@@ -13,6 +13,8 @@
     "build": "npm run typecheck && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/lint.mjs",
+    "licenses:check": "node scripts/check-licenses.mjs",
+    "performance:r5": "node --experimental-strip-types scripts/r5-performance.mjs",
     "test": "node --experimental-strip-types --test \"src/**/*.test.ts\" \"tools/**/*.test.ts\"",
     "puzzles:generate": "node --experimental-strip-types tools/r2.ts puzzles:generate",
     "puzzles:validate": "node --experimental-strip-types tools/r2.ts puzzles:validate",

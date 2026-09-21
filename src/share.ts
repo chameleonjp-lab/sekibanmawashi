@@ -1,10 +1,7 @@
-import { GAME_TITLE } from "./core/index.ts";
+import { GAME_TITLE, PUBLIC_GAME_URL } from "./core/index.ts";
 import { formatTimeMs, type FinalRunResult } from "./run.ts";
 
-/** Planned v2 URL; publication remains a later, explicitly approved stage. */
-export const PUBLIC_GAME_URL = "https://chameleonjp-lab.github.io/sekibanmawashi/";
-/** The experiment home, not the old ranking endpoint. */
-export const LAB_URL = "https://chameleonjp-lab.github.io/chameleonjp_lab/";
+export { LAB_URL, PUBLIC_GAME_URL } from "./core/index.ts";
 
 export type SharePayload = {
   title?: string;

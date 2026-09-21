@@ -4,7 +4,7 @@
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)でマージ済みです。R4（5問進行・時計・保存・結果・共有）は実装・自動検査・独立レビュー済みで、Draft PR #9のマージ待ちです。**
+最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)でマージ済みです。R4（5問進行・時計・保存・結果・共有）は実装・自動検査・独立レビュー済みで、Draft PR #9のマージ待ちです。R5（公開品質）は `chore/05-release-readiness` で実装・検査中です。**
 
 R4の基準mainは `7bef5632092443401dffc9765a3687fc53a3d2b5`（GitHub PR #8マージ後）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
 
@@ -32,7 +32,7 @@ R4で5問進行・時計・保存・結果・共有を追加し、[Draft PR #9](
 
 ## 次の作業
 
-R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4のDraft PR #9は68単体テスト・54画面検査と独立レビューを完了しました。こちらではマージ・公開を行いません。R5はユーザーがR4をマージした後の最新mainから開始します。
+R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4のDraft PR #9は68単体テスト・54画面検査と独立レビューを完了しました。R5の実装状況と未実施項目は[R5検査記録](docs/reviews/R5_VERIFICATION.md)で管理します。こちらではマージ・公開を行いません。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 
