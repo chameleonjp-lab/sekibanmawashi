@@ -175,7 +175,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
         <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 1</strong><span class="status-subtext" data-field="difficulty">${DIFFICULTY_LABELS[puzzle.difficulty]}</span></div>
         <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
         <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count">0</strong></div>
-        <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">記録対象外</span></div>
+        <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">記録なし</span></div>
         <p class="status-message" data-field="state" aria-live="polite">${statusMessage}</p>
       </section>
 
