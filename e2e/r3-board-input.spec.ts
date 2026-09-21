@@ -100,7 +100,9 @@ async function readMoves(page: Page): Promise<number> {
 }
 
 async function openGame(page: Page, puzzleId?: string): Promise<void> {
-  const query = puzzleId ? `?puzzleId=${encodeURIComponent(puzzleId)}` : "";
+  // R4 opens the five-question home at /. Preserve every R3 assertion on
+  // the same adopted single-puzzle inspection surface, now explicitly named.
+  const query = `?puzzleId=${encodeURIComponent(puzzleId ?? puzzles[0].id)}`;
   await page.goto(`/${query}`, { waitUntil: "networkidle" });
   await expect(page.getByRole("heading", { name: "石板回し" })).toBeVisible();
   await expect(board(page)).toBeVisible();
