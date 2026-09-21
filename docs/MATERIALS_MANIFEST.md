@@ -8,7 +8,7 @@ SHA-256は、格納したファイルが途中で欠けていないか確認す�
 | `archive/v1.1/IMPLEMENTATION_PLAN.md` | 80,555 bytes | `bf8a8a4ef656408ad3fc810c782b23a285553611557c15bdc5989723b0d7a1bf` | 5問方式へ変更した直前版 |
 | `archive/v1.1/CHANGELOG.md` | 555 bytes | `91f7a4c9c72917e78e2d5966902da26cc1b2137ccc07a921e7398393a9ac52aa` | v1.1作成時の変更記録 |
 | `archive/v1.1/PACKAGE_README.md` | 1,479 bytes | `e077f5062c15ab749ae14b08ee94d4ce1dd1afa161a8677a8f7b5a1d2805a5ab` | 会話で渡した計画書一式の案内 |
-| `planning/IMPLEMENTATION_PLAN.md` | 40,094 bytes | `13b8c03da57f608634ab31b56a655b128855ed40ae63717b0c2c80496e73a234` | 現在の文書版2.0（R1で実ファイルと再照合） |
+| `planning/IMPLEMENTATION_PLAN.md` | 40,462 bytes | `487b328041f845c85d56461a6d96fe08c420708df888b47f3e690a6d48ac1a3e` | 現在の文書版2.0（R2の検証結果への案内を追記し再照合） |
 | `research/original-logic-research.md` | 36,115 bytes | `f3ef868c1a40708f8287fe2ba7ed11af30d096a505684c9bb62f0c9d62ee7cd7` | 元ロジックの調査 |
 | `examples/problem-pool.example.json` | 2,999 bytes | `083d7c618a161c74ee4a210e4f7e935a5df5027fda143dfb28fbaf22ccb3f72c` | 問題庫の形式例 |
 | `examples/puzzle-definition.example.json` | 1,141 bytes | `4336970566ab7b34e8736544e425f8bb24876a2d0a6375d8fff70db64c05a48e` | 1問の形式例 |

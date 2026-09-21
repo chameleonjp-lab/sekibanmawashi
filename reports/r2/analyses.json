@@ -1,0 +1,4929 @@
+[
+  {
+    "puzzleId": "easy-v2-01-355098e2a030861f",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 3,
+    "shortestPathCount": "15",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      }
+    ],
+    "visitedStates": 296,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 605
+  },
+  {
+    "puzzleId": "easy-v2-02-909205dcd99f818d",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "30",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 307,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-03-bd9a13470a8b8014",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      }
+    ],
+    "visitedStates": 272,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-04-5a9e409a422ed84c",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      }
+    ],
+    "visitedStates": 236,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-05-95101e0ffad1955c",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 302,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-06-f2d9bc464c83d979",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 3,
+    "shortestPathCount": "50",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 275,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 605
+  },
+  {
+    "puzzleId": "easy-v2-07-1bf57db589684c9d",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 242,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-08-622d9bea96a7f059",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 302,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-09-1985cd0432a765c4",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 362,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-10-bce2a61ba2903fce",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      1
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      }
+    ],
+    "visitedStates": 236,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-11-7fb6f7dec5499cf4",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 302,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 630
+  },
+  {
+    "puzzleId": "easy-v2-12-77773bc62ecea5ff",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 3,
+    "shortestPathCount": "65",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 278,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 605
+  },
+  {
+    "puzzleId": "easy-v2-13-2c01a173e788835d",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "4",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 182,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 555
+  },
+  {
+    "puzzleId": "easy-v2-14-753135aadf2b8b48",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "20",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 285,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 695
+  },
+  {
+    "puzzleId": "easy-v2-15-b25c969dff8956d4",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 359,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 655
+  },
+  {
+    "puzzleId": "easy-v2-16-876fb9f083ef24a2",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "24",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 160,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 570
+  },
+  {
+    "puzzleId": "easy-v2-17-225edd73dd7d8e12",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "24",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 159,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 570
+  },
+  {
+    "puzzleId": "easy-v2-18-dd64e5ead8a11acf",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "4",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 182,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 555
+  },
+  {
+    "puzzleId": "easy-v2-19-d8dacb1676ca16ba",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "60",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 267,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 670
+  },
+  {
+    "puzzleId": "easy-v2-20-230b9cea63e16d90",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "8",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 218,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 530
+  },
+  {
+    "puzzleId": "easy-v2-21-be43747bd541067d",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "40",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 275,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 670
+  },
+  {
+    "puzzleId": "easy-v2-22-7e9c90624f9c37ce",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "20",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 339,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 695
+  },
+  {
+    "puzzleId": "easy-v2-23-6eadcd3c9bfe220f",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "30",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 326,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 695
+  },
+  {
+    "puzzleId": "easy-v2-24-3b91f98129086094",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "5",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 365,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 655
+  },
+  {
+    "puzzleId": "easy-v2-25-d99dcf18e1359402",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 2,
+    "shortestPathCount": "60",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 277,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 670
+  },
+  {
+    "puzzleId": "easy-v2-26-10132a6e487a5334",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 3,
+    "shortestPathCount": "30",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 145,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 505
+  },
+  {
+    "puzzleId": "easy-v2-27-bcff185c01a3f893",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "12",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 192,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 595
+  },
+  {
+    "puzzleId": "easy-v2-28-57c243bc54b3bab9",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "5",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 303,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 655
+  },
+  {
+    "puzzleId": "easy-v2-29-dbf22e326811ee3a",
+    "shortestMoves": 5,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "10",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 331,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 655
+  },
+  {
+    "puzzleId": "easy-v2-30-826b6a094f55979d",
+    "shortestMoves": 4,
+    "shortestGoalStateCount": 3,
+    "shortestPathCount": "30",
+    "minOperatedRingCount": 2,
+    "requiredRingIndexes": [
+      0,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 186,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 505
+  },
+  {
+    "puzzleId": "normal-v2-01-6a456160373b834c",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 919,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-02-f53b63b9f59a6e61",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 858,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-03-32263bb7a952e855",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 868,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-04-c6bcd6baeb1bcfa1",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 908,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-05-8db54ddba2c9beab",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 824,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-06-5828df96e3387ba1",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 790,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-07-b3f2dfb648251e89",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 869,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-08-bef26d9257f8b873",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 858,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-09-083b124f8b8e5db6",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 958,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-10-456ad40d4923a26c",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "112",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 762,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-11-c54fd6672024e59a",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 858,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-12-44edcd9a2cc0b162",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 868,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-13-fb5483202671d80a",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "112",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 767,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-14-8cda91c0301c6269",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 888,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-15-bd8f53461cb5e16e",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 918,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-16-5ad401de552a8846",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 840,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-17-274d3e26a195f6bd",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 794,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-18-e07369783dbadacf",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 835,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-19-b0abc0b647219c70",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 864,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-20-22d4abf38585286e",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 896,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-21-1c93f1305e3f98e6",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 918,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-22-268afb278fdd19d2",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 907,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-23-ce17a98724877ee8",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 864,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-24-9eaa654e8e1dda36",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 844,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-25-449a80f3616e59b3",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "560",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 844,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-26-8141deef9af546d0",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "280",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 820,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-27-8ca65ad17c09b276",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "112",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 761,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-28-7389523f3276be60",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 944,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-29-5060734f22d776f5",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 869,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "normal-v2-30-e600145e6eb260ca",
+    "shortestMoves": 8,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "168",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 848,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 995
+  },
+  {
+    "puzzleId": "hard-v2-01-fe30d6ec2ec65e81",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1545,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-02-7e3bf8c1838d9760",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1509,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-03-0581abf7e83857ff",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1499,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-04-42d1694068543b1b",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1529,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-05-8e855d5f61e8cf4a",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "16632",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1561,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-06-c6988e2e452bee4b",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1593,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-07-afe53f0579f287ca",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "16632",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1525,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-08-2074abceb8464c5c",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1533,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-09-1ddc3f5cb88710e6",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1528,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-10-7d277384981ad373",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "16632",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1566,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-11-aacb466f91e4df7a",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "34650",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1537,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-12-a25f1da87593f923",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "16632",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1561,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-13-0b5fee646a6be49d",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1580,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-14-4aa384f67e1894f3",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1595,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-15-a25f45025fe0afad",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1518,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-16-4636a7378a5d028c",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1549,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-17-a2416a6a33b1785b",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1550,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-18-f4082d8869e79dfa",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1499,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-19-39f9f1fb5573d810",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1581,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-20-4a5d953fe04ed2b0",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1541,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-21-f1d947cf649d0c91",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1517,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-22-052a34d9fdcbcf75",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1558,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-23-48fbaaf6d009e095",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1580,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-24-bd8cc3fd99c5c22c",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1511,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-25-b0c339013da5c302",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1526,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-26-91f1b5b57e40ed47",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "16632",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1596,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-27-10961d64501076d1",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1526,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-28-c8cc4df8fc8cdbe7",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1541,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-29-c72cfa5c75d8df8f",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "11088",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      },
+      {
+        "type": "l",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1507,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  },
+  {
+    "puzzleId": "hard-v2-30-48dc80e47381f3a8",
+    "shortestMoves": 12,
+    "shortestGoalStateCount": 1,
+    "shortestPathCount": "27720",
+    "minOperatedRingCount": 3,
+    "requiredRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "representativeSolution": [
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 0
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "l",
+        "ring": 1
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      },
+      {
+        "type": "r",
+        "ring": 2
+      }
+    ],
+    "visitedStates": 1540,
+    "truncated": false,
+    "effectiveRingIndexes": [
+      0,
+      1,
+      2
+    ],
+    "calibrationScore": 1395
+  }
+]

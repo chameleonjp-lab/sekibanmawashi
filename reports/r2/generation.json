@@ -1,0 +1,30 @@
+{
+  "configVersion": "r2-config-v1",
+  "seed": 20260919,
+  "counts": {
+    "easy": {
+      "inspected": 313,
+      "accepted": 300,
+      "adopted": 30,
+      "attempts": 313,
+      "exhausted": false
+    },
+    "normal": {
+      "inspected": 330,
+      "accepted": 300,
+      "adopted": 30,
+      "attempts": 330,
+      "exhausted": false
+    },
+    "hard": {
+      "inspected": 385,
+      "accepted": 300,
+      "adopted": 30,
+      "attempts": 385,
+      "exhausted": false
+    }
+  },
+  "candidateCount": 1028,
+  "adoptedCount": 90,
+  "generatedAtPolicy": "deterministic-no-timestamp"
+}

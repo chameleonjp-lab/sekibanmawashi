@@ -13,7 +13,16 @@
     "build": "npm run typecheck && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/lint.mjs",
-    "test": "node --experimental-strip-types --test \"src/**/*.test.ts\""
+    "test": "node --experimental-strip-types --test \"src/**/*.test.ts\" \"tools/**/*.test.ts\"",
+    "puzzles:generate": "node --experimental-strip-types tools/r2.ts puzzles:generate",
+    "puzzles:validate": "node --experimental-strip-types tools/r2.ts puzzles:validate",
+    "puzzles:report": "node --experimental-strip-types tools/r2.ts puzzles:report",
+    "puzzles:test": "node --experimental-strip-types tools/r2.ts puzzles:test",
+    "pool:create": "node --experimental-strip-types tools/r2.ts pool:create",
+    "pool:validate": "node --experimental-strip-types tools/r2.ts pool:validate",
+    "tickets:create": "node --experimental-strip-types tools/r2.ts tickets:create",
+    "tickets:validate": "node --experimental-strip-types tools/r2.ts tickets:validate",
+    "selection:simulate": "node --experimental-strip-types tools/r2.ts selection:simulate"
   },
   "devDependencies": {
     "@types/node": "24.8.0",

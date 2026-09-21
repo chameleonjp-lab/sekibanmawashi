@@ -1,0 +1,60 @@
+{
+  "configVersion": "r2-config-v1",
+  "seed": 20260919,
+  "rulesetVersion": "stone-rings-v2",
+  "schemaVersion": 2,
+  "generatorVersion": "generator-v2",
+  "candidatesPerDifficulty": 300,
+  "adoptedPerDifficulty": 30,
+  "difficultyBands": [
+    {
+      "difficulty": "easy",
+      "minMoves": 4,
+      "maxMoves": 6,
+      "minTargets": 2,
+      "maxTargets": 3,
+      "minEmitters": 3,
+      "maxEmitters": 4,
+      "minBlockers": 2,
+      "maxBlockers": 3,
+      "minOperatedRings": 2,
+      "maxShortestGoalStates": 4
+    },
+    {
+      "difficulty": "normal",
+      "minMoves": 7,
+      "maxMoves": 10,
+      "minTargets": 3,
+      "maxTargets": 4,
+      "minEmitters": 4,
+      "maxEmitters": 5,
+      "minBlockers": 3,
+      "maxBlockers": 4,
+      "minOperatedRings": 3,
+      "maxShortestGoalStates": 3
+    },
+    {
+      "difficulty": "hard",
+      "minMoves": 11,
+      "maxMoves": 15,
+      "minTargets": 4,
+      "maxTargets": 5,
+      "minEmitters": 5,
+      "maxEmitters": 6,
+      "minBlockers": 4,
+      "maxBlockers": 5,
+      "minOperatedRings": 3,
+      "maxShortestGoalStates": 2
+    }
+  ],
+  "calibration": {
+    "formula": "100*shortestMoves + 40*minOperatedRingCount + 25*max(0,4-shortestGoalStateCount)",
+    "tolerance": 0.1
+  },
+  "draw": {
+    "ticketCount": 900,
+    "sampleCount": 100000
+  },
+  "numericChanges": [],
+  "maxAttemptsPerDifficulty": 15000
+}

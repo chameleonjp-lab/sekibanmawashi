@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 2,
+  "poolVersion": "pool-v2",
+  "configVersion": "r2-config-v1",
+  "puzzleCount": 90,
+  "checks": {
+    "P02": {
+      "passed": true,
+      "details": "saved analyses, recomputed BFS metrics and representative replays agree; independent state comparisons 155520/155520, mismatches 0"
+    },
+    "P01": {
+      "passed": true,
+      "details": "90 puzzles have successful representative rotation-only solutions"
+    },
+    "P06": {
+      "passed": true,
+      "details": "all 3 fixed difficulty bands match"
+    },
+    "P03": {
+      "passed": true,
+      "details": "core 155520, beam 679104, fast mask 155520; mismatches 0 (core 0, fast 0)"
+    },
+    "P04": {
+      "passed": true,
+      "details": "adopted normalized keys 90/90; near duplicate records 1, dropped candidates 1"
+    },
+    "P05": {
+      "passed": true,
+      "details": "byte-identical regeneration for 3 public artifacts; puzzle/pool/ticket checksums 05c1cb2416d69bca/21b5349b3a56dba1/e86dcb38f1ec49dd"
+    },
+    "P07": {
+      "passed": true,
+      "details": "tickets 900; normalized unique 900; order true; per-ID counts true; pair diversity {\"easyPairKinds\":397,\"normalPairKinds\":435,\"hardKinds\":30,\"minEasyPartners\":19,\"minNormalPartners\":29}"
+    },
+    "P08": {
+      "passed": true,
+      "details": "all 4 saved ±10% ranges pass; measured {\"easyPair\":{\"min\":1125,\"max\":1350,\"threshold\":{\"baseline\":1239,\"tolerance\":0.1,\"min\":1115.1000000000001,\"max\":1362.9}},\"normalPair\":{\"min\":1990,\"max\":1990,\"threshold\":{\"baseline\":1990,\"tolerance\":0.1,\"min\":1791,\"max\":2189}},\"hardSingle\":{\"min\":1395,\"max\":1395,\"threshold\":{\"baseline\":1395,\"tolerance\":0.1,\"min\":1255.5,\"max\":1534.5000000000002}},\"overall\":{\"min\":4510,\"max\":4735,\"threshold\":{\"baseline\":4624,\"tolerance\":0.1,\"min\":4161.6,\"max\":5086.400000000001}}}"
+    },
+    "P09": {
+      "passed": true,
+      "details": "seed 1375865088, runs 100000, method uint32-rejection-sampling; all ticket and puzzle frequencies within 5σ"
+    }
+  },
+  "generatedAtPolicy": "deterministic-no-timestamp",
+  "evidence": {
+    "independentSolutions": {
+      "puzzleCount": 90,
+      "stateComparisonCount": 155520,
+      "mismatchCount": 0,
+      "mismatchExamples": []
+    },
+    "independentLight": {
+      "puzzleCount": 90,
+      "statesPerPuzzle": 1728,
+      "comparisonCount": 155520,
+      "beamComparisonCount": 679104,
+      "fastMaskComparisonCount": 155520,
+      "mismatchCount": 0,
+      "coreMismatchCount": 0,
+      "fastMaskMismatchCount": 0,
+      "mismatchExamples": []
+    },
+    "reproducibility": {
+      "passed": true,
+      "files": {
+        "puzzles-v2.json": {
+          "expectedBytes": 109681,
+          "actualBytes": 109681,
+          "identical": true
+        },
+        "pool-v2.json": {
+          "expectedBytes": 3965,
+          "actualBytes": 3965,
+          "identical": true
+        },
+        "tickets-v2.json": {
+          "expectedBytes": 181238,
+          "actualBytes": 181238,
+          "identical": true
+        }
+      },
+      "checksums": {
+        "puzzleCollection": "05c1cb2416d69bca",
+        "pool": "21b5349b3a56dba1",
+        "tickets": "e86dcb38f1ec49dd"
+      }
+    },
+    "ticketDiversity": {
+      "easyPairKinds": 397,
+      "normalPairKinds": 435,
+      "hardKinds": 30,
+      "minEasyPartners": 19,
+      "minNormalPartners": 29
+    },
+    "calibrationRanges": {
+      "easyPair": {
+        "min": 1125,
+        "max": 1350,
+        "threshold": {
+          "baseline": 1239,
+          "tolerance": 0.1,
+          "min": 1115.1000000000001,
+          "max": 1362.9
+        }
+      },
+      "normalPair": {
+        "min": 1990,
+        "max": 1990,
+        "threshold": {
+          "baseline": 1990,
+          "tolerance": 0.1,
+          "min": 1791,
+          "max": 2189
+        }
+      },
+      "hardSingle": {
+        "min": 1395,
+        "max": 1395,
+        "threshold": {
+          "baseline": 1395,
+          "tolerance": 0.1,
+          "min": 1255.5,
+          "max": 1534.5000000000002
+        }
+      },
+      "overall": {
+        "min": 4510,
+        "max": 4735,
+        "threshold": {
+          "baseline": 4624,
+          "tolerance": 0.1,
+          "min": 4161.6,
+          "max": 5086.400000000001
+        }
+      }
+    },
+    "simulation": {
+      "seed": 1375865088,
+      "runs": 100000,
+      "ticketExpected": 111.11111111111111,
+      "ticketFrequencyRange": [
+        75,
+        144
+      ]
+    }
+  }
+}

@@ -1,0 +1,6222 @@
+[
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-01-355098e2a030861f",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        7,
+        5
+      ]
+    },
+    "contentChecksum": "07e16414cd865222"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-02-909205dcd99f818d",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        10,
+        7
+      ]
+    },
+    "contentChecksum": "10c53f6473673578"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-03-bd9a13470a8b8014",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        5,
+        11
+      ]
+    },
+    "contentChecksum": "4506370e8c31ff70"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-04-5a9e409a422ed84c",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        10,
+        10
+      ]
+    },
+    "contentChecksum": "d0504d9a6ca791f6"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-05-95101e0ffad1955c",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        8,
+        9
+      ]
+    },
+    "contentChecksum": "ff5aab158505cdbc"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-06-f2d9bc464c83d979",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      7,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        7,
+        3
+      ]
+    },
+    "contentChecksum": "55728857d6d3481c"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-07-1bf57db589684c9d",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        10,
+        9
+      ]
+    },
+    "contentChecksum": "7aefa20a030c2a3d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-08-622d9bea96a7f059",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 5
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        11,
+        4
+      ]
+    },
+    "contentChecksum": "77366cc7fc131caf"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-09-1985cd0432a765c4",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        2,
+        0
+      ]
+    },
+    "contentChecksum": "7e9714f5e816f95e"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-10-bce2a61ba2903fce",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        6,
+        1
+      ]
+    },
+    "contentChecksum": "02582b321ff5ea40"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-11-7fb6f7dec5499cf4",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      4
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        10,
+        3
+      ]
+    },
+    "contentChecksum": "b9055d97e356ce2c"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-12-77773bc62ecea5ff",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      5
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        6,
+        4
+      ]
+    },
+    "contentChecksum": "296b9fdc0cac4623"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-13-2c01a173e788835d",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      5
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        3,
+        10
+      ]
+    },
+    "contentChecksum": "01a950484bcf3d33"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-14-753135aadf2b8b48",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        9,
+        2
+      ]
+    },
+    "contentChecksum": "cca78e6d1a2c33ed"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-15-b25c969dff8956d4",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        2,
+        8,
+        3
+      ]
+    },
+    "contentChecksum": "f246e7231773c6e2"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-16-876fb9f083ef24a2",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      7,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        1,
+        3
+      ]
+    },
+    "contentChecksum": "71ac33db5c8ecbdc"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-17-225edd73dd7d8e12",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        1,
+        8
+      ]
+    },
+    "contentChecksum": "d04559af711da5cb"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-18-dd64e5ead8a11acf",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        9,
+        8
+      ]
+    },
+    "contentChecksum": "fb2c383336f301a5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-19-d8dacb1676ca16ba",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      5,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        0,
+        0
+      ]
+    },
+    "contentChecksum": "cf4dae14df23e260"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-20-230b9cea63e16d90",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        2,
+        9,
+        3
+      ]
+    },
+    "contentChecksum": "645dc9eb2cafb96b"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-21-be43747bd541067d",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        11,
+        1
+      ]
+    },
+    "contentChecksum": "16abf72df125e58b"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-22-7e9c90624f9c37ce",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        1,
+        3
+      ]
+    },
+    "contentChecksum": "46837152c62dae5f"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-23-6eadcd3c9bfe220f",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        5,
+        1
+      ]
+    },
+    "contentChecksum": "936361ef59e1fad1"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-24-3b91f98129086094",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      10,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        8,
+        3
+      ]
+    },
+    "contentChecksum": "c4dc670cef930af5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-25-d99dcf18e1359402",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        5,
+        5
+      ]
+    },
+    "contentChecksum": "3ad937d7cecc41e4"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-26-10132a6e487a5334",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      5
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        11,
+        5
+      ]
+    },
+    "contentChecksum": "a23a33adc94e2eb0"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-27-bcff185c01a3f893",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      2,
+      4
+    ],
+    "initialState": {
+      "rotations": [
+        7,
+        10,
+        11
+      ]
+    },
+    "contentChecksum": "122bc7b611825963"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-28-57c243bc54b3bab9",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      3
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        10,
+        3
+      ]
+    },
+    "contentChecksum": "0b1bfe857dbf1d48"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-29-dbf22e326811ee3a",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      8,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        4,
+        5
+      ]
+    },
+    "contentChecksum": "8f38da3d9fa043e1"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "easy-v2-30-826b6a094f55979d",
+    "difficulty": "easy",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        11,
+        2
+      ]
+    },
+    "contentChecksum": "3abb46f761e9042b"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-01-6a456160373b834c",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        2,
+        5
+      ]
+    },
+    "contentChecksum": "f4b9854f8925e086"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-02-f53b63b9f59a6e61",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      3,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        0,
+        2
+      ]
+    },
+    "contentChecksum": "9c730ef12af21c43"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-03-32263bb7a952e855",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      8,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        6,
+        10,
+        11
+      ]
+    },
+    "contentChecksum": "efbf4ab5107f5c32"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-04-c6bcd6baeb1bcfa1",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      6,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        11,
+        6
+      ]
+    },
+    "contentChecksum": "5efcb43702b743a0"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-05-8db54ddba2c9beab",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      7,
+      8,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        0,
+        3
+      ]
+    },
+    "contentChecksum": "bb32a9de8dd38c51"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-06-5828df96e3387ba1",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      4,
+      5
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        3,
+        1
+      ]
+    },
+    "contentChecksum": "51a6b45c54516cd6"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-07-b3f2dfb648251e89",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      6,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        3,
+        3
+      ]
+    },
+    "contentChecksum": "2e687eeb8250af0c"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-08-bef26d9257f8b873",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      7,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        3,
+        11
+      ]
+    },
+    "contentChecksum": "cae8a32a7d19da96"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-09-083b124f8b8e5db6",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      4,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        11,
+        6
+      ]
+    },
+    "contentChecksum": "d86cff9afe58600a"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-10-456ad40d4923a26c",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 1
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      4,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        2,
+        10
+      ]
+    },
+    "contentChecksum": "ab44aa7e2f5aaeec"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-11-c54fd6672024e59a",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      3,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        9,
+        6
+      ]
+    },
+    "contentChecksum": "fec9804c4d8d30aa"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-12-44edcd9a2cc0b162",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      5,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        6,
+        9,
+        7
+      ]
+    },
+    "contentChecksum": "2c0d6bcf7a9e5401"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-13-fb5483202671d80a",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      4,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        11,
+        3
+      ]
+    },
+    "contentChecksum": "3a4f2d4b0579e166"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-14-8cda91c0301c6269",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      6,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        1,
+        3
+      ]
+    },
+    "contentChecksum": "37b34731e91f8266"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-15-bd8f53461cb5e16e",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      10,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        2,
+        3,
+        4
+      ]
+    },
+    "contentChecksum": "f0b7ca7b1edfe98b"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-16-5ad401de552a8846",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        2,
+        2,
+        8
+      ]
+    },
+    "contentChecksum": "aec01b2c3f2e10fd"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-17-274d3e26a195f6bd",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      3,
+      5,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        10,
+        6
+      ]
+    },
+    "contentChecksum": "a972f867a3fe9f09"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-18-e07369783dbadacf",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      6,
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        11,
+        10
+      ]
+    },
+    "contentChecksum": "4d6b98c2ae5eef92"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-19-b0abc0b647219c70",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      3
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        0,
+        4
+      ]
+    },
+    "contentChecksum": "f1ca771b9ba446a6"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-20-22d4abf38585286e",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      5,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        1,
+        9
+      ]
+    },
+    "contentChecksum": "ab88f5fe912922ca"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-21-1c93f1305e3f98e6",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      7,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        2,
+        6
+      ]
+    },
+    "contentChecksum": "6621c99762f74dcd"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-22-268afb278fdd19d2",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      5,
+      7
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        10,
+        11
+      ]
+    },
+    "contentChecksum": "170ea11e6a724119"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-23-ce17a98724877ee8",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      6,
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        7,
+        6
+      ]
+    },
+    "contentChecksum": "80926fb8134d762d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-24-9eaa654e8e1dda36",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      6,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        7,
+        4,
+        10
+      ]
+    },
+    "contentChecksum": "eee8005bda602301"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-25-449a80f3616e59b3",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      4,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        4,
+        3
+      ]
+    },
+    "contentChecksum": "3a5664cdb1b880cd"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-26-8141deef9af546d0",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      7,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        2,
+        8,
+        5
+      ]
+    },
+    "contentChecksum": "64d2a83395c96040"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-27-8ca65ad17c09b276",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      4,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        1,
+        11
+      ]
+    },
+    "contentChecksum": "cae504a8acc717c5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-28-7389523f3276be60",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      4,
+      5,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        8,
+        1
+      ]
+    },
+    "contentChecksum": "1a09f5e75465e4d5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-29-5060734f22d776f5",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      5,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        4,
+        1
+      ]
+    },
+    "contentChecksum": "8e6973f0395f858d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "normal-v2-30-e600145e6eb260ca",
+    "difficulty": "normal",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      3,
+      5
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        8,
+        4
+      ]
+    },
+    "contentChecksum": "3efcc8f3fa1700fb"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-01-fe30d6ec2ec65e81",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      2,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        1,
+        4
+      ]
+    },
+    "contentChecksum": "995c4ec3772ea018"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-02-7e3bf8c1838d9760",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      9,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        7,
+        7,
+        9
+      ]
+    },
+    "contentChecksum": "34687e51570ef129"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-03-0581abf7e83857ff",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      2,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        2,
+        7
+      ]
+    },
+    "contentChecksum": "27f8f4a8efa91511"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-04-42d1694068543b1b",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        2,
+        5
+      ]
+    },
+    "contentChecksum": "ae8e87c042457eed"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-05-8e855d5f61e8cf4a",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      9,
+      10,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        5,
+        9
+      ]
+    },
+    "contentChecksum": "73c69c222d31e464"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-06-c6988e2e452bee4b",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        4,
+        0
+      ]
+    },
+    "contentChecksum": "8671a6074b23269f"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-07-afe53f0579f287ca",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      3,
+      6,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        9,
+        4
+      ]
+    },
+    "contentChecksum": "c56e318a32f6df3c"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-08-2074abceb8464c5c",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      1,
+      4,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        5,
+        11
+      ]
+    },
+    "contentChecksum": "f7411f70edae3c30"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-09-1ddc3f5cb88710e6",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      9,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        9,
+        10
+      ]
+    },
+    "contentChecksum": "232bf95d6f8cf578"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-10-7d277384981ad373",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      3,
+      5,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        9,
+        8
+      ]
+    },
+    "contentChecksum": "35089d8c858ad61d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-11-aacb466f91e4df7a",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      9,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        10,
+        0
+      ]
+    },
+    "contentChecksum": "a5c2f015e81e4aed"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-12-a25f1da87593f923",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      3,
+      7,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        3,
+        6,
+        1
+      ]
+    },
+    "contentChecksum": "bb4740b1a59904af"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-13-0b5fee646a6be49d",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      1,
+      8,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        10,
+        10,
+        10
+      ]
+    },
+    "contentChecksum": "74b36365acd5234a"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-14-4aa384f67e1894f3",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      3,
+      4
+    ],
+    "initialState": {
+      "rotations": [
+        6,
+        11,
+        8
+      ]
+    },
+    "contentChecksum": "1dcbe0856f547e7f"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-15-a25f45025fe0afad",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      4,
+      5,
+      6
+    ],
+    "initialState": {
+      "rotations": [
+        8,
+        7,
+        8
+      ]
+    },
+    "contentChecksum": "ddc885d472ea66f5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-16-4636a7378a5d028c",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      3,
+      4,
+      6,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        4,
+        8,
+        4
+      ]
+    },
+    "contentChecksum": "319f6e05435db162"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-17-a2416a6a33b1785b",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      6,
+      8,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        3,
+        2
+      ]
+    },
+    "contentChecksum": "7b407b5273dd79df"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-18-f4082d8869e79dfa",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      1,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        7,
+        2,
+        10
+      ]
+    },
+    "contentChecksum": "50152277ac2702b5"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-19-39f9f1fb5573d810",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 10
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      1,
+      3,
+      4
+    ],
+    "initialState": {
+      "rotations": [
+        5,
+        11,
+        8
+      ]
+    },
+    "contentChecksum": "4405431c3594b5c0"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-20-4a5d953fe04ed2b0",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      3,
+      7,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        0,
+        6,
+        1
+      ]
+    },
+    "contentChecksum": "5de847c785b5bc52"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-21-f1d947cf649d0c91",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      2,
+      10,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        9,
+        8
+      ]
+    },
+    "contentChecksum": "f064fbf7bbd9cd13"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-22-052a34d9fdcbcf75",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      7,
+      8,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        2,
+        1
+      ]
+    },
+    "contentChecksum": "a20c13994c32dbd6"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-23-48fbaaf6d009e095",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      8,
+      9,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        11,
+        8
+      ]
+    },
+    "contentChecksum": "8ecb0b9402a9a45d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-24-bd8cc3fd99c5c22c",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "blocker",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 6
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      6,
+      7,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        10,
+        4
+      ]
+    },
+    "contentChecksum": "00a90e36dad2fd0e"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-25-b0c339013da5c302",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      2,
+      6,
+      7,
+      11
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        2,
+        4
+      ]
+    },
+    "contentChecksum": "9e9dfcdd5ceaaae8"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-26-91f1b5b57e40ed47",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 8
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 4
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      5,
+      6,
+      8,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        1,
+        1,
+        8
+      ]
+    },
+    "contentChecksum": "eee4c8915e46139f"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-27-10961d64501076d1",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "blocker",
+            "slot": 7
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      }
+    ],
+    "targets": [
+      0,
+      1,
+      4,
+      8
+    ],
+    "initialState": {
+      "rotations": [
+        11,
+        6,
+        5
+      ]
+    },
+    "contentChecksum": "7ab342ba813ed89e"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-28-c8cc4df8fc8cdbe7",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 3
+          },
+          {
+            "kind": "emitter",
+            "slot": 4
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      4,
+      6,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        9,
+        2,
+        8
+      ]
+    },
+    "contentChecksum": "6f86e04500fd635d"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-29-c72cfa5c75d8df8f",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 1
+          },
+          {
+            "kind": "emitter",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 9
+          },
+          {
+            "kind": "emitter",
+            "slot": 10
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 6
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      5,
+      8,
+      9,
+      10
+    ],
+    "initialState": {
+      "rotations": [
+        6,
+        6,
+        2
+      ]
+    },
+    "contentChecksum": "28e97fd7a31bd6df"
+  },
+  {
+    "schemaVersion": 2,
+    "rulesetVersion": "stone-rings-v2",
+    "generatorVersion": "generator-v2",
+    "id": "hard-v2-30-48dc80e47381f3a8",
+    "difficulty": "hard",
+    "slotCount": 12,
+    "rings": [
+      {
+        "id": "inner",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "emitter",
+            "slot": 5
+          },
+          {
+            "kind": "emitter",
+            "slot": 7
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "middle",
+        "parts": [
+          {
+            "kind": "emitter",
+            "slot": 0
+          },
+          {
+            "kind": "blocker",
+            "slot": 11
+          }
+        ]
+      },
+      {
+        "id": "outer",
+        "parts": [
+          {
+            "kind": "blocker",
+            "slot": 2
+          },
+          {
+            "kind": "emitter",
+            "slot": 8
+          },
+          {
+            "kind": "blocker",
+            "slot": 9
+          },
+          {
+            "kind": "blocker",
+            "slot": 10
+          }
+        ]
+      }
+    ],
+    "targets": [
+      1,
+      2,
+      4,
+      9
+    ],
+    "initialState": {
+      "rotations": [
+        7,
+        10,
+        4
+      ]
+    },
+    "contentChecksum": "009ab2f63473a5eb"
+  }
+]
