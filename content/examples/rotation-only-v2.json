@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 2,
+  "rulesetVersion": "stone-rings-v2",
+  "generatorVersion": "generator-v2",
+  "id": "rotation-only-example",
+  "difficulty": "easy",
+  "slotCount": 12,
+  "rings": [
+    {
+      "id": "inner",
+      "parts": [
+        { "kind": "emitter", "slot": 0 },
+        { "kind": "emitter", "slot": 3 }
+      ]
+    },
+    {
+      "id": "middle",
+      "parts": [
+        { "kind": "blocker", "slot": 6 }
+      ]
+    },
+    {
+      "id": "outer",
+      "parts": []
+    }
+  ],
+  "targets": [6, 9],
+  "initialState": {
+    "rotations": [0, 0, 0]
+  },
+  "contentChecksum": "85e1ec61a707e15f"
+}
