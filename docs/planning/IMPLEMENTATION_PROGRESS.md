@@ -1,8 +1,9 @@
 # 実装と受入の進捗
 
-更新日: 2026-09-26 / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
+更新日: 2026-09-27 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
-R5の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）
+R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
+今回の記録更新PRの基準main: `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（PR #10マージ後、tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`）
 
 ## 段階
 
@@ -13,7 +14,7 @@ R5の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マー
 | R2 問題庫 | 実装・P01〜P09・独立レビュー済み、[PR #7](https://github.com/chameleonjp-lab/sekibanmawashi/pull/7)マージ済み | 人による試遊・iPhone実機・ゲーム全体の受入は未完了 |
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
-| R5 公開品質 | [Draft PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)のCI失敗を修正・再検査中 | コード独立レビューの指摘を修正。最新版の全体CI合格と実機受入は未完了。正式名・共有画像は未確定 |
+| R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・正式名・共有画像・公開指示は未完了 |
 | R6 公開 | 保留 | 受入完了とユーザーの公開指示が必要 |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
@@ -51,7 +52,7 @@ Node `24.19.0` / npm `11.9.0` / Linuxで `npm ci → typecheck → lint → test
 
 ローカルでは68単体テスト、型検査・lint・P01〜P09・buildが成功。停止後の復帰通知、時計逆行、保存例外、共有取消しと古い応答、上限後の参考結果などを修正・検査しました。実装検査対象 `8fd3fb627611d1789f35e9d96e280ed59d1fa6a3` の[CI 35636775163](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35636775163)で、Chromium/WebKitの54画面検査もすべて成功しました。失敗・skip・flaky各0。初回以降の検査初期化、小画面の時間欄、保存例外注入などを修正し、Sol Highが集計JSONと代表画像を確認してR4の自動検査範囲を承認しました。未解消のコードblockerはありません。実行時間枠だけを調整した `c7fea6709dd12d5776699a6525935560e23e622c` の[CI 35637796323](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35637796323)でも68単体・54画面検査と全基本検査が成功しました。記録追記後のCIはPRのChecksを参照してください。
 
-iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名・画像、音の実装、公開品質と公開手順はR5以降に残していましたが、R5で公開準備と音を実装しました。本番公開・ランキング関連・実験場側の変更は行っていません。R4のPR #9をマージした最新mainからR5へ進みました。
+iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名・画像、音の実装、公開品質と公開手順はR5以降に残していましたが、R5で公開準備と音を実装しました。本番公開・ランキング関連・実験場側の変更は行っていません。R4のPR #9をマージした当時のmainからR5へ進みました。
 
 ## 各PRで記入する内容
 
@@ -61,14 +62,14 @@ iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名�
 
 R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認、正式な公開名・共有画像・実験場掲載方式は後続段階です。旧版のテスト成功をv2へ持ち越しません。
 
-R4のPR #9をユーザーがマージした最新main `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5` からR5を開始しました。こちらではマージと本番公開を行いません。
+R4のPR #9をユーザーがマージしたmain `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5` をR5開始時の基準にしました。PR #10はその後ユーザーがmainへマージしました（上記）。本番公開は行っていません。
 
 ## R5の実装状況
 
 `chore/05-release-readiness` で、仮タイトル・予定URL・説明・faviconの設定元を共通化し、音6種の安全なWeb Audio制御、音設定の初期ON・保存・gesture解除、共有/結果/実験場の共通導線、起動・読込・予期しない例外の復旧画面、性能測定、依存ライセンス記録、手動Pages公開手順を追加しています。旧試作OG画像は採用せず、正式な共有画像は未確定のため設定していません。詳細は[R5検査記録](../reviews/R5_VERIFICATION.md)です。
 
-単体72件、P01〜P09、lint、ライセンスメタデータ、ViteのPages baseビルドと性能測定はローカルで成功しました。追加readinessブラウザ検査の実ブラウザ結果はDraft PR #10のCIで確認中です。iPhone実機、VoiceOver、ロック復帰、正式名・共有画像の確定は未実施です。R5の独立観点レビュー完了前に公開可とは扱いません。
+単体72件、P01〜P09、lint、ライセンスメタデータ、ViteのPages baseビルドと性能測定は成功しました。検証source head `1cf19149de75b1f970185ec903b6eed7c5896fad` / tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6` の[CI 36252821838](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は成功し、6 smoke・72単体・browser90件（89 expected + 1 flaky、retry成功）・最終失敗0・skip0でした。1件のflakyはWebKit 402×874の開始ボタン操作後にゲーム画面が出ず、再試行では通過したものです。traceではfatal・validation・console errorを確認できず、原因は未確定です。PR #10は2026-09-27 01:49:54 JSTにユーザーによりmain `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（同tree）へマージされました。詳細は[R5検査記録](../reviews/R5_VERIFICATION.md)と[CI集計](../../reports/r5/ci-36252821838.json)を参照してください。iPhone実機、VoiceOver、ロック復帰、正式名・共有画像の確定は未実施です。R5のCI成功・マージは、実機受入・公開許可とは扱いません。
 
 2026-09-26にPR #10の失敗対応を再開しました。head `3ad17c5226ab1026b7878678d1ae466f98c6722d` の[CI 35650672638](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35650672638)はsmoke 4件成功、全体70件中67件成功・3件失敗でした。残りは連続20回検査のlistener計数（両エンジン）と横画面844×390・文字200%の時間欄（WebKit）です。診断head `10b4890902e2ddfeed97af100485825ba5038285` では上限を変えず対象・呼出元・矩形を記録します。新規cloneからの `npm ci`、型検査、lint、72単体、P01〜P09、ライセンス、buildは成功。実装/診断はLuna Max、独立レビューはSol Highが担当しています。詳細と失敗履歴は[R5検査記録](../reviews/R5_VERIFICATION.md)に追記しています。一般公開は引き続き保留です。
 
-診断CIで、増えた13 listenerは全て検査ツールの初回注入、時間欄は実際の幅不足と確定しました。基準値の取得前に読み取り専用で検査ツールを初期化し、listenerの増加許容をなくして20回を測定します。横画面の時間欄は余白・列幅を見直します。独立レビューで見つかった「例外時に5問進行側のタイマー等を停止できない」「復元した結果のボタンが動かない」問題も修正し、例外後の停止と全4操作を検査へ追加します。規則・90問・900組を変更せず、同じPRで修正後CIを確認します。
+診断では増えた13 listenerが全てPlaywright検査ツールの初回注入と判明しました。注入を基準取得前に済ませ、増加許容なしのQ03を両ブラウザで20回ずつ通過しました。375/390pxでの時間欄はカード余白を調整し、900.00は200%文字で一行に、1800.00は小画面でも要素・カード内に収まることを検査します。例外境界と5問進行側の後始末を接続し、確定結果を通常描画で復元して4操作を再び使えることも検査しました。規則・90問・900組のデータは変更していません。最新のCI・flaky・資源集計は[R5検査記録](../reviews/R5_VERIFICATION.md)と[CI集計](../../reports/r5/ci-36252821838.json)を参照してください。
