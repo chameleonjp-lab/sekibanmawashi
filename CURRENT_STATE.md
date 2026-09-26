@@ -1,12 +1,12 @@
 # 現在の状態
 
-更新日: 2026-09-26 / 対象: `chameleonjp-lab/sekibanmawashi`
+更新日: 2026-09-27 JST / 対象: `chameleonjp-lab/sekibanmawashi`
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)、R4（5問進行・時計・保存・結果・共有）は[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)でマージ済みです。R5（公開品質）は `chore/05-release-readiness` の[Draft PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)で実装・検査中です。**
+最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)、R4（5問進行・時計・保存・結果・共有）は[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)でマージ済みです。R5は[PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)として2026-09-27 01:49:54 JSTにユーザーによりmainへマージ済みです。検証ソース `1cf19149de75b1f970185ec903b6eed7c5896fad` の[CI 36252821838](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は成功し、browser 90件（89 expected + 1 flaky。初回失敗後に再試行成功）、最終失敗0・skip0でした。flakyの原因は未確定です。PR #10マージ時点のmainは `69ba9e1f34afa9bd5cbdf6950e77e6750132f648` / tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6` です。R5のマージは公開許可ではなく、R6へ進むための実機受入・明示的な公開指示は未完了です。**
 
-R5の基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
+R5開始時の基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）です。今回の記録更新PRの基準mainはPR #10マージ後の `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
 
 | 項目 | 決定・状態 |
 |---|---|
@@ -32,7 +32,7 @@ R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https:
 
 ## 次の作業
 
-R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4のPR #9は68単体テスト・54画面検査と独立レビューを完了してマージ済みです。R5の実装状況と未実施項目は[R5検査記録](docs/reviews/R5_VERIFICATION.md)で管理します。こちらではマージ・公開を行いません。
+R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)で管理します。R4のPR #9は68単体テスト・54画面検査と独立レビューを完了してマージ済みです。R5のマージ記録・CI・未実施項目・公開境界は[R5検査記録](docs/reviews/R5_VERIFICATION.md)で管理します。PR #10はマージ済みですが、実機受入・正式名と画像・R6の明示的な公開指示が残り、公開は保留です。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 

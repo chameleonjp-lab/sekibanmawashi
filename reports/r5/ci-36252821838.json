@@ -1,0 +1,1795 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "chameleonjp-lab/sekibanmawashi",
+    "baseMain": "0709e7ff2faaaf8b5e28e4038e60ca1872e118a5",
+    "head": "1cf19149de75b1f970185ec903b6eed7c5896fad",
+    "tree": "451b800a2ab1b536680cc49fb667faa0ca87a1c6",
+    "runId": 36252821838,
+    "runUrl": "https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838",
+    "artifactId": 10911076667,
+    "artifactSha256": "2029037c85514781395da1ae3a10ea93a542aaa91f7523f9a885883aa8a89e88"
+  },
+  "integration": {
+    "pullRequest": 10,
+    "mergedAt": "2026-09-26T16:49:54Z",
+    "mainCommit": "69ba9e1f34afa9bd5cbdf6950e77e6750132f648",
+    "mainTree": "451b800a2ab1b536680cc49fb667faa0ca87a1c6",
+    "matchesTestedTree": true,
+    "note": "Merge metadata and tree equality verified separately; this is not a claim of a new CI run on the merge commit."
+  },
+  "environment": {
+    "os": "Ubuntu 24.04.5",
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "playwright": "1.63.0",
+    "physicalDevice": false
+  },
+  "workflowConclusion": "success",
+  "performance": {
+    "distBytes": 298054,
+    "distGzipJavascriptBytes": 43627,
+    "distJavascriptBytes": 280907,
+    "puzzleJsonBytes": 109681,
+    "puzzleJsonGzipBytes": 5691,
+    "puzzleJsonTransport": "embedded-in-javascript; standalone gzip diagnostic",
+    "puzzleCount": 90,
+    "maxParts": 11,
+    "evaluateSamples": 155520,
+    "evaluateMilliseconds": {
+      "p50": 0.04138700000021345,
+      "p95": 0.0559849999999642,
+      "max": 1.2809550000000058
+    },
+    "networkTransferMeasured": false
+  },
+  "unit": {
+    "passed": 72,
+    "failed": 0
+  },
+  "smoke": {
+    "passed": 6
+  },
+  "browserStats": {
+    "startTime": "2026-09-26T15:45:33.658Z",
+    "duration": 3146637.0409999997,
+    "expected": 89,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 1
+  },
+  "cases": [
+    {
+      "project": "chromium",
+      "title": "V01/V04/V05 render all 90 puzzles with twelve directions and finite light paths",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 85620
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "V01 rejects an unknown puzzle id without falling back to another board",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 856
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "V02 covers every prescribed viewport at 200% root text without clipping controls",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 15963
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "V02 keeps the primary controls and board on every normal-text viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 12193
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "V03 separates all three ring hit regions and keeps selection at zero moves",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1076
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "V01/V04/V05 render all 90 puzzles with twelve directions and finite light paths",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 95298
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "V01 rejects an unknown puzzle id without falling back to another board",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1111
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "V02 covers every prescribed viewport at 200% root text without clipping controls",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 21325
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "V02 keeps the primary controls and board on every normal-text viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 14337
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "V03 separates all three ring hit regions and keeps selection at zero moves",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1359
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I01 accepts one click, one touch tap, and one programmatic button activation as one move each",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1066
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I03 does not duplicate compatibility clicks, multi-touch, cancelled pointers, or held input",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2041
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I04 keeps focus on the accessible HTML ring control after the SVG is replaced",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 997
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I04 does not prevent held Enter/Space in input, textarea, or contenteditable targets",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1151
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I02/I04 keep the board fixed during dialogs and protect editable controls from shortcuts",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1272
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I05 closes the dialog with Escape and restores the opener focus",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1105
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I04 supports arrows and held Space without changing the selected ring unexpectedly",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1949
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "I06 solves a known rendered official puzzle by touch and by keyboard, and freezes after success",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2860
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I01 accepts one click, one touch tap, and one programmatic button activation as one move each",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1538
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I03 does not duplicate compatibility clicks, multi-touch, cancelled pointers, or held input",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2557
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I04 keeps focus on the accessible HTML ring control after the SVG is replaced",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1431
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I04 does not prevent held Enter/Space in input, textarea, or contenteditable targets",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1670
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I02/I04 keep the board fixed during dialogs and protect editable controls from shortcuts",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1767
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I05 closes the dialog with Escape and restores the opener focus",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1605
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I04 supports arrows and held Space without changing the selected ring unexpectedly",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2618
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "I06 solves a known rendered official puzzle by touch and by keyboard, and freezes after success",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3504
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "F01/F02: challenge has five fixed questions, one countdown, four intermissions, and a result",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 14552
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "F03/F04/T02/T03: dialogs and lifecycle events keep the same question and avoid duplicate moves",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4648
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "F03: abort during countdown or intermission cancels stale callbacks",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7533
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "F03/F04: every question boundary cancels stale work before and after success",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 101889
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "F05: reload reports an unfinished run, keeps its assignment, and practice resets only the current puzzle",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 20015
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "T01/T02/T03: countdown and intermissions are excluded while help, abort, and background time count exactly",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 14635
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "T04: a backward wall clock marks the result as reference data without erasing it",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 14914
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "T04/F05: more than 300 moves stays operable and finalizes as reference data",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 32230
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "S01/S03: malformed, typed-bad, null, and throwing storage leave a usable home screen",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7348
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "S03: a second tab observes a completed best and cannot move it backwards",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 33545
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "S02/U03: a final write failure keeps results and share fallback/cancel semantics",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 14889
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "U03: unsupported share falls back to copy, copy failure leaves selectable text, and cancel does not copy",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 17045
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "U01/U02: name validation and result links expose challenge, practice, home, and experiment routes",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 43733
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R4 responsive acceptance: home, game, and result have no horizontal overflow at every prescribed viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 156545
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "F01/F02: challenge has five fixed questions, one countdown, four intermissions, and a result",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 27227
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "F03/F04/T02/T03: dialogs and lifecycle events keep the same question and avoid duplicate moves",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 5823
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "F03: abort during countdown or intermission cancels stale callbacks",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 9782
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "F03/F04: every question boundary cancels stale work before and after success",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 158769
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "F05: reload reports an unfinished run, keeps its assignment, and practice resets only the current puzzle",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 30853
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "T01/T02/T03: countdown and intermissions are excluded while help, abort, and background time count exactly",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 26530
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "T04: a backward wall clock marks the result as reference data without erasing it",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 24660
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "T04/F05: more than 300 moves stays operable and finalizes as reference data",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 75752
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "S01/S03: malformed, typed-bad, null, and throwing storage leave a usable home screen",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 8033
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "S03: a second tab observes a completed best and cannot move it backwards",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 55140
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "S02/U03: a final write failure keeps results and share fallback/cancel semantics",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 27012
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "U03: unsupported share falls back to copy, copy failure leaves selectable text, and cancel does not copy",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 31344
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "U01/U02: name validation and result links expose challenge, practice, home, and experiment routes",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 82993
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R4 responsive acceptance: home, game, and result have no horizontal overflow at every prescribed viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 271879
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "Q02/U04: the normal app flow has metadata and no browser diagnostics",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 15754
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "startup fallback remains actionable when the entry module fails to load",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 232
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "fatal boundary recovers and handles a second independent exception",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1373
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "fatal recovery cancels live runs and rebuilds finalized-result actions",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 59796
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w320-h568 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 22746
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w375-h667 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 26261
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w390-h844 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 28462
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w402-h874 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 28038
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w430-h932 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 27308
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w844-h390 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 26586
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w1280-h720 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 37930
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w393-h852 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 28137
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w852-h393 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 27128
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "R5 state matrix: all required screens at w1440-h900 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 43167
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "load and save failures preserve usable recovery screens at every prescribed viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 167638
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "U05: audio off and audio resume failure never block a real run",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 31944
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "U05: a delayed audio resume cannot play after abort, and action sounds remain distinct",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 17014
+        }
+      ]
+    },
+    {
+      "project": "chromium",
+      "title": "Q03: twenty consecutive five-question challenges have no duplicate progress, best regression, or persistent resource growth",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 325314
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "Q02/U04: the normal app flow has metadata and no browser diagnostics",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 31120
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "startup fallback remains actionable when the entry module fails to load",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 937
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "fatal boundary recovers and handles a second independent exception",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1867
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "fatal recovery cancels live runs and rebuilds finalized-result actions",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 105361
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w320-h568 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 119200
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w375-h667 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 129287
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w390-h844 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 110249
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w402-h874 and 200% text",
+      "status": "flaky",
+      "attempts": [
+        {
+          "status": "failed",
+          "retry": 0,
+          "durationMs": 17994
+        },
+        {
+          "status": "passed",
+          "retry": 1,
+          "durationMs": 97719
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w430-h932 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 94664
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w844-h390 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 102249
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w1280-h720 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 161711
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w393-h852 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 94384
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w852-h393 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 100094
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "R5 state matrix: all required screens at w1440-h900 and 200% text",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 173739
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "load and save failures preserve usable recovery screens at every prescribed viewport",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 205298
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "U05: audio off and audio resume failure never block a real run",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 47095
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "U05: a delayed audio resume cannot play after abort, and action sounds remain distinct",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 25203
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "title": "Q03: twenty consecutive five-question challenges have no duplicate progress, best regression, or persistent resource growth",
+      "status": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 480650
+        }
+      ]
+    }
+  ],
+  "q03": [
+    {
+      "project": "chromium",
+      "status": "expected",
+      "baseline": {
+        "domNodes": 64,
+        "timeouts": 0,
+        "intervals": 1,
+        "listeners": 24,
+        "audioContexts": 0,
+        "audioNodes": 0,
+        "audioProbeSupported": true,
+        "audioStops": 0,
+        "audioDisconnects": 0,
+        "activeAudioNodes": 0,
+        "activeOscillators": 0,
+        "resources": 25
+      },
+      "runs": [
+        {
+          "run": 1,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 182,
+          "audioProbeSupported": true,
+          "audioStops": 91,
+          "audioDisconnects": 182,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 2,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 362,
+          "audioProbeSupported": true,
+          "audioStops": 181,
+          "audioDisconnects": 362,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 3,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 542,
+          "audioProbeSupported": true,
+          "audioStops": 271,
+          "audioDisconnects": 542,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 4,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 728,
+          "audioProbeSupported": true,
+          "audioStops": 364,
+          "audioDisconnects": 728,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 5,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 910,
+          "audioProbeSupported": true,
+          "audioStops": 455,
+          "audioDisconnects": 910,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 6,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1084,
+          "audioProbeSupported": true,
+          "audioStops": 542,
+          "audioDisconnects": 1084,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 7,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1262,
+          "audioProbeSupported": true,
+          "audioStops": 631,
+          "audioDisconnects": 1262,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 8,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1446,
+          "audioProbeSupported": true,
+          "audioStops": 723,
+          "audioDisconnects": 1446,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 9,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1624,
+          "audioProbeSupported": true,
+          "audioStops": 812,
+          "audioDisconnects": 1624,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 10,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1804,
+          "audioProbeSupported": true,
+          "audioStops": 902,
+          "audioDisconnects": 1804,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 11,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1982,
+          "audioProbeSupported": true,
+          "audioStops": 991,
+          "audioDisconnects": 1982,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 12,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2156,
+          "audioProbeSupported": true,
+          "audioStops": 1078,
+          "audioDisconnects": 2156,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 13,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2330,
+          "audioProbeSupported": true,
+          "audioStops": 1165,
+          "audioDisconnects": 2330,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 14,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2508,
+          "audioProbeSupported": true,
+          "audioStops": 1254,
+          "audioDisconnects": 2508,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 15,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2682,
+          "audioProbeSupported": true,
+          "audioStops": 1341,
+          "audioDisconnects": 2682,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 16,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2862,
+          "audioProbeSupported": true,
+          "audioStops": 1431,
+          "audioDisconnects": 2862,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 17,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3048,
+          "audioProbeSupported": true,
+          "audioStops": 1524,
+          "audioDisconnects": 3048,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 18,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3220,
+          "audioProbeSupported": true,
+          "audioStops": 1610,
+          "audioDisconnects": 3220,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 19,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3404,
+          "audioProbeSupported": true,
+          "audioStops": 1702,
+          "audioDisconnects": 3404,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 20,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3588,
+          "audioProbeSupported": true,
+          "audioStops": 1794,
+          "audioDisconnects": 3588,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        }
+      ]
+    },
+    {
+      "project": "webkit",
+      "status": "expected",
+      "baseline": {
+        "domNodes": 64,
+        "timeouts": 0,
+        "intervals": 1,
+        "listeners": 24,
+        "audioContexts": 0,
+        "audioNodes": 0,
+        "audioProbeSupported": true,
+        "audioStops": 0,
+        "audioDisconnects": 0,
+        "activeAudioNodes": 0,
+        "activeOscillators": 0,
+        "resources": 25
+      },
+      "runs": [
+        {
+          "run": 1,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 180,
+          "audioProbeSupported": true,
+          "audioStops": 90,
+          "audioDisconnects": 180,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 2,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 360,
+          "audioProbeSupported": true,
+          "audioStops": 180,
+          "audioDisconnects": 360,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 3,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 542,
+          "audioProbeSupported": true,
+          "audioStops": 271,
+          "audioDisconnects": 542,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 4,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 726,
+          "audioProbeSupported": true,
+          "audioStops": 363,
+          "audioDisconnects": 726,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 5,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 910,
+          "audioProbeSupported": true,
+          "audioStops": 455,
+          "audioDisconnects": 910,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 6,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1090,
+          "audioProbeSupported": true,
+          "audioStops": 545,
+          "audioDisconnects": 1090,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 7,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1274,
+          "audioProbeSupported": true,
+          "audioStops": 637,
+          "audioDisconnects": 1274,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 8,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1456,
+          "audioProbeSupported": true,
+          "audioStops": 728,
+          "audioDisconnects": 1456,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 9,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1632,
+          "audioProbeSupported": true,
+          "audioStops": 816,
+          "audioDisconnects": 1632,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 10,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1812,
+          "audioProbeSupported": true,
+          "audioStops": 906,
+          "audioDisconnects": 1812,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 11,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 1996,
+          "audioProbeSupported": true,
+          "audioStops": 998,
+          "audioDisconnects": 1996,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 12,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2184,
+          "audioProbeSupported": true,
+          "audioStops": 1092,
+          "audioDisconnects": 2184,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 13,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2366,
+          "audioProbeSupported": true,
+          "audioStops": 1183,
+          "audioDisconnects": 2366,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 14,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2552,
+          "audioProbeSupported": true,
+          "audioStops": 1276,
+          "audioDisconnects": 2552,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 15,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2730,
+          "audioProbeSupported": true,
+          "audioStops": 1365,
+          "audioDisconnects": 2730,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 16,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 2910,
+          "audioProbeSupported": true,
+          "audioStops": 1455,
+          "audioDisconnects": 2910,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 17,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3090,
+          "audioProbeSupported": true,
+          "audioStops": 1545,
+          "audioDisconnects": 3090,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 18,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3270,
+          "audioProbeSupported": true,
+          "audioStops": 1635,
+          "audioDisconnects": 3270,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 19,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3450,
+          "audioProbeSupported": true,
+          "audioStops": 1725,
+          "audioDisconnects": 3450,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        },
+        {
+          "run": 20,
+          "domNodes": 64,
+          "timeouts": 0,
+          "intervals": 1,
+          "listeners": 24,
+          "audioContexts": 1,
+          "audioNodes": 3626,
+          "audioProbeSupported": true,
+          "audioStops": 1813,
+          "audioDisconnects": 3626,
+          "activeAudioNodes": 0,
+          "activeOscillators": 0,
+          "resources": 25
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "One WebKit 402x874 state-matrix case failed its first attempt and passed on retry; not a zero-flaky run.",
+    "Linux browser emulation is not iPhone Safari, VoiceOver, physical lock/resume, or device-audio acceptance.",
+    "Resource instrumentation does not prove absence of every JavaScript heap leak."
+  ]
+}
