@@ -58,6 +58,7 @@ type ResourceSnapshot = {
   timeouts: number;
   intervals: number;
   listeners: number;
+  listenerDetails: Array<{ target: string; type: string; count: number; callers: string[] }>;
   audioContexts: number;
   audioNodes: number;
   audioProbeSupported: boolean;
@@ -163,6 +164,7 @@ async function installResourceProbe(page: Page): Promise<void> {
       type: string;
       listener: EventListenerOrEventListenerObject;
       active: boolean;
+      caller: string;
     };
     type AudioRecord = {
       kind: "oscillator" | "gain";
@@ -226,13 +228,30 @@ async function installResourceProbe(page: Page): Promise<void> {
 
     const nativeAdd = EventTarget.prototype.addEventListener;
     const nativeRemove = EventTarget.prototype.removeEventListener;
+    const describeListenerTarget = (value: EventTarget): string => {
+      if (value === window) return "window";
+      if (value === document) return "document";
+      if (value instanceof Element) {
+        const identity = [
+          value.id ? `#${value.id}` : "",
+          value.getAttribute("data-testid") ? `[data-testid=${value.getAttribute("data-testid")}]` : "",
+          value.getAttribute("data-action") ? `[data-action=${value.getAttribute("data-action")}]` : "",
+          value.getAttribute("data-screen") ? `[data-screen=${value.getAttribute("data-screen")}]` : "",
+          value.getAttribute("data-modal") ? `[data-modal=${value.getAttribute("data-modal")}]` : "",
+        ].join("");
+        return `${value.tagName.toLowerCase()}${identity || `.${Array.from(value.classList).slice(0, 2).join(".")}`}`;
+      }
+      if (value instanceof Node) return value.nodeName;
+      return value.constructor?.name ?? "EventTarget";
+    };
     EventTarget.prototype.addEventListener = function addEventListener(
       type: string,
       listener: EventListenerOrEventListenerObject | null,
       options?: AddEventListenerOptions | boolean,
     ): void {
       if (listener) {
-        const record: ListenerRecord = { target: this, type, listener, active: true };
+        const caller = new Error().stack?.split("\n").slice(2, 4).map((line) => line.trim()).join(" <- ") ?? "unknown";
+        const record: ListenerRecord = { target: this, type, listener, active: true, caller };
         probe.listeners.push(record);
         const signal = typeof options === "object" ? options.signal : undefined;
         if (signal) {
@@ -327,20 +346,33 @@ async function installResourceProbe(page: Page): Promise<void> {
       }
     }
 
-    target.__r5ResourceSnapshot = () => ({
-      domNodes: document.querySelectorAll("*").length,
-      timeouts: probe.timeoutIds.size,
-      intervals: probe.intervalIds.size,
-      listeners: probe.listeners.filter((entry) => entry.active && connected(entry.target)).length,
-      audioContexts: probe.audioContexts,
-      audioNodes: probe.audioNodes,
-      audioProbeSupported: probe.audioProbeSupported,
-      audioStops: probe.audioStops,
-      audioDisconnects: probe.audioDisconnects,
-      activeAudioNodes: probe.audioRecords.filter((record) => !(record.stopped && record.disconnected)).length,
-      activeOscillators: probe.audioRecords.filter((record) => record.kind === "oscillator" && !(record.stopped && record.disconnected)).length,
-      resources: performance.getEntriesByType("resource").length,
-    });
+    target.__r5ResourceSnapshot = () => {
+      const activeListeners = probe.listeners.filter((entry) => entry.active && connected(entry.target));
+      const listenerGroups = new Map<string, { target: string; type: string; count: number; callers: Set<string> }>();
+      for (const entry of activeListeners) {
+        const listenerTarget = describeListenerTarget(entry.target);
+        const key = `${listenerTarget}\u0000${entry.type}`;
+        const group = listenerGroups.get(key) ?? { target: listenerTarget, type: entry.type, count: 0, callers: new Set<string>() };
+        group.count += 1;
+        if (group.callers.size < 3) group.callers.add(entry.caller);
+        listenerGroups.set(key, group);
+      }
+      return {
+        domNodes: document.querySelectorAll("*").length,
+        timeouts: probe.timeoutIds.size,
+        intervals: probe.intervalIds.size,
+        listeners: activeListeners.length,
+        listenerDetails: Array.from(listenerGroups.values()).map((group) => ({ ...group, callers: Array.from(group.callers) })),
+        audioContexts: probe.audioContexts,
+        audioNodes: probe.audioNodes,
+        audioProbeSupported: probe.audioProbeSupported,
+        audioStops: probe.audioStops,
+        audioDisconnects: probe.audioDisconnects,
+        activeAudioNodes: probe.audioRecords.filter((record) => !(record.stopped && record.disconnected)).length,
+        activeOscillators: probe.audioRecords.filter((record) => record.kind === "oscillator" && !(record.stopped && record.disconnected)).length,
+        resources: performance.getEntriesByType("resource").length,
+      };
+    };
   });
 }
 
@@ -481,6 +513,7 @@ async function readResourceSnapshot(page: Page): Promise<ResourceSnapshot> {
       timeouts: -1,
       intervals: -1,
       listeners: -1,
+      listenerDetails: [],
       audioContexts: -1,
       audioNodes: -1,
       audioProbeSupported: false,
@@ -660,25 +693,53 @@ async function assertLinksReachable(page: Page, viewport: Viewport): Promise<voi
 
 async function assertGameStatusReadableAt200(page: Page): Promise<void> {
   const status = await page.evaluate(() => {
-    const lineCount = (element: Element): number => {
+    const measureText = (element: HTMLElement | null) => {
+      if (!element) return { lines: 0, rects: [], clientWidth: 0, scrollWidth: 0, fontSize: "", whiteSpace: "" };
       const range = document.createRange();
       range.selectNodeContents(element);
-      const tops = new Set(Array.from(range.getClientRects()).map((rect) => Math.round(rect.top * 10) / 10));
-      return tops.size;
+      const rects = Array.from(range.getClientRects()).map((rect) => ({
+        top: Math.round(rect.top * 100) / 100,
+        left: Math.round(rect.left * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+        height: Math.round(rect.height * 100) / 100,
+      }));
+      const style = getComputedStyle(element);
+      const tops = new Set(rects.map((rect) => Math.round(rect.top * 10) / 10));
+      return {
+        lines: tops.size,
+        rects,
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+        fontSize: style.fontSize,
+        whiteSpace: style.whiteSpace,
+      };
     };
-    return Array.from(document.querySelectorAll<HTMLElement>("[data-testid='game-screen'] .status-card")).map((card) => ({
-      label: card.querySelector<HTMLElement>(".status-label")?.textContent?.trim() ?? "",
-      labelLines: card.querySelector<HTMLElement>(".status-label") ? lineCount(card.querySelector<HTMLElement>(".status-label") as HTMLElement) : 0,
-      value: card.querySelector<HTMLElement>("[data-field]")?.textContent?.trim() ?? "",
-      valueLines: card.querySelector<HTMLElement>("[data-field]") ? lineCount(card.querySelector<HTMLElement>("[data-field]") as HTMLElement) : 0,
-    }));
+    return Array.from(document.querySelectorAll<HTMLElement>("[data-testid='game-screen'] .status-card")).map((card) => {
+      const cardRect = card.getBoundingClientRect();
+      const cardStyle = getComputedStyle(card);
+      return {
+        label: card.querySelector<HTMLElement>(".status-label")?.textContent?.trim() ?? "",
+        labelText: measureText(card.querySelector<HTMLElement>(".status-label")),
+        value: card.querySelector<HTMLElement>("[data-field]")?.textContent?.trim() ?? "",
+        valueText: measureText(card.querySelector<HTMLElement>("[data-field]")),
+        cardRect: {
+          top: Math.round(cardRect.top * 100) / 100,
+          left: Math.round(cardRect.left * 100) / 100,
+          width: Math.round(cardRect.width * 100) / 100,
+          height: Math.round(cardRect.height * 100) / 100,
+        },
+        cardStyle: { paddingInline: cardStyle.paddingInline, display: cardStyle.display, gridTemplateColumns: cardStyle.gridTemplateColumns },
+        cardScrollWidth: card.scrollWidth,
+        cardClientWidth: card.clientWidth,
+      };
+    });
   });
   expect(status, "the four game status cards are present").toHaveLength(4);
   for (const card of status) {
     expect(card.label.length, "status labels remain visible").toBeGreaterThan(0);
-    expect(card.labelLines, `${card.label} label is not one-character-per-line`).toBeLessThanOrEqual(2);
+    expect(card.labelText.lines, `${card.label} label geometry: ${JSON.stringify(card)}`).toBeLessThanOrEqual(2);
     expect(card.value.length, `${card.label} value remains visible`).toBeGreaterThan(0);
-    expect(card.valueLines, `${card.label} value remains on one visual line`).toBe(1);
+    expect(card.valueText.lines, `${card.label} value geometry: ${JSON.stringify(card)}`).toBe(1);
   }
 }
 
@@ -886,8 +947,8 @@ test.describe("R5 release readiness", () => {
       await assertHitTargets(page);
       await assertNonColorControls(page);
       await assertButtonsReachable(page, viewport);
-      await assertGameStatusReadableAt200(page);
       await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-game-200.png`), fullPage: true });
+      await assertGameStatusReadableAt200(page);
       await setFontScale(page, 100);
 
       await page.getByRole("button", { name: "中断" }).first().click();
@@ -1115,7 +1176,7 @@ test.describe("R5 release readiness", () => {
     await assertNoBrowserDiagnostics(page, diagnostics);
   });
 
-  test("Q03: twenty consecutive five-question challenges have no duplicate progress, best regression, or persistent resource growth", async ({ page }) => {
+  test("Q03: twenty consecutive five-question challenges have no duplicate progress, best regression, or persistent resource growth", async ({ page }, testInfo: TestInfo) => {
     test.setTimeout(1_200_000);
     const diagnostics = installDiagnostics(page);
     await installUnhandledProbe(page);
@@ -1171,12 +1232,25 @@ test.describe("R5 release readiness", () => {
 
       await page.waitForTimeout(500);
       const snapshot = await readResourceSnapshot(page);
+      const listenerEvidence = {
+        run: run + 1,
+        baseline: { count: baseline.listeners, details: baseline.listenerDetails },
+        previous: { count: previous.listeners, details: previous.listenerDetails },
+        settled: { count: snapshot.listeners, details: snapshot.listenerDetails },
+      };
+      await testInfo.attach(`q03-listeners-run-${run + 1}`, {
+        body: JSON.stringify(listenerEvidence, null, 2),
+        contentType: "application/json",
+      });
       // Intervals and listener/timer ownership must return to the home-state
       // baseline. Small bounded slack covers browser/framework listeners that
       // are attached lazily once on the first run.
       expect(snapshot.intervals).toBeLessThanOrEqual(baseline.intervals);
       expect(snapshot.timeouts).toBeLessThanOrEqual(baseline.timeouts + 2);
-      expect(snapshot.listeners).toBeLessThanOrEqual(baseline.listeners + 12);
+      expect(
+        snapshot.listeners,
+        `Q03 active connected listeners after run ${run + 1}: ${JSON.stringify(listenerEvidence)}`,
+      ).toBeLessThanOrEqual(baseline.listeners + 12);
       expect(snapshot.audioContexts).toBeLessThanOrEqual(baseline.audioContexts + 1);
       expect(snapshot.audioProbeSupported).toBe(true);
       expect(snapshot.audioContexts).toBeGreaterThanOrEqual(baseline.audioContexts);
