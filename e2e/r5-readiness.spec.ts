@@ -720,10 +720,15 @@ async function assertGameStatusReadableAt200(page: Page): Promise<void> {
       const valueElement = card.querySelector<HTMLElement>("[data-field]");
       const value = valueElement?.textContent?.trim() ?? "";
       let longTimeText: ReturnType<typeof measureText> | null = null;
+      let longerTimeText: ReturnType<typeof measureText> | null = null;
+      let longerTimeCard: { scrollWidth: number; clientWidth: number } | null = null;
       if (valueElement?.dataset.field === "time") {
         const original = valueElement.textContent;
         valueElement.textContent = "900.00";
         longTimeText = measureText(valueElement);
+        valueElement.textContent = "1800.00";
+        longerTimeText = measureText(valueElement);
+        longerTimeCard = { scrollWidth: card.scrollWidth, clientWidth: card.clientWidth };
         valueElement.textContent = original;
       }
       return {
@@ -732,6 +737,8 @@ async function assertGameStatusReadableAt200(page: Page): Promise<void> {
         value,
         valueText: measureText(valueElement),
         longTimeText,
+        longerTimeText,
+        longerTimeCard,
         cardRect: {
           top: Math.round(cardRect.top * 100) / 100,
           left: Math.round(cardRect.left * 100) / 100,
@@ -755,6 +762,10 @@ async function assertGameStatusReadableAt200(page: Page): Promise<void> {
     if (card.longTimeText) {
       expect(card.longTimeText.lines, `900.00-second time remains on one line: ${JSON.stringify(card)}`).toBe(1);
       expect(card.longTimeText.scrollWidth, `900.00-second time fits its content box: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.longTimeText.clientWidth);
+    }
+    if (card.longerTimeText && card.longerTimeCard) {
+      expect(card.longerTimeText.scrollWidth, `1800.00-second time remains contained: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.longerTimeText.clientWidth);
+      expect(card.longerTimeCard.scrollWidth, `card contains the longer time value: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.longerTimeCard.clientWidth);
     }
   }
 }

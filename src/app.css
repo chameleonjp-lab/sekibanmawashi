@@ -1038,7 +1038,14 @@ figcaption {
 
 @media (max-width: 36rem) {
   .game-screen .status-card {
-    padding-inline: 0.45rem;
+    /* Preserve room for a six-character 900.00 timer at 200% text on
+       narrow two-column layouts without shrinking the value itself. */
+    padding-inline: 0.25rem;
+  }
+
+  .game-screen .status-card [data-field="time"] {
+    /* Longer practice runs may exceed the width available to a single line. */
+    white-space: normal;
   }
 }
 
