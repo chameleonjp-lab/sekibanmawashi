@@ -522,6 +522,42 @@ figcaption {
   text-align: center;
 }
 
+.fatal-error-screen {
+  gap: 0.8rem;
+}
+
+.fatal-error-screen p {
+  max-width: 34rem;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+.fatal-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.fatal-error-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7rem;
+  min-height: 3rem;
+  border: 1px solid #96958b;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  color: var(--parchment);
+  text-decoration: none;
+  background: #2f3031;
+}
+
+.fatal-error-actions a:focus-visible {
+  outline: 3px solid var(--beam);
+  outline-offset: 3px;
+}
+
 @media (max-width: 58rem) {
   .game-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -558,7 +594,9 @@ figcaption {
   }
 
   .puzzle-status {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.4fr);
+    /* Give the live time field enough room for the full 900.00-second display
+       at 200% text without compressing the adjacent status message. */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr) minmax(0, 1.5fr);
     gap: 0.35rem;
     margin-bottom: 0.5rem;
   }
@@ -566,6 +604,16 @@ figcaption {
   .status-card,
   .status-message {
     padding-block: 0.35rem;
+  }
+
+  .status-card {
+    /* At 200% text the default 0.8rem inline padding consumes 51px per
+       card, forcing the live time value onto two lines in landscape. */
+    padding-inline: 0.35rem;
+  }
+
+  .status-card strong {
+    white-space: nowrap;
   }
 
   .game-layout {
@@ -640,9 +688,19 @@ figcaption {
   }
 
   .puzzle-status {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* At most four tracks fit with gaps. Doubling rem raises the minimum
+       to 128px, leaving two readable cards per row on narrow screens. */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, max(4rem, 20%)), 1fr));
     gap: 0.4rem;
     margin-bottom: 0.45rem;
+  }
+
+  .status-card strong {
+    white-space: nowrap;
+  }
+
+  .status-label {
+    word-break: keep-all;
   }
 
   .status-message {
@@ -715,7 +773,7 @@ figcaption {
   }
 
   .status-label {
-    font-size: 0.62rem;
+    font-size: 0.56rem;
   }
 
   .status-card strong {
@@ -980,7 +1038,14 @@ figcaption {
 
 @media (max-width: 36rem) {
   .game-screen .status-card {
-    padding-inline: 0.45rem;
+    /* Preserve room for a six-character 900.00 timer at 200% text on
+       narrow two-column layouts without shrinking the value itself. */
+    padding-inline: 0.25rem;
+  }
+
+  .game-screen .status-card [data-field="time"] {
+    /* Longer practice runs may exceed the width available to a single line. */
+    white-space: normal;
   }
 }
 

@@ -4,6 +4,7 @@ import {
   evaluate,
   selectRing as selectCoreRing,
 } from "./core/engine.ts";
+import { GAME_TITLE } from "./core/index.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { createBoardSvg } from "./board.ts";
 import {
@@ -43,6 +44,7 @@ import {
   saveName,
 } from "./storage.ts";
 import { LAB_URL, PUBLIC_GAME_URL, shareOrCopy, shareText } from "./share.ts";
+import { SoundController } from "./sound.ts";
 
 const DIFFICULTY_LABELS: Record<Puzzle["difficulty"], string> = {
   easy: "初級",
@@ -53,8 +55,15 @@ const DIFFICULTY_LABELS: Record<Puzzle["difficulty"], string> = {
 type ModalName = "help" | "abort";
 type HomeOptions = { notice?: string; prefill?: string };
 type RunOptions = { storageWarning?: string };
+type FinalizedResultRecovery = {
+  prepared: PreparedPool;
+  result: FinalRunResult;
+  playerName: string;
+  initialNotice: string;
+};
 
 const teardownByRoot = new WeakMap<HTMLElement, () => void>();
+const finalizedResultByRoot = new WeakMap<HTMLElement, FinalizedResultRecovery>();
 let attemptSerial = 0;
 
 function query<T extends Element>(root: ParentNode, selector: string): T | null {
@@ -77,15 +86,40 @@ function teardownRoot(root: HTMLElement): void {
   teardownByRoot.delete(root);
 }
 
+/** Dispose run/result listeners and timers when the app-level boundary takes over. */
+export function teardownRunUi(root: HTMLElement): void {
+  teardownRoot(root);
+}
+
+/** Whether a fully finalized in-memory result can be rebuilt after an exception. */
+export function hasFinalizedResultRecovery(root: HTMLElement): boolean {
+  return finalizedResultByRoot.has(root);
+}
+
+/** Rebuild the saved result through the normal renderer so its actions work. */
+export function restoreFinalizedResult(root: HTMLElement): boolean {
+  const recovery = finalizedResultByRoot.get(root);
+  if (!recovery) return false;
+  renderResult(root, recovery.prepared, recovery.result, recovery.playerName, recovery.initialNotice);
+  return true;
+}
+
 function renderArtifactError(root: HTMLElement, message: string): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   root.innerHTML = `
     <section class="app-shell load-error-screen" data-testid="load-error" data-error="artifact" role="alert">
       <h1>問題を読み込めません</h1>
       <p>${message}</p>
       <p class="muted-copy">問題庫を確認してから、もう一度読み込んでください。</p>
+      <div class="fatal-error-actions">
+        <button type="button" class="primary-button" data-action="reload">もう一度読み込む</button>
+        <a class="secondary-button" href="${typeof window === "undefined" ? "/" : new URL("./", window.location.href).href}">ホームへ戻る</a>
+        <a class="secondary-button" href="${LAB_URL}">実験場へ戻る</a>
+      </div>
     </section>
   `;
+  query<HTMLButtonElement>(root, "[data-action='reload']")?.addEventListener("click", () => window.location.reload());
 }
 
 function renderHomeError(root: HTMLElement, message: string): void {
@@ -109,6 +143,7 @@ function uniqueAttemptId(seed: string): string {
 /** Render the default home screen. The puzzle query path remains owned by app.ts. */
 export function renderHome(root: HTMLElement, prepared: PreparedPool, options: HomeOptions = {}): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   let snapshot;
   try {
     snapshot = loadSave({ prepared });
@@ -129,7 +164,7 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
       <header class="app-header home-header">
         <div>
           <p class="eyebrow">常時発光・回転パズル</p>
-          <h1 id="home-title">石板回し</h1>
+          <h1 id="home-title">${GAME_TITLE}</h1>
           <p class="subtitle">三本の環を回して、5問を続けて解きます。</p>
         </div>
         <a class="secondary-button home-lab-link" href="${LAB_URL}">実験場へ戻る</a>
@@ -201,6 +236,7 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
   const homeShare = query<HTMLButtonElement>(root, "[data-action='home-share']");
   const homeShareArea = query<HTMLElement>(root, "[data-home-share-area]");
   if (!shell || !input || !challengeForm || !practiceForm || !audio || !nameError || !notice || !bestEmpty || !bestDetails || !bestTime || !bestMoves || !bestName || !homeShare || !homeShareArea) return;
+  const sound = new SoundController({ enabled: snapshot.audioEnabled });
 
   input.value = displayName(snapshot.name, options.prefill);
   audio.checked = snapshot.audioEnabled;
@@ -232,10 +268,12 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
   const start = (mode: RunMode): void => {
     const checked = validatePlayerName(input.value);
     if (!checked.ok) {
+      void sound.unlockFromGesture().then((ready) => { if (ready) sound.play("error"); });
       setNameError(checked.message);
       input.focus();
       return;
     }
+    void sound.unlockFromGesture();
     setNameError();
     const nameWrite = saveName(checked.name);
     let warning = nameWrite.ok ? "" : storageMessage(nameWrite.error);
@@ -277,6 +315,8 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     start("practice");
   }, { signal: controller.signal });
   audio.addEventListener("change", () => {
+    sound.setEnabled(audio.checked);
+    if (audio.checked) void sound.unlockFromGesture();
     const result = saveAudioEnabled(audio.checked);
     if (!result.ok) {
       notice.hidden = false;
@@ -284,6 +324,7 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     }
   }, { signal: controller.signal });
   homeShare.addEventListener("click", () => {
+    void sound.unlockFromGesture();
     const status = query<HTMLElement>(root, "[data-home-share-status]");
     if (status) status.textContent = "";
     homeShareArea.hidden = true;
@@ -307,7 +348,10 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
       currentStatus.textContent = result.status === "copied" ? "共有文をコピーしました。" : "共有しました。";
     });
   }, { signal: controller.signal });
-  teardownByRoot.set(root, () => controller.abort());
+  teardownByRoot.set(root, () => {
+    controller.abort();
+    sound.dispose();
+  });
 }
 
 function assignmentIsFreshForUi(assignment: Parameters<typeof markAssignmentSeen>[0], nowWallMs: number): boolean {
@@ -337,6 +381,7 @@ export function renderRun(
   options: RunOptions = {},
 ): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   let assignment = initialAssignment;
   let runState: RunState = createRunState(assignment);
   let phase: RunPhase = "loading";
@@ -365,7 +410,7 @@ export function renderRun(
         <header class="app-header">
           <div>
             <p class="eyebrow">${assignment.mode === "challenge" ? "5問チャレンジ" : "5問練習"}</p>
-            <h1 id="game-title">石板回し</h1>
+            <h1 id="game-title">${GAME_TITLE}</h1>
             <p class="subtitle">三本の環を選び、左右へ一区画ずつ回します。</p>
           </div>
           <div class="header-actions" aria-label="補助操作">
@@ -462,6 +507,7 @@ export function renderRun(
   shell.dataset.runId = assignment.runId;
   const settingsSnapshot = loadSave({ prepared });
   let helpSeen = settingsSnapshot.helpSeen;
+  const sound = new SoundController({ enabled: settingsSnapshot.audioEnabled });
   audio.checked = settingsSnapshot.audioEnabled;
 
   const listeners = new AbortController();
@@ -482,6 +528,7 @@ export function renderRun(
     disposed = true;
     clearScheduled();
     listeners.abort();
+    sound.dispose();
   };
   teardownByRoot.set(root, dispose);
 
@@ -583,6 +630,7 @@ export function renderRun(
 
   const setStorageWarning = (message: string): void => {
     if (!message) return;
+    sound.play("error");
     storageWarning = storageWarning || message;
     shell.dataset.storage = "warning";
     gameNote.textContent = "この端末に保存できません。今回は参考記録として表示します。未完了の割当を保持できない場合があります。";
@@ -632,6 +680,7 @@ export function renderRun(
   const abortRun = (): void => {
     if (phase === "result" || phase === "cancelled") return;
     clearScheduled();
+    sound.invalidate();
     phase = "cancelled";
     runState = { ...runState, phase: "cancelled" };
     // Keep an unfinished challenge ticket during its 30-minute retention
@@ -671,7 +720,12 @@ export function renderRun(
     phase = "result";
     runState = { ...runState, phase: "result" };
     const result = finalizeRun(runState);
-    renderResult(root, prepared, result, playerName, storageWarning);
+    const resultUnlock = sound.unlockFromGesture();
+    const resultSound = new SoundController({ enabled: sound.isEnabled() });
+    renderResult(root, prepared, result, playerName, storageWarning, resultSound);
+    // Rendering the result tears down the game controller. Emit the terminal
+    // effect from the result surface so teardown cannot cut it off.
+    void resultUnlock.then((ready) => { if (ready) resultSound.play("success"); });
     const best = storageWarning ? null : bestFromResult(result, playerName);
     if (storageWarning) {
       updateResultNotice(root, storageWarning);
@@ -726,19 +780,27 @@ export function renderRun(
     // argument on RunTimer.stop is used as a side-effect-only stop boundary so
     // a later callback cannot change the recorded solving time.
     const reading = timer.reading();
+    const before = evaluate(currentPuzzle, session.state);
     const result = acceptRotation(session, type, selectedRing, reading.elapsedMs, actualMoves + 1);
     if (!result.accepted) {
+      void sound.unlockFromGesture().then((ready) => { if (ready) sound.play("error"); });
       refreshStatus();
       return;
     }
     actualMoves += 1;
     const nextSession = { ...result.session, history: boundedHistory(result.session.history) };
     session = nextSession;
+    void sound.unlockFromGesture();
     if (result.light.solved) {
+      // Success is the only terminal effect; a simultaneous rotation/light
+      // chord would make the six actions indistinguishable.
+      if (questionIndex < 4) sound.play("success");
       timer.stop(reading);
       completeQuestion(reading, nextSession, true);
       return;
     }
+    sound.play("rotate");
+    if (result.light.litRequired > before.litRequired) sound.play("light");
     refreshBoard();
     refreshStatus();
   };
@@ -746,6 +808,8 @@ export function renderRun(
   const selectRing = (ring: number): void => {
     if (!isInputOpen()) return;
     selectedRing = selectCoreRing(selectedRing, ring);
+    void sound.unlockFromGesture();
+    sound.play("select");
     refreshBoard();
     refreshStatus();
   };
@@ -760,6 +824,7 @@ export function renderRun(
   const resetQuestion = (): void => {
     if (assignment.mode !== "practice" || phase !== "playing" || !currentPuzzle) return;
     clearScheduled();
+    sound.invalidate();
     stopTimerDisplay();
     timer?.reset();
     session = createSession(currentPuzzle);
@@ -783,6 +848,7 @@ export function renderRun(
       return;
     }
     currentPuzzle = puzzle;
+    sound.invalidate();
     session = createSession(puzzle);
     selectedRing = 1;
     actualMoves = 0;
@@ -790,6 +856,7 @@ export function renderRun(
     timer?.reset();
     timer = new RunTimer();
     phase = "playing";
+    sound.play("start");
     runState = { ...runState, phase: "playing", questionIndex: index };
     // Render the first board before starting the clock; the same synchronous
     // turn then enables input and starts the timer without a free preview.
@@ -824,6 +891,7 @@ export function renderRun(
   };
 
   const lifecycle = (event: "hidden" | "visible" | "pagehide" | "pageshow"): void => {
+    if (event === "hidden" || event === "pagehide") sound.invalidate();
     timer?.lifecycle(event);
     persistAssignmentSeen();
     refreshTimer();
@@ -879,6 +947,8 @@ export function renderRun(
   rightButton.addEventListener("click", () => controller.rotate("r"), { signal: listeners.signal });
   resetButton.addEventListener("click", resetQuestion, { signal: listeners.signal });
   audio.addEventListener("change", () => {
+    sound.setEnabled(audio.checked);
+    if (audio.checked) void sound.unlockFromGesture();
     const result = saveAudioEnabled(audio.checked);
     if (!result.ok) setStorageWarning(storageMessage(result.error));
   }, { signal: listeners.signal });
@@ -892,6 +962,8 @@ export function renderRun(
 function updateResultNotice(root: HTMLElement, message: string): void {
   const element = query<HTMLElement>(root, "[data-result-notice]");
   if (!element || !message) return;
+  const recovery = finalizedResultByRoot.get(root);
+  if (recovery) recovery.initialNotice = message;
   element.hidden = false;
   element.textContent = message;
 }
@@ -901,8 +973,9 @@ function resultActionButton(root: HTMLElement, selector: string): HTMLButtonElem
 }
 
 /** Render a finalized in-memory result before attempting storage writes. */
-export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = ""): void {
+export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = "", terminalSound: SoundController | null = null): void {
   teardownRoot(root);
+  finalizedResultByRoot.set(root, { prepared, result, playerName, initialNotice });
   root.innerHTML = `
     <section class="app-shell result-screen" data-testid="result-screen" data-screen="result" data-mode="${result.mode}">
       <header class="app-header result-header">
@@ -947,7 +1020,17 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
   const share = resultActionButton(root, "[data-action='result-share']");
   const shareArea = query<HTMLElement>(root, "[data-share-area]");
   const resultPlayer = query<HTMLElement>(root, "[data-result-player]");
-  if (!retry || !practice || !home || !share || !shareArea || !resultPlayer) return;
+  if (!retry || !practice || !home || !share || !shareArea || !resultPlayer) {
+    terminalSound?.dispose();
+    return;
+  }
+  let terminalSoundTimer: number | null = null;
+  if (terminalSound) {
+    terminalSoundTimer = window.setTimeout(() => {
+      terminalSoundTimer = null;
+      terminalSound.dispose();
+    }, 260);
+  }
   resultPlayer.textContent = playerName;
   if (initialNotice) updateResultNotice(root, initialNotice);
   let shareRequestSerial = 0;
@@ -988,5 +1071,9 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
       shareArea.dataset.shareStatus = "done";
     });
   }, { signal: listeners.signal });
-  teardownByRoot.set(root, () => listeners.abort());
+  teardownByRoot.set(root, () => {
+    listeners.abort();
+    if (terminalSoundTimer !== null) window.clearTimeout(terminalSoundTimer);
+    terminalSound?.dispose();
+  });
 }

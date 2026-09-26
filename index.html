@@ -3,11 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="常時発光する三本の環を回すパズルの実装基盤" />
-    <title>石板回し</title>
+    <meta name="description" content="%SITE_DESCRIPTION%" />
+    <meta name="theme-color" content="#161617" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="%SITE_TITLE%" />
+    <meta property="og:description" content="%SITE_DESCRIPTION%" />
+    <meta property="og:url" content="%SITE_URL%" />
+    %SITE_OG_IMAGE%
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <title>%SITE_TITLE%</title>
   </head>
   <body>
-    <main id="app"></main>
+    <main id="app">
+      <!-- Keep a useful Japanese recovery route if the entry module cannot be fetched. -->
+      <section aria-labelledby="static-load-error-title" style="box-sizing:border-box;max-width:42rem;margin:0 auto;padding:clamp(1.5rem,6vw,4rem) 1rem;font-family:system-ui,sans-serif;line-height:1.7;color:#f4f4f5;background:#161617">
+        <h1 id="static-load-error-title" style="margin:0 0 1rem;font-size:clamp(1.5rem,5vw,2.25rem)">%SITE_TITLE%</h1>
+        <p>ゲームを読み込んでいます。表示されない場合は、通信を確認してもう一度読み込んでください。</p>
+        <nav aria-label="復旧操作" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.5rem">
+          <a href="%BASE_URL%" style="display:inline-block;padding:.7rem 1rem;border:1px solid #8ce0d2;border-radius:.5rem;color:#d9fff8">もう一度読み込む</a>
+          <a href="%BASE_URL%" style="display:inline-block;padding:.7rem 1rem;border:1px solid #777;border-radius:.5rem;color:#f4f4f5">ホームへ戻る</a>
+          <a href="%SITE_LAB_URL%" style="display:inline-block;padding:.7rem 1rem;border:1px solid #777;border-radius:.5rem;color:#f4f4f5">実験場へ戻る</a>
+        </nav>
+      </section>
+    </main>
     <script type="module" src="/src/app.ts"></script>
   </body>
 </html>

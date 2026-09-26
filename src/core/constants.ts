@@ -1,3 +1,5 @@
+import { siteConfig } from "../../site.config.ts";
+
 export {
   GENERATOR_VERSION,
   POOL_VERSION,
@@ -12,5 +14,11 @@ export {
 } from "./types.ts";
 
 export const AUDIO_SETTING_KEY = "audioEnabled" as const;
-export const GAME_TITLE = "石板回し" as const;
+/** The display title is provisional until the publication name is approved. */
+export const GAME_TITLE = siteConfig.title;
+export const GAME_DESCRIPTION = siteConfig.description;
+export const PUBLIC_GAME_URL = siteConfig.publicUrl;
+export const LAB_URL = siteConfig.labUrl;
+/** A publication image is intentionally unset until its source is approved. */
+export const SHARE_IMAGE_URL: string | null = siteConfig.shareImageUrl;
 export const RUN_ORDER = ["easy", "easy", "normal", "normal", "hard"] as const;

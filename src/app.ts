@@ -5,6 +5,7 @@ import {
   evaluate,
   selectRing as selectCoreRing,
 } from "./core/engine.ts";
+import { GAME_TITLE, LAB_URL } from "./core/index.ts";
 import { createDefaultSettings, setAudioEnabled, type UserSettings } from "./core/settings.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { validatePuzzle } from "./core/validation.ts";
@@ -12,7 +13,8 @@ import { createBoardSvg } from "./board.ts";
 import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
 import { preparePoolArtifacts } from "./run.ts";
-import { renderHome } from "./run-ui.ts";
+import { hasFinalizedResultRecovery, renderHome, restoreFinalizedResult, teardownRunUi } from "./run-ui.ts";
+import { loadSave, saveAudioEnabled } from "./storage.ts";
 import {
   canAcceptInput,
   InputController,
@@ -20,6 +22,7 @@ import {
   isEditableTarget,
   type InputPhase,
 } from "./input.ts";
+import { SoundController } from "./sound.ts";
 import "./app.css";
 
 const DIFFICULTY_LABELS: Record<Puzzle["difficulty"], string> = {
@@ -66,15 +69,91 @@ function renderLoadError(root: HTMLElement, issues: readonly { path: string }[])
   heading.textContent = "問題を読み込めません";
   const message = document.createElement("p");
   message.textContent = puzzleLoadReason(issues[0]?.path ?? "");
-  section.append(heading, message);
+  const actions = document.createElement("div");
+  actions.className = "fatal-error-actions";
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.className = "primary-button";
+  retry.textContent = "もう一度読み込む";
+  retry.addEventListener("click", () => window.location.reload());
+  const home = document.createElement("a");
+  home.className = "secondary-button";
+  home.href = typeof window === "undefined" ? "/" : new URL("./", window.location.href).href;
+  home.textContent = "ホームへ戻る";
+  const lab = document.createElement("a");
+  lab.className = "secondary-button";
+  lab.href = LAB_URL;
+  lab.textContent = "実験場へ戻る";
+  actions.append(retry, home, lab);
+  section.append(heading, message, actions);
   root.replaceChildren(section);
 }
 
-/** Render the R3 single-puzzle screen. R4 owns five-question progression. */
+/** Keep a user-facing recovery route when boot or a browser callback fails. */
+export function renderFatalError(root: HTMLElement): void {
+  const canRestoreFinalizedResult = hasFinalizedResultRecovery(root);
+  try { teardownRunUi(root); } catch { /* run timers/listeners must not block recovery */ }
+  try { teardownByRoot.get(root)?.(); } catch { /* recovery must survive teardown failures */ }
+  teardownByRoot.delete(root);
+  const section = document.createElement("section");
+  section.className = "app-shell load-error-screen fatal-error-screen";
+  section.dataset.fatalError = "true";
+  section.setAttribute("role", "alert");
+  const heading = document.createElement("h1");
+  heading.textContent = "画面を表示できません";
+  const message = document.createElement("p");
+  message.textContent = "一時的な問題が起きました。再試行するか、ホームからやり直してください。";
+  const actions = document.createElement("div");
+  actions.className = "fatal-error-actions";
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.className = "primary-button";
+  retry.dataset.action = "retry";
+  retry.textContent = "もう一度読み込む";
+  retry.addEventListener("click", () => {
+    try {
+      boot(root, puzzleForLocation());
+    } catch {
+      renderFatalError(root);
+    }
+  });
+  const home = document.createElement("a");
+  home.className = "secondary-button";
+  home.href = typeof window === "undefined" ? "/" : new URL("./", window.location.href).href;
+  home.textContent = "ホームへ戻る";
+  const lab = document.createElement("a");
+  lab.className = "secondary-button";
+  lab.href = LAB_URL;
+  lab.textContent = "実験場へ戻る";
+  actions.append(retry, home, lab);
+  if (canRestoreFinalizedResult) {
+    const result = document.createElement("button");
+    result.type = "button";
+    result.className = "secondary-button";
+    result.dataset.action = "restore-finalized-result";
+    result.textContent = "確定済みの結果を表示";
+    result.addEventListener("click", () => {
+      try {
+        if (!restoreFinalizedResult(root)) renderFatalError(root);
+      } catch {
+        renderFatalError(root);
+      }
+    });
+    actions.append(result);
+  }
+  section.append(heading, message, actions);
+  try {
+    root.replaceChildren(section);
+  } catch {
+    root.textContent = "画面を表示できません。ホームへ戻ってください。";
+  }
+}
+
+/** Render the explicit one-puzzle inspection screen. Normal play uses home. */
 export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   teardownByRoot.get(root)?.();
   let session: CoreSession = createSession(puzzle);
-  let settings: UserSettings = createDefaultSettings();
+  let settings: UserSettings = setAudioEnabled(createDefaultSettings(), loadSave().audioEnabled);
   let selectedRing = 1;
   let phase: InputPhase = session.status === "solved" ? "solved" : "playing";
   let sessionActive = phase === "playing";
@@ -90,7 +169,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <header class="app-header">
         <div>
           <p class="eyebrow">1問の盤面確認</p>
-          <h1 id="game-title">石板回し</h1>
+          <h1 id="game-title">${GAME_TITLE}</h1>
           <p class="subtitle">三本の環を選び、左右へ一区画ずつ回します。</p>
         </div>
         <div class="header-actions" aria-label="補助操作">
@@ -104,7 +183,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
         <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 1</strong><span class="status-subtext" data-field="difficulty">${DIFFICULTY_LABELS[puzzle.difficulty]}</span></div>
         <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
         <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count">0</strong></div>
-        <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">R4で計測</span></div>
+        <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">記録なし</span></div>
         <p class="status-message" data-field="state" aria-live="polite">${statusMessage}</p>
       </section>
 
@@ -131,7 +210,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
         </section>
       </div>
 
-      <p class="game-note">この画面では問題を1問だけ操作します。記録や5問の進行は後段で追加します。</p>
+      <p class="game-note">これは問題庫を確認する1問用画面です。5問の挑戦はホームから始めてください。</p>
       </div>
 
       <div class="modal-layer" data-modal="help" hidden>
@@ -173,6 +252,9 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
   if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !audio || !helpLayer || !abortLayer || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
   shell.setAttribute("data-puzzle-id", puzzle.id);
+  audio.checked = settings.audioEnabled;
+  const sound = new SoundController({ enabled: audio.checked });
+  const listenerController = new AbortController();
 
   const getInputState = () => ({
     phase,
@@ -220,15 +302,20 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   };
 
   const selectRing = (ring: number): void => {
+    void sound.unlockFromGesture();
     selectedRing = selectCoreRing(selectedRing, ring);
+    sound.play("select");
     statusMessage = `選択中: ${["内環", "中環", "外環"][selectedRing]}`;
     refresh();
   };
 
   const rotate = (type: MoveType): void => {
+    void sound.unlockFromGesture();
     const elapsed = Math.max(0, Date.now() - startedAt);
+    const before = evaluate(puzzle, session.state);
     const result = acceptRotation(session, type, selectedRing, elapsed);
     if (!result.accepted) {
+      sound.play("error");
       statusMessage = result.reason === "solved" ? "成功済み" : "入力を受け付けません";
       refresh();
       return;
@@ -238,8 +325,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     if (light.solved) {
       phase = "solved";
       sessionActive = false;
+      sound.play("success");
       statusMessage = `成功！ ${light.litRequired}個の受光紋が点灯しました。`;
     } else {
+      sound.play("rotate");
+      if (light.litRequired > before.litRequired) sound.play("light");
       statusMessage = `操作可能。${light.litRequired} / ${light.requiredCount} 個が点灯中`;
     }
     refresh();
@@ -282,6 +372,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
 
   const confirmAbort = (): void => {
     if (!activeModal || activeModal !== "abort") return;
+    sound.invalidate();
     sessionActive = false;
     phase = "cancelled";
     statusMessage = "この問題を中断しました。";
@@ -291,7 +382,12 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
 
   audio.addEventListener("change", () => {
     settings = setAudioEnabled(settings, audio.checked);
+    sound.setEnabled(settings.audioEnabled);
+    if (settings.audioEnabled) void sound.unlockFromGesture();
+    const saved = saveAudioEnabled(settings.audioEnabled);
+    if (!saved.ok) statusMessage = "音設定を保存できませんでした。";
     shell.dataset.audio = settings.audioEnabled ? "on" : "off";
+    refresh();
   });
   helpButton.addEventListener("click", () => openModal("help", helpButton));
   abortButton.addEventListener("click", () => openModal("abort", abortButton));
@@ -304,6 +400,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     button.addEventListener("click", () => controller.selectRing(Number(button.dataset.ring)));
   }
 
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) sound.invalidate();
+  }, { signal: listenerController.signal });
+  window.addEventListener("pagehide", () => sound.invalidate(), { signal: listenerController.signal });
+
   const keyHandler = (event: KeyboardEvent): void => {
     // Let a focused button perform its normal single activation. Suppress
     // only repeated native activations caused by a held Enter/Space key.
@@ -315,9 +416,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     }
     controller.keyboard(event);
   };
-  const listenerController = new AbortController();
   window.addEventListener("keydown", keyHandler, { signal: listenerController.signal });
-  teardownByRoot.set(root, () => listenerController.abort());
+  teardownByRoot.set(root, () => {
+    listenerController.abort();
+    sound.dispose();
+  });
   const dialogKeyHandler = (event: KeyboardEvent): void => {
     if (!activeModal) return;
     if (event.key === "Escape") {
@@ -357,27 +460,54 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
 }
 
 export function boot(root: HTMLElement, definition: unknown): void {
-  const requestedId = typeof window === "undefined"
-    ? null
-    : new URLSearchParams(window.location.search).get("puzzleId");
-  // The explicit puzzleId path is a stable R3 inspection surface. The normal
-  // URL now opens the name/mode home screen and owns the five-question run.
-  if (requestedId !== null) {
-    const result = validatePuzzle(definition);
-    if (!result.ok) {
-      renderLoadError(root, result.issues);
+  try {
+    const requestedId = typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("puzzleId");
+    // The explicit puzzleId path is a stable one-question inspection surface.
+    if (requestedId !== null) {
+      const result = validatePuzzle(definition);
+      if (!result.ok) {
+        renderLoadError(root, result.issues);
+        return;
+      }
+      renderPuzzle(root, result.puzzle);
       return;
     }
-    renderPuzzle(root, result.puzzle);
-    return;
+    const prepared = preparePoolArtifacts(puzzlePool, poolManifest, ticketManifest);
+    if (!prepared.ok) {
+      renderLoadError(root, prepared.issues);
+      return;
+    }
+    renderHome(root, prepared.prepared);
+  } catch {
+    renderFatalError(root);
   }
-  const prepared = preparePoolArtifacts(puzzlePool, poolManifest, ticketManifest);
-  if (!prepared.ok) {
-    renderLoadError(root, prepared.issues);
-    return;
-  }
-  renderHome(root, prepared.prepared);
 }
 
 const root = document.querySelector<HTMLElement>("#app");
-if (root) boot(root, puzzleForLocation());
+if (root) {
+  let boundaryActive = false;
+  const handleUnexpectedError = (): void => {
+    if (boundaryActive || root.dataset.fatalError === "true") return;
+    boundaryActive = true;
+    renderFatalError(root);
+  };
+  // A successful retry clears the guard so a later independent failure still
+  // gets the recovery surface instead of becoming a blank page.
+  root.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.matches("[data-fatal-error] [data-action='retry'], [data-fatal-error] [data-action='restore-finalized-result']")) boundaryActive = false;
+  }, true);
+  window.addEventListener("error", (event) => {
+    if (event.error || event.message) {
+      event.preventDefault();
+      handleUnexpectedError();
+    }
+  });
+  window.addEventListener("unhandledrejection", (event) => {
+    event.preventDefault();
+    handleUnexpectedError();
+  });
+  boot(root, puzzleForLocation());
+}
