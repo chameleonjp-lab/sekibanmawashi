@@ -55,8 +55,15 @@ const DIFFICULTY_LABELS: Record<Puzzle["difficulty"], string> = {
 type ModalName = "help" | "abort";
 type HomeOptions = { notice?: string; prefill?: string };
 type RunOptions = { storageWarning?: string };
+type FinalizedResultRecovery = {
+  prepared: PreparedPool;
+  result: FinalRunResult;
+  playerName: string;
+  initialNotice: string;
+};
 
 const teardownByRoot = new WeakMap<HTMLElement, () => void>();
+const finalizedResultByRoot = new WeakMap<HTMLElement, FinalizedResultRecovery>();
 let attemptSerial = 0;
 
 function query<T extends Element>(root: ParentNode, selector: string): T | null {
@@ -79,8 +86,27 @@ function teardownRoot(root: HTMLElement): void {
   teardownByRoot.delete(root);
 }
 
+/** Dispose run/result listeners and timers when the app-level boundary takes over. */
+export function teardownRunUi(root: HTMLElement): void {
+  teardownRoot(root);
+}
+
+/** Whether a fully finalized in-memory result can be rebuilt after an exception. */
+export function hasFinalizedResultRecovery(root: HTMLElement): boolean {
+  return finalizedResultByRoot.has(root);
+}
+
+/** Rebuild the saved result through the normal renderer so its actions work. */
+export function restoreFinalizedResult(root: HTMLElement): boolean {
+  const recovery = finalizedResultByRoot.get(root);
+  if (!recovery) return false;
+  renderResult(root, recovery.prepared, recovery.result, recovery.playerName, recovery.initialNotice);
+  return true;
+}
+
 function renderArtifactError(root: HTMLElement, message: string): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   root.innerHTML = `
     <section class="app-shell load-error-screen" data-testid="load-error" data-error="artifact" role="alert">
       <h1>問題を読み込めません</h1>
@@ -117,6 +143,7 @@ function uniqueAttemptId(seed: string): string {
 /** Render the default home screen. The puzzle query path remains owned by app.ts. */
 export function renderHome(root: HTMLElement, prepared: PreparedPool, options: HomeOptions = {}): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   let snapshot;
   try {
     snapshot = loadSave({ prepared });
@@ -354,6 +381,7 @@ export function renderRun(
   options: RunOptions = {},
 ): void {
   teardownRoot(root);
+  finalizedResultByRoot.delete(root);
   let assignment = initialAssignment;
   let runState: RunState = createRunState(assignment);
   let phase: RunPhase = "loading";
@@ -934,6 +962,8 @@ export function renderRun(
 function updateResultNotice(root: HTMLElement, message: string): void {
   const element = query<HTMLElement>(root, "[data-result-notice]");
   if (!element || !message) return;
+  const recovery = finalizedResultByRoot.get(root);
+  if (recovery) recovery.initialNotice = message;
   element.hidden = false;
   element.textContent = message;
 }
@@ -945,6 +975,7 @@ function resultActionButton(root: HTMLElement, selector: string): HTMLButtonElem
 /** Render a finalized in-memory result before attempting storage writes. */
 export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = "", terminalSound: SoundController | null = null): void {
   teardownRoot(root);
+  finalizedResultByRoot.set(root, { prepared, result, playerName, initialNotice });
   root.innerHTML = `
     <section class="app-shell result-screen" data-testid="result-screen" data-screen="result" data-mode="${result.mode}">
       <header class="app-header result-header">

@@ -717,11 +717,21 @@ async function assertGameStatusReadableAt200(page: Page): Promise<void> {
     return Array.from(document.querySelectorAll<HTMLElement>("[data-testid='game-screen'] .status-card")).map((card) => {
       const cardRect = card.getBoundingClientRect();
       const cardStyle = getComputedStyle(card);
+      const valueElement = card.querySelector<HTMLElement>("[data-field]");
+      const value = valueElement?.textContent?.trim() ?? "";
+      let longTimeText: ReturnType<typeof measureText> | null = null;
+      if (valueElement?.dataset.field === "time") {
+        const original = valueElement.textContent;
+        valueElement.textContent = "900.00";
+        longTimeText = measureText(valueElement);
+        valueElement.textContent = original;
+      }
       return {
         label: card.querySelector<HTMLElement>(".status-label")?.textContent?.trim() ?? "",
         labelText: measureText(card.querySelector<HTMLElement>(".status-label")),
-        value: card.querySelector<HTMLElement>("[data-field]")?.textContent?.trim() ?? "",
-        valueText: measureText(card.querySelector<HTMLElement>("[data-field]")),
+        value,
+        valueText: measureText(valueElement),
+        longTimeText,
         cardRect: {
           top: Math.round(cardRect.top * 100) / 100,
           left: Math.round(cardRect.left * 100) / 100,
@@ -740,6 +750,12 @@ async function assertGameStatusReadableAt200(page: Page): Promise<void> {
     expect(card.labelText.lines, `${card.label} label geometry: ${JSON.stringify(card)}`).toBeLessThanOrEqual(2);
     expect(card.value.length, `${card.label} value remains visible`).toBeGreaterThan(0);
     expect(card.valueText.lines, `${card.label} value geometry: ${JSON.stringify(card)}`).toBe(1);
+    expect(card.valueText.scrollWidth, `${card.label} value fits its content box: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.valueText.clientWidth);
+    expect(card.cardScrollWidth, `${card.label} card has no horizontal overflow: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.cardClientWidth);
+    if (card.longTimeText) {
+      expect(card.longTimeText.lines, `900.00-second time remains on one line: ${JSON.stringify(card)}`).toBe(1);
+      expect(card.longTimeText.scrollWidth, `900.00-second time fits its content box: ${JSON.stringify(card)}`).toBeLessThanOrEqual(card.longTimeText.clientWidth);
+    }
   }
 }
 
@@ -902,13 +918,120 @@ test.describe("R5 release readiness", () => {
     await assertFatalActions(secondMessage);
   });
 
-  test("R5 state matrix: all required screens stay usable at every viewport and at 200% text", async ({ page }, testInfo: TestInfo) => {
-    test.setTimeout(720_000);
-    const diagnostics = installDiagnostics(page);
+  test("fatal recovery cancels live runs and rebuilds finalized-result actions", async ({ page }) => {
+    test.setTimeout(360_000);
     await installUnhandledProbe(page);
-    await page.emulateMedia({ reducedMotion: "reduce" });
+    await installResourceProbe(page);
+    await page.addInitScript(() => {
+      const state = window as Window & { __r5ShareCalls?: string[] };
+      state.__r5ShareCalls = [];
+      const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void>; clipboard?: unknown };
+      Object.defineProperty(nav, "share", {
+        configurable: true,
+        value: async (data: ShareData) => { state.__r5ShareCalls?.push(data.text ?? ""); },
+      });
+      Object.defineProperty(nav, "clipboard", { configurable: true, value: undefined });
+    });
+    await gotoHome(page);
+    // Resolve Playwright's lazy main-world/hit-target listener helpers before
+    // taking the baseline; this read-only DOM query does not start a run.
+    expect(await home(page).evaluateAll((screens) => screens.length)).toBe(1);
+    await page.waitForTimeout(350);
+    const baseline = await readResourceSnapshot(page);
 
-    for (const viewport of VIEWPORTS) {
+    const triggerFatal = async (message: string): Promise<void> => {
+      await page.evaluate((failureMessage) => {
+        queueMicrotask(() => { throw new Error(failureMessage); });
+      }, message);
+      await expect(page.locator("[data-fatal-error]")).toBeVisible();
+    };
+    const assertRunResourcesStopped = async (): Promise<void> => {
+      const snapshot = await readResourceSnapshot(page);
+      expect(snapshot.intervals, "fatal recovery clears run intervals").toBeLessThanOrEqual(baseline.intervals);
+      expect(snapshot.timeouts, "fatal recovery clears run timeouts").toBeLessThanOrEqual(baseline.timeouts + 2);
+      expect(snapshot.listeners, `fatal recovery clears run listeners: ${JSON.stringify(snapshot.listenerDetails)}`).toBeLessThanOrEqual(baseline.listeners + 2);
+      expect(snapshot.activeAudioNodes, "fatal recovery stops active tones").toBeLessThanOrEqual(baseline.activeAudioNodes);
+    };
+
+    // A fatal screen must own the root after countdown callbacks have had time
+    // to run; no stale callback may re-render the board underneath it.
+    await begin(page, "challenge", "復旧カウントダウン");
+    await expect(phase(page, "countdown")).toBeVisible();
+    await triggerFatal("R5 fatal during countdown");
+    await assertRunResourcesStopped();
+    await page.waitForTimeout(3_300);
+    await expect(page.locator("[data-fatal-error]")).toBeVisible();
+    await expect(game(page)).toHaveCount(0);
+    await expect(result(page)).toHaveCount(0);
+    await page.locator("[data-fatal-error] [data-action='retry']").click();
+    await expect(home(page)).toBeVisible();
+
+    // Intermission has a scheduled transition instead of the countdown pair;
+    // it must also be cancelled before the recovery screen is shown.
+    await begin(page, "challenge", "復旧成功表示");
+    await waitForPlaying(page);
+    await solveVisibleQuestion(page);
+    await expect(phase(page, "intermission")).toBeVisible();
+    await triggerFatal("R5 fatal during intermission");
+    await assertRunResourcesStopped();
+    await page.waitForTimeout(1_300);
+    await expect(page.locator("[data-fatal-error]")).toBeVisible();
+    await expect(game(page)).toHaveCount(0);
+    await expect(result(page)).toHaveCount(0);
+    await page.locator("[data-fatal-error] [data-action='retry']").click();
+    await expect(home(page)).toBeVisible();
+
+    // Recover a committed result and exercise its freshly bound share and home
+    // actions, then repeat for retry and practice so every result action is live.
+    await runChallenge(page, "復旧共有とホーム");
+    const firstIds = await page.locator("[data-result-question]").evaluateAll((elements) => elements.map((element) => element.getAttribute("data-puzzle-id")));
+    const firstTotal = await page.locator("[data-total-time]").getAttribute("data-total-time-ms");
+    await triggerFatal("R5 fatal after finalized result");
+    const restore = page.locator("[data-fatal-error] [data-action='restore-finalized-result']");
+    await expect(restore).toBeVisible();
+    await restore.click();
+    await expect(result(page)).toBeVisible();
+    await expect(page.locator("[data-result-question]")).toHaveCount(5);
+    expect(await page.locator("[data-result-question]").evaluateAll((elements) => elements.map((element) => element.getAttribute("data-puzzle-id")))).toEqual(firstIds);
+    await expect(page.locator("[data-total-time]")).toHaveAttribute("data-total-time-ms", firstTotal ?? "");
+    await page.locator("[data-action='result-share']").click();
+    await expect(page.locator("[data-share-area]")).toContainText("共有しました");
+    expect(await page.evaluate(() => (window as Window & { __r5ShareCalls?: string[] }).__r5ShareCalls?.length ?? 0)).toBe(1);
+    await page.locator("[data-action='result-home']").click();
+    await expect(home(page)).toBeVisible();
+
+    await runChallenge(page, "復旧リトライ");
+    await triggerFatal("R5 retry recovery result");
+    await page.locator("[data-fatal-error] [data-action='restore-finalized-result']").click();
+    await expect(result(page)).toBeVisible();
+    await page.locator("[data-action='retry']").click();
+    await expect(game(page)).toBeVisible();
+    await expect(phase(page, "countdown")).toBeVisible();
+    await expect(page.locator("[data-field='move-count']")).toHaveText("0");
+    await waitForPlaying(page);
+    await page.locator("[data-action='abort']").click();
+    await expect(visibleDialog(page)).toBeVisible();
+    await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+    await expect(home(page)).toBeVisible();
+
+    await runChallenge(page, "復旧練習");
+    await triggerFatal("R5 practice recovery result");
+    await page.locator("[data-fatal-error] [data-action='restore-finalized-result']").click();
+    await expect(result(page)).toBeVisible();
+    await page.locator("[data-action='result-practice']").click();
+    await expect(game(page)).toBeVisible();
+    await expect(game(page)).toHaveAttribute("data-mode", "practice");
+    await expect(phase(page, "countdown")).toBeVisible();
+    await expect(page.locator("[data-field='move-count']")).toHaveText("0");
+  });
+
+  for (const viewport of VIEWPORTS) {
+    test(`R5 state matrix: all required screens at ${viewport.name} and 200% text`, async ({ page }, testInfo: TestInfo) => {
+      test.setTimeout(300_000);
+      const diagnostics = installDiagnostics(page);
+      await installUnhandledProbe(page);
+      await page.emulateMedia({ reducedMotion: "reduce" });
+
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await gotoHome(page);
       await applyMonochrome(page, true);
@@ -983,9 +1106,9 @@ test.describe("R5 release readiness", () => {
       await applyMonochrome(page, false);
       await page.locator("[data-action='result-home']").click();
       await expect(home(page)).toBeVisible();
-    }
-    await assertNoBrowserDiagnostics(page, diagnostics);
-  });
+      await assertNoBrowserDiagnostics(page, diagnostics);
+    });
+  }
 
   test("load and save failures preserve usable recovery screens at every prescribed viewport", async ({ page }, testInfo: TestInfo) => {
     test.setTimeout(720_000);
@@ -1184,6 +1307,10 @@ test.describe("R5 release readiness", () => {
     await installPhaseProbe(page);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoHome(page);
+    // Playwright injects its global-listener and pointer hit-target observers
+    // on first main-world locator evaluation. Prime them without interaction so
+    // Q03 measures only persistent application-resource changes.
+    expect(await home(page).evaluateAll((screens) => screens.length)).toBe(1);
     const audio = page.locator("[data-testid='home-screen'] [data-action='audio']");
     // Audio remains ON here on purpose. Q03 must observe context/node
     // creation and cleanup in addition to the no-audio path covered by U05.
@@ -1232,25 +1359,24 @@ test.describe("R5 release readiness", () => {
 
       await page.waitForTimeout(500);
       const snapshot = await readResourceSnapshot(page);
-      const listenerEvidence = {
+      const resourceEvidence = {
         run: run + 1,
-        baseline: { count: baseline.listeners, details: baseline.listenerDetails },
-        previous: { count: previous.listeners, details: previous.listenerDetails },
-        settled: { count: snapshot.listeners, details: snapshot.listenerDetails },
+        baseline,
+        previous,
+        settled: snapshot,
       };
-      await testInfo.attach(`q03-listeners-run-${run + 1}`, {
-        body: JSON.stringify(listenerEvidence, null, 2),
+      await testInfo.attach(`q03-resources-run-${run + 1}`, {
+        body: JSON.stringify(resourceEvidence, null, 2),
         contentType: "application/json",
       });
-      // Intervals and listener/timer ownership must return to the home-state
-      // baseline. Small bounded slack covers browser/framework listeners that
-      // are attached lazily once on the first run.
+      // Browser-owned lazy listener hooks have already been primed, so all
+      // app listeners and intervals must return to the exact home baseline.
       expect(snapshot.intervals).toBeLessThanOrEqual(baseline.intervals);
       expect(snapshot.timeouts).toBeLessThanOrEqual(baseline.timeouts + 2);
       expect(
         snapshot.listeners,
-        `Q03 active connected listeners after run ${run + 1}: ${JSON.stringify(listenerEvidence)}`,
-      ).toBeLessThanOrEqual(baseline.listeners + 12);
+        `Q03 active connected listeners after run ${run + 1}: ${JSON.stringify(resourceEvidence)}`,
+      ).toBeLessThanOrEqual(baseline.listeners);
       expect(snapshot.audioContexts).toBeLessThanOrEqual(baseline.audioContexts + 1);
       expect(snapshot.audioProbeSupported).toBe(true);
       expect(snapshot.audioContexts).toBeGreaterThanOrEqual(baseline.audioContexts);
@@ -1263,7 +1389,7 @@ test.describe("R5 release readiness", () => {
       // Compare consecutive settled snapshots as well, which catches a slow
       // monotonic leak that could hide behind one large initial allowance.
       expect(snapshot.domNodes).toBeLessThanOrEqual(previous.domNodes + 8);
-      expect(snapshot.listeners).toBeLessThanOrEqual(previous.listeners + 4);
+      expect(snapshot.listeners).toBeLessThanOrEqual(previous.listeners);
       expect(snapshot.timeouts).toBeLessThanOrEqual(previous.timeouts + 1);
       expect(snapshot.activeOscillators).toBeLessThanOrEqual(previous.activeOscillators);
       expect(snapshot.activeAudioNodes).toBeLessThanOrEqual(previous.activeAudioNodes);

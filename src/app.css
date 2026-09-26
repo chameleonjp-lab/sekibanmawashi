@@ -594,7 +594,9 @@ figcaption {
   }
 
   .puzzle-status {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.4fr);
+    /* Give the live time field enough room for the full 900.00-second display
+       at 200% text without compressing the adjacent status message. */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr) minmax(0, 1.5fr);
     gap: 0.35rem;
     margin-bottom: 0.5rem;
   }
@@ -602,6 +604,16 @@ figcaption {
   .status-card,
   .status-message {
     padding-block: 0.35rem;
+  }
+
+  .status-card {
+    /* At 200% text the default 0.8rem inline padding consumes 51px per
+       card, forcing the live time value onto two lines in landscape. */
+    padding-inline: 0.35rem;
+  }
+
+  .status-card strong {
+    white-space: nowrap;
   }
 
   .game-layout {

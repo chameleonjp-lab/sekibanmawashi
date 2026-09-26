@@ -13,7 +13,7 @@ import { createBoardSvg } from "./board.ts";
 import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
 import { preparePoolArtifacts } from "./run.ts";
-import { renderHome } from "./run-ui.ts";
+import { hasFinalizedResultRecovery, renderHome, restoreFinalizedResult, teardownRunUi } from "./run-ui.ts";
 import { loadSave, saveAudioEnabled } from "./storage.ts";
 import {
   canAcceptInput,
@@ -91,7 +91,8 @@ function renderLoadError(root: HTMLElement, issues: readonly { path: string }[])
 
 /** Keep a user-facing recovery route when boot or a browser callback fails. */
 export function renderFatalError(root: HTMLElement): void {
-  const resultBackup = root.querySelector<HTMLElement>("[data-testid='result-screen']")?.cloneNode(true);
+  const canRestoreFinalizedResult = hasFinalizedResultRecovery(root);
+  try { teardownRunUi(root); } catch { /* run timers/listeners must not block recovery */ }
   try { teardownByRoot.get(root)?.(); } catch { /* recovery must survive teardown failures */ }
   teardownByRoot.delete(root);
   const section = document.createElement("section");
@@ -125,12 +126,19 @@ export function renderFatalError(root: HTMLElement): void {
   lab.href = LAB_URL;
   lab.textContent = "実験場へ戻る";
   actions.append(retry, home, lab);
-  if (resultBackup instanceof HTMLElement) {
+  if (canRestoreFinalizedResult) {
     const result = document.createElement("button");
     result.type = "button";
     result.className = "secondary-button";
+    result.dataset.action = "restore-finalized-result";
     result.textContent = "確定済みの結果を表示";
-    result.addEventListener("click", () => root.replaceChildren(resultBackup));
+    result.addEventListener("click", () => {
+      try {
+        if (!restoreFinalizedResult(root)) renderFatalError(root);
+      } catch {
+        renderFatalError(root);
+      }
+    });
     actions.append(result);
   }
   section.append(heading, message, actions);
@@ -489,7 +497,7 @@ if (root) {
   // gets the recovery surface instead of becoming a blank page.
   root.addEventListener("click", (event) => {
     const target = event.target;
-    if (target instanceof HTMLElement && target.matches("[data-fatal-error] [data-action='retry']")) boundaryActive = false;
+    if (target instanceof HTMLElement && target.matches("[data-fatal-error] [data-action='retry'], [data-fatal-error] [data-action='restore-finalized-result']")) boundaryActive = false;
   }, true);
   window.addEventListener("error", (event) => {
     if (event.error || event.message) {

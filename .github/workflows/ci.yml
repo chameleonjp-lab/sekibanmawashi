@@ -32,10 +32,8 @@ jobs:
       - run: npm run performance:r5
       - name: Install Playwright browsers
         run: npm run test:e2e:install
-      - name: Check browser transitions and compact layout
-        run: npx playwright test --grep 'V02 keeps the primary controls|Q02/U04'
-      - name: Diagnose the remaining R5 regressions
-        run: npx playwright test --grep 'Q03|R5 state matrix' --retries=0
+      - name: Check browser transitions, recovery and compact layout
+        run: npx playwright test --grep 'V02 keeps the primary controls|Q02/U04|fatal recovery'
       - name: Run browser tests
         run: npm run test:e2e
       - name: Upload browser test artifacts
