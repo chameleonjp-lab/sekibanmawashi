@@ -549,7 +549,7 @@ async function assertNoBrowserDiagnostics(page: Page, diagnostics: BrowserDiagno
 
 async function gotoHome(page: Page): Promise<void> {
   await page.goto("/", { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { name: /石板回し|セキバンマワシ/ }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "セキバンマワシ" }).first()).toBeVisible();
   await expect(home(page)).toBeVisible();
   await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
 }
@@ -846,6 +846,11 @@ test.describe("R5 release readiness", () => {
       ogDescription: document.querySelector<HTMLMetaElement>("meta[property='og:description']")?.content ?? "",
       ogUrl: document.querySelector<HTMLMetaElement>("meta[property='og:url']")?.content ?? "",
       ogImage: document.querySelector<HTMLMetaElement>("meta[property='og:image']")?.content ?? null,
+      ogImageAlt: document.querySelector<HTMLMetaElement>("meta[property='og:image:alt']")?.content ?? null,
+      twitterTitle: document.querySelector<HTMLMetaElement>("meta[name='twitter:title']")?.content ?? "",
+      twitterDescription: document.querySelector<HTMLMetaElement>("meta[name='twitter:description']")?.content ?? "",
+      twitterCard: document.querySelector<HTMLMetaElement>("meta[name='twitter:card']")?.content ?? null,
+      twitterImage: document.querySelector<HTMLMetaElement>("meta[name='twitter:image']")?.content ?? null,
       heading: document.querySelector("[data-testid='home-screen'] h1")?.textContent?.trim() ?? "",
     }));
     expect(metadata.lang).toBe("ja");
@@ -856,8 +861,18 @@ test.describe("R5 release readiness", () => {
     expect(metadata.heading).toBe(siteTitle);
     expect(metadata.icon, "a public page needs a resolvable favicon").toMatch(/^https?:\/\//);
     expect(metadata.ogUrl, "share URL metadata").toBe(PUBLIC_GAME_URL);
-    if (SHARE_IMAGE_URL) expect(metadata.ogImage).toBe(SHARE_IMAGE_URL);
-    else expect(metadata.ogImage, "share-image metadata must be absent while no image is approved").toBeNull();
+    expect(metadata.twitterTitle).toBe(siteTitle);
+    expect(metadata.twitterDescription).toBe(siteDescription);
+    if (SHARE_IMAGE_URL) {
+      expect(metadata.ogImage).toBe(SHARE_IMAGE_URL);
+      expect(metadata.twitterImage).toBe(SHARE_IMAGE_URL);
+      expect(metadata.ogImageAlt).toContain(siteTitle);
+      expect(metadata.twitterCard).toBe("summary_large_image");
+    } else {
+      expect(metadata.ogImage, "share-image metadata must be absent while no image is approved").toBeNull();
+      expect(metadata.twitterImage).toBeNull();
+      expect(metadata.twitterCard).toBe("summary");
+    }
 
     // Exercise the home share route with both browser sharing APIs disabled;
     // this reaches the selectable fallback and proves its URL is current.

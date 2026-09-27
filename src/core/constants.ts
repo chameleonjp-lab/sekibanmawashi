@@ -14,11 +14,11 @@ export {
 } from "./types.ts";
 
 export const AUDIO_SETTING_KEY = "audioEnabled" as const;
-/** The display title is provisional until the publication name is approved. */
+/** The official display title is configured in site.config.ts. */
 export const GAME_TITLE = siteConfig.title;
 export const GAME_DESCRIPTION = siteConfig.description;
 export const PUBLIC_GAME_URL = siteConfig.publicUrl;
 export const LAB_URL = siteConfig.labUrl;
-/** A publication image is intentionally unset until its source is approved. */
+/** The social sharing image is configured in site.config.ts. */
 export const SHARE_IMAGE_URL: string | null = siteConfig.shareImageUrl;
 export const RUN_ORDER = ["easy", "easy", "normal", "normal", "hard"] as const;

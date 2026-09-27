@@ -1,6 +1,6 @@
 # 資料一覧
 
-最新は**文書版2.0、常時発光・回転のみ**です。R1〜R3に続き、R4の5問進行・時計・保存・結果と共有まで実装・自動検査・独立レビュー済みです。ゲーム全体の実機受入と公開は未完了です。
+最新は**文書版2.0、常時発光・回転のみ**です。正式名「セキバンマワシ」と実プレイ画面ベースの共有画像を設定済みです。ゲーム全体の実機受入と公開は未完了です。
 
 ## 現在使う資料
 
@@ -11,6 +11,8 @@
 | [対応実装計画書](planning/IMPLEMENTATION_PLAN.md) | 指摘対応、固定条件、初期検証案、検査、公開の境界 |
 | [PRロードマップ](planning/PR_ROADMAP.md) | R0〜R6と次へ進む条件 |
 | [進捗表](planning/IMPLEMENTATION_PROGRESS.md) | 実装・検査・受入の状況 |
+| [GitHub Pages公開手順](PAGES_PUBLICATION.md) | 手動公開・ゲート・配信後検査 |
+| [公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md) | 正式名、main CI実画面ベース共有PNG、metadataと公開前検査 |
 | [2026-09-21の決定](history/DECISION_2026-09-21.md) | 発光切替廃止と今回の依頼範囲 |
 | [レビュー基準記録](reviews/REVIEW_BASELINE_2026-09-21.md) | 旧版の確認結果と未確認の区別 |
 | [R1の検査・レビュー記録](reviews/R1_VERIFICATION.md) | 正式版の判定・形式・履歴の検査結果と残作業 |
@@ -24,6 +26,7 @@
 | [R3の検査・レビュー記録](reviews/R3_VERIFICATION.md) | V/I検査の結果、指摘対応、実機などの未確認 |
 | [R4の進行・時計・保存](spec/R4_RUN_TIMER_STORAGE.md) | 5問の状態、時間、保存、共有の境界 |
 | [R4の検査・レビュー記録](reviews/R4_VERIFICATION.md) | F/T/S/Uの検査、独立レビュー、失敗と再検査、未確認 |
+| [R6公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md) | 正式名、main CI実画面ベース共有PNG、metadataと公開前検査 |
 
 ## 試作とデータ例
 

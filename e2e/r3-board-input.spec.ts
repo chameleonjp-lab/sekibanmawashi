@@ -104,7 +104,7 @@ async function openGame(page: Page, puzzleId?: string): Promise<void> {
   // the same adopted single-puzzle inspection surface, now explicitly named.
   const query = `?puzzleId=${encodeURIComponent(puzzleId ?? puzzles[0].id)}`;
   await page.goto(`/${query}`, { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { name: "石板回し" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "セキバンマワシ" })).toBeVisible();
   await expect(board(page)).toBeVisible();
   await expect(page.locator("[data-error], [role=alert]")).toHaveCount(0);
   if (puzzleId) {

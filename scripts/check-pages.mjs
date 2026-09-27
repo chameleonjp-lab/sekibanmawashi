@@ -26,11 +26,27 @@ function parseSiteConfig(source) {
   };
   const imageMatch = source.match(/shareImageUrl:\s*(null|"([^"]+)")/u);
   assert.ok(imageMatch, "site.config.ts must define shareImageUrl");
+  const shareImageUrl = imageMatch[1] === "null" ? null : imageMatch[2];
+  const imageAlt = shareImageUrl === null ? null : source.match(/shareImageAlt:\s*"([^"]+)"/u);
+  const imageType = shareImageUrl === null ? null : source.match(/shareImageType:\s*"([^"]+)"/u);
+  if (shareImageUrl !== null) {
+    assert.ok(imageAlt, "site.config.ts must define shareImageAlt");
+    assert.ok(imageType, "site.config.ts must define shareImageType");
+  }
+  const readNumber = (key) => {
+    const match = source.match(new RegExp(`${key}:\\s*(\\d+)`, "u"));
+    assert.ok(match, `site.config.ts must define ${key}`);
+    return Number(match[1]);
+  };
   return {
     title: readString("title"),
     description: readString("description"),
     publicUrl: readString("publicUrl"),
-    shareImageUrl: imageMatch[1] === "null" ? null : imageMatch[2],
+    shareImageUrl,
+    shareImageAlt: imageAlt?.[1] ?? null,
+    shareImageWidth: shareImageUrl === null ? null : readNumber("shareImageWidth"),
+    shareImageHeight: shareImageUrl === null ? null : readNumber("shareImageHeight"),
+    shareImageType: imageType?.[1] ?? null,
   };
 }
 
@@ -57,6 +73,11 @@ function metadataValue(html, property) {
   return meta?.attributes.content;
 }
 
+function namedMetadataValue(html, name) {
+  const meta = tags(html, "meta").find(({ attributes }) => attributes.name === name);
+  return meta?.attributes.content;
+}
+
 function assertHtmlContract(html, config) {
   const htmlTag = tags(html, "html")[0];
   assert.ok(htmlTag, "HTML document tag is present");
@@ -66,13 +87,26 @@ function assertHtmlContract(html, config) {
   assert.equal(metadataValue(html, "og:title"), htmlEscape(config.title), "OG title matches site.config.ts");
   assert.equal(metadataValue(html, "og:description"), htmlEscape(config.description), "OG description matches site.config.ts");
   assert.equal(metadataValue(html, "og:url"), htmlEscape(config.publicUrl), "OG URL matches site.config.ts");
+  const twitterTitle = namedMetadataValue(html, "twitter:title");
+  const twitterDescription = namedMetadataValue(html, "twitter:description");
+  if (twitterTitle !== undefined) assert.equal(twitterTitle, htmlEscape(config.title), "Twitter title matches site.config.ts");
+  if (twitterDescription !== undefined) assert.equal(twitterDescription, htmlEscape(config.description), "Twitter description matches site.config.ts");
   const description = tags(html, "meta").find(({ attributes }) => attributes.name === "description");
   assert.equal(description?.attributes.content, htmlEscape(config.description), "description matches site.config.ts");
   const image = metadataValue(html, "og:image");
   if (config.shareImageUrl === null) {
     assert.equal(image, undefined, "unconfigured share image is absent");
+    assert.equal(namedMetadataValue(html, "twitter:image"), undefined, "unconfigured Twitter image is absent");
+    assert.equal(namedMetadataValue(html, "twitter:card"), "summary", "unconfigured Twitter card uses the summary format");
   } else {
     assert.equal(image, htmlEscape(config.shareImageUrl), "OG image matches site.config.ts");
+    assert.equal(metadataValue(html, "og:image:alt"), htmlEscape(config.shareImageAlt), "OG image alt text matches site.config.ts");
+    assert.equal(metadataValue(html, "og:image:type"), config.shareImageType, "OG image MIME type matches site.config.ts");
+    assert.equal(metadataValue(html, "og:image:width"), String(config.shareImageWidth), "OG image width matches site.config.ts");
+    assert.equal(metadataValue(html, "og:image:height"), String(config.shareImageHeight), "OG image height matches site.config.ts");
+    assert.equal(namedMetadataValue(html, "twitter:image"), htmlEscape(config.shareImageUrl), "Twitter image matches site.config.ts");
+    assert.equal(namedMetadataValue(html, "twitter:image:alt"), htmlEscape(config.shareImageAlt), "Twitter image alt text matches site.config.ts");
+    assert.equal(namedMetadataValue(html, "twitter:card"), "summary_large_image", "configured Twitter image uses the large-image card format");
   }
 
   const scripts = tags(html, "script")
@@ -96,7 +130,8 @@ function assertHtmlContract(html, config) {
   }
   assert.ok(scripts.some((path) => path.startsWith(`${expectedBasePath}assets/`) && /\.js$/u.test(new URL(path, config.publicUrl).pathname)), "bundled JavaScript uses the asset directory");
   assert.ok(stylesheets.some((path) => path.startsWith(`${expectedBasePath}assets/`) && /\.css$/u.test(new URL(path, config.publicUrl).pathname)), "bundled CSS uses the asset directory");
-  return { scripts, stylesheets, favicon: `${expectedBasePath}favicon.svg` };
+  const shareImage = assertShareImageUrl(config);
+  return { scripts, stylesheets, favicon: `${expectedBasePath}favicon.svg`, shareImage };
 }
 
 function assertPublicUrl(config) {
@@ -104,6 +139,19 @@ function assertPublicUrl(config) {
   assert.equal(publicUrl.protocol, "https:", "configured Pages URL uses HTTPS");
   assert.equal(publicUrl.pathname, expectedBasePath, "configured URL and Vite Pages base agree");
   return publicUrl;
+}
+
+function assertShareImageUrl(config) {
+  if (config.shareImageUrl === null) return null;
+  const publicUrl = new URL(config.publicUrl);
+  const imageUrl = new URL(config.shareImageUrl);
+  assert.equal(imageUrl.origin, publicUrl.origin, "share image uses the configured public origin");
+  assert.ok(imageUrl.pathname.startsWith(expectedBasePath), "share image uses the Pages base path");
+  assert.equal(imageUrl.search, "", "share image URL has no cache-busting query");
+  assert.equal(imageUrl.hash, "", "share image URL has no fragment");
+  assert.equal(config.shareImageType, "image/png", "share image is a PNG");
+  assert.match(imageUrl.pathname, /\.png$/u, "share image path has a PNG extension");
+  return imageUrl.pathname;
 }
 
 async function verifyLocalAsset(pathname, contentType) {
@@ -121,7 +169,16 @@ function expectedMime(pathname) {
   if (/\.js$/u.test(pathname)) return ["text/javascript", "application/javascript", "application/ecmascript", "text/ecmascript"];
   if (/\.css$/u.test(pathname)) return ["text/css"];
   if (/\.svg$/u.test(pathname)) return ["image/svg+xml"];
+  if (/\.png$/u.test(pathname)) return ["image/png"];
   return [];
+}
+
+function assertPngDimensions(content, width, height, label) {
+  const bytes = Buffer.from(content);
+  assert.equal(bytes.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", `${label} has the PNG signature`);
+  assert.equal(bytes.toString("ascii", 12, 16), "IHDR", `${label} has a PNG IHDR header`);
+  assert.equal(bytes.readUInt32BE(16), width, `${label} width is ${width}px`);
+  assert.equal(bytes.readUInt32BE(20), height, `${label} height is ${height}px`);
 }
 
 async function verifyArtifact(config) {
@@ -141,10 +198,15 @@ async function verifyArtifact(config) {
   const recordedVersion = JSON.parse(await readFile(resolve(distRoot, "version.json"), "utf8"));
   assert.deepEqual(recordedVersion, version, "version.json records source and requested SHA");
 
-  const paths = [...resources.scripts, ...resources.stylesheets, resources.favicon]
+  const paths = [...resources.scripts, ...resources.stylesheets, resources.favicon, ...(resources.shareImage ? [resources.shareImage] : [])]
     .map((path) => new URL(path, config.publicUrl).pathname);
   for (const path of paths) {
     await verifyLocalAsset(path, (assetPath) => expectedMime(assetPath).length > 0);
+  }
+  if (resources.shareImage) {
+    const imagePath = decodeURIComponent(resources.shareImage.slice(expectedBasePath.length));
+    const image = await readFile(resolve(distRoot, imagePath));
+    assertPngDimensions(image, config.shareImageWidth, config.shareImageHeight, "built share image");
   }
   await access(resolve(distRoot, "assets"));
   console.log(`Pages artifact verified: sourceSha=${sourceSha}, requestedSha=${requestedSha}, assets=${paths.length}`);
@@ -208,7 +270,7 @@ async function verifyPublished(config) {
     assert.equal(version.requestedSha, expectedSha, "published requested SHA matches dispatch input");
   });
 
-  const assets = [...resources.scripts, ...resources.stylesheets, resources.favicon];
+  const assets = [...resources.scripts, ...resources.stylesheets, resources.favicon, ...(resources.shareImage ? [resources.shareImage] : [])];
   await Promise.all(assets.map(async (path) => {
     const assetUrl = new URL(path, publicUrl);
     const acceptedMime = expectedMime(assetUrl.pathname);
@@ -217,8 +279,11 @@ async function verifyPublished(config) {
       const finalUrl = new URL(response.url);
       assert.equal(finalUrl.origin, publicUrl.origin, "asset remains on configured origin");
       assert.equal(finalUrl.pathname, assetUrl.pathname, "asset resolves at its base-prefixed path");
-      const body = await response.arrayBuffer();
+      const body = Buffer.from(await response.arrayBuffer());
       assert.ok(body.byteLength > 0, "published asset is non-empty");
+      if (path === resources.shareImage) {
+        assertPngDimensions(body, config.shareImageWidth, config.shareImageHeight, "published share image");
+      }
     });
   }));
   console.log(`Published HTTP smoke passed: ${publicUrl.href}; sourceSha=${expectedSha}; assets=${assets.length}`);
