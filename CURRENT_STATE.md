@@ -4,7 +4,7 @@
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)、R4（5問進行・時計・保存・結果・共有）は[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)でマージ済みです。R5は[PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)として2026-09-27 01:49:54 JSTにユーザーによりmainへマージ済みです。検証ソース `1cf19149de75b1f970185ec903b6eed7c5896fad` の[CI 36252821838](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は成功し、browser 90件（89 expected + 1 flaky。初回失敗後に再試行成功）、最終失敗0・skip0でした。flakyの原因は未確定です。R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784` です。ユーザーは2026-09-27に本番公開を許可しましたが、これは計画の未達受入ゲートの包括的免除とは扱いません。R6 PRは準備中でworkflow dispatch・実deployは未実施、Q05実機受入・正式名・共有画像も未完了です。**
+最新の実装基準は[対応実装計画書 文書版2.0](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)、R4（5問進行・時計・保存・結果・共有）は[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)でマージ済みです。R5は[PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)として2026-09-27 01:49:54 JSTにユーザーによりmainへマージ済みです。検証ソース `1cf19149de75b1f970185ec903b6eed7c5896fad` の[CI 36252821838](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は成功し、browser 90件（89 expected + 1 flaky。初回失敗後に再試行成功）、最終失敗0・skip0でした。flakyの原因は未確定です。R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784` です。[R6 Draft PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12) の[CI 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213)はsuccess。browser 90件中89 pass、1 flakyはretry成功、最終失敗0・skip0でした。ユーザーは2026-09-27に本番公開を許可しましたが、これは計画の未達受入ゲートの包括的免除とは扱いません。workflow dispatch・実deployは未実施、Q05実機受入・正式名・共有画像も未完了です。**
 
 R5開始時の基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）です。今回の記録更新PRの基準mainはPR #10マージ後の `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
 
@@ -17,7 +17,7 @@ R5開始時の基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub 
 | 1回の挑戦 | 初級2・中級2・上級1の順に5問。日替わりなし |
 | 今回の実装先 | 正式版の `src/` / `content/` を基本とする。旧試作は比較資料 |
 | 今回の接続 | 端末内で完結。ランキング・プレイ回数・Supabaseは対象外 |
-| 公開 | R6でworkflow_dispatch専用の公開workflowを準備中。公開許可は記録済みだが未達ゲートの包括waiverではない。Q05・正式名・画像等の事前ゲート完了または項目ごとの明示waiverまではdispatchしない |
+| 公開 | R6のworkflow_dispatch専用公開workflowは[Draft PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12)、CI success。公開許可は記録済みだが未達ゲートの包括waiverではない。Q05・正式名・画像等の事前ゲート完了または項目ごとの明示waiverまではdispatchしない |
 | 主対象 | iPhone 17 Pro Safari。横画面・PCも同じ規則で検査する |
 
 ## 完了・未完了の区別

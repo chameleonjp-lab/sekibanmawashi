@@ -34,9 +34,11 @@ R6では、ユーザーの明示的な本番公開許可を受け、workflow_dis
 | Rollback verifier source | 対応済み | verifier scriptをdispatch workflow revisionから`RUNNER_TEMP`へ保存後にrequested SHAへcheckout。対象SHAの`site.config.ts`を同じtempへ渡し、R6導入前の受入済みsourceもartifact/smoke検査できます |
 | Deployment URL output | 必須化・isolated check成功 | published smokeは`PAGES_DEPLOYMENT_URL`非空、HTTPS、`site.config.ts`のpublicUrlと同じorigin/pathでなければ失敗。SHAを設定してURLを省いた実行はHTTP fetchの前に必須URLエラーで停止 |
 | Playwright browser install | blocked | `npm run test:e2e:install` (`--with-deps`) failed because apt could not `setgroups` in this sandbox. `npx playwright install chromium webkit` failed after repeated zero-byte/truncated browser archive responses. Cached WebKit revision 2336 does not match current Playwright 1.63's required 2359; pinned Chromium 1243 is absent |
-| targeted E2E / full E2E | 未実施 | No matching Playwright Chromium/WebKit browser binaries; rerun via GitHub CI before merge. Browser tests are not reported as passing |
+| local targeted E2E / full E2E | 未実施 | Local Playwright install was blocked above; the full suite did run in GitHub PR CI below |
 | static source/workflow checks | 成功 / actionlint未導入 | `node --check scripts/check-pages.mjs`, PyYAML parse of both workflow files, `git diff --check`; actionlint was not installed |
 | 独立担当レビュー | Draft PR作成可 | Sol Highが最終差分を再レビューし、Draft PRを妨げるblockerなしを確認。GET method、pre-R6 rollback verifier、release-gate/waiver、deployment URLの指摘を修正済み。公開受入完了を意味しない |
+| PR #12 CI | 成功 | [run 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213), head `036b0e04f16a2a3b5531ad3411f35db87a8a93d9`; verify成功。unit72、P01-P09、Pages artifact check成功、browser 90件は89 pass + 1 flaky（再試行成功）、最終失敗0・skip0 |
+| PR #12 browser flaky | 未解決 / final CI success | WebKit `w390-h844`・文字200%のstate matrixで初回、開始後に`game-screen`が現れずtimeout。retry成功。根因は未確定で、ゲーム実装はこのPRで変更していない |
 | Pages dispatch / live HTTP smoke | 未実施 | 本番公開はしていない。live smokeはR6 PR merge後のroot実deploy時に実施 |
 
 ## 残る受入・本番状態
@@ -47,4 +49,4 @@ R6では、ユーザーの明示的な本番公開許可を受け、workflow_dis
 - 公開URLは `https://chameleonjp-lab.github.io/sekibanmawashi/`。このURLへ本番deployしていない。
 - 自動公開後検査はHTTP smokeまでであり、ライブサイト上のチャレンジ開始・入力・5問結果・共有・実験場往復をブラウザ操作した結果ではない。計画8.2のこれらの実URLフロー確認がR6完了前に必要。既存Playwright CIはlocalhost previewで動作する。
 - R6変更のPR merge後でも、rootは事前gate完了または個別waiverの記録、main head・`CI / verify`を再確認してからdispatchする。Pages Settings、branch protection、ランキング、Supabase、実験場本番データは変更しない。
-- Draft PR作成前のSol High独立レビューではblockerなし。actionlint未導入のためYAMLはPyYAMLでparse確認。GitHub PR CI・実deploy・実URLフロー・Q05は未実施で、PR CIがmerge前の必須確認。
+- Draft PR作成前のSol High独立レビューではblockerなし。actionlint未導入のためYAMLはPyYAMLでparse確認。PR #12 CIは成功したが1 browser flakyを再試行で通過。dispatch・実deploy・実URLフロー・Q05は未実施で、公開ゲート完了または個別明示waiverまではdispatchしない。
