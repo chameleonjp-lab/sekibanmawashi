@@ -1,0 +1,166 @@
+name: Publish Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: "受入済みmain上の公開元コミット（完全な40桁SHA）"
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      source_sha: ${{ steps.validate.outputs.source_sha }}
+    steps:
+      - name: Check out current main history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Validate dispatch source and current main ancestry
+        id: validate
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "::error::Pages publication can only be dispatched from refs/heads/main."
+            exit 1
+          fi
+          if [[ ! "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::source_sha must be a full lowercase 40-character commit SHA."
+            exit 1
+          fi
+          git fetch --no-tags origin main
+          git cat-file -e "${SOURCE_SHA}^{commit}"
+          if ! git merge-base --is-ancestor "$SOURCE_SHA" refs/remotes/origin/main; then
+            echo "::error::source_sha is not an ancestor of current origin/main."
+            exit 1
+          fi
+          printf 'source_sha=%s\n' "$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Require successful CI verify push run for exact source SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: |
+          runs="$(gh api \
+            --method GET \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/runs" \
+            -f head_sha="$SOURCE_SHA" \
+            -f event=push \
+            -f status=completed \
+            -f per_page=100)"
+          run_id="$(jq -r --arg source "$SOURCE_SHA" '
+            first(.workflow_runs[] | select(
+              .head_sha == $source and
+              .head_branch == "main" and
+              .event == "push" and
+              .status == "completed" and
+              .conclusion == "success"
+            )).id // empty
+          ' <<< "$runs")"
+          if [[ -z "$run_id" ]]; then
+            echo "::error::No successful CI/verify push run for source_sha=$SOURCE_SHA on main."
+            exit 1
+          fi
+          jobs="$(gh api \
+            --method GET \
+            "/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs" \
+            -f per_page=100)"
+          if ! jq -e 'any(.jobs[]; .name == "verify" and .conclusion == "success")' <<< "$jobs" >/dev/null; then
+            echo "::error::The matching CI run did not report CI/verify success."
+            exit 1
+          fi
+          echo "Confirmed successful CI/verify push run ${run_id} for ${SOURCE_SHA}."
+
+      - name: Stage release verifier from dispatch workflow revision
+        run: |
+          mkdir -p "$RUNNER_TEMP/pages-smoke-tools"
+          cp scripts/check-pages.mjs "$RUNNER_TEMP/pages-smoke-tools/check-pages.mjs"
+
+      - name: Check out the requested source commit
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: |
+          git checkout --detach "$SOURCE_SHA"
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+      - name: Stage requested source site configuration
+        run: |
+          cp site.config.ts "$RUNNER_TEMP/pages-smoke-tools/site.config.ts"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Use the pinned npm version
+        run: npm install --global npm@11.9.0
+
+      - run: npm ci
+
+      - name: Build GitHub Pages output
+        run: PAGES_BUILD=1 npm run build
+
+      - name: Record SHA and verify Pages artifact
+        env:
+          PAGES_REQUESTED_SHA: ${{ inputs.source_sha }}
+          PAGES_SITE_CONFIG: ${{ runner.temp }}/pages-smoke-tools/site.config.ts
+        run: node "$RUNNER_TEMP/pages-smoke-tools/check-pages.mjs" artifact
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+
+      - name: Upload post-deployment smoke verifier
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pages-smoke-tools
+          path: ${{ runner.temp }}/pages-smoke-tools
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      id-token: write
+      pages: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy uploaded Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Download HTTP smoke verifier
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pages-smoke-tools
+          path: pages-smoke-tools
+
+      - name: Verify deployed Pages URL and assets
+        env:
+          PAGES_DEPLOYMENT_URL: ${{ steps.deployment.outputs.page_url }}
+          PAGES_EXPECTED_SHA: ${{ needs.build.outputs.source_sha }}
+          PAGES_SITE_CONFIG: pages-smoke-tools/site.config.ts
+        run: node pages-smoke-tools/check-pages.mjs published

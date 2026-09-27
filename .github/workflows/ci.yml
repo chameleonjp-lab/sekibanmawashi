@@ -29,6 +29,12 @@ jobs:
       - run: npm test
       - run: npm run puzzles:test
       - run: npm run build
+      - name: Build and statically verify GitHub Pages artifact
+        env:
+          PAGES_REQUESTED_SHA: ${{ github.sha }}
+        run: |
+          PAGES_BUILD=1 npm run build
+          npm run pages:artifact:check
       - run: npm run performance:r5
       - name: Install Playwright browsers
         run: npm run test:e2e:install
