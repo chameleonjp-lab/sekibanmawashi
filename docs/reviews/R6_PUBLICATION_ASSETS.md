@@ -28,7 +28,7 @@ Node `24.19.0` / npm `11.9.0` のローカル作業ツリーで次を実行し�
 | `npm run licenses:check` | 成功 |
 | `PAGES_BUILD=1 npm run build` | 成功 |
 | `npm run pages:artifact:check` | 成功。HTML metadata、Pages base、共有PNGの存在・MIME・1200×630寸法・version SHAを確認 |
-| PR CI・独立レビュー | 未完了。PR作成後に確認 |
+| PR #13 CI・独立レビュー | PR上で進行中。最新状態はGitHub PRを参照 |
 | iPhone 17 Pro物理受入Q05 | 未実施 |
 | Pages dispatch・本番deploy | 未実施 |
 

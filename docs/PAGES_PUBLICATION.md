@@ -1,6 +1,6 @@
 # GitHub Pages の公開手順（R6）
 
-ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。この後続PRで正式名「セキバンマワシ」と共有画像を設定しました。公開後の実deployは、画像・名称を含む変更がmainへマージされ、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録され、mainとCIを再確認した後に行います。Pages Settingsはこの作業では変更しません。
+ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。この後続PRで正式名「セキバンマワシ」と共有画像を設定しました。今後の本番deployは、画像・名称を含む変更がmainへマージされ、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録され、mainとCIを再確認した後に行います。Pages Settingsはこの作業では変更しません。
 
 Q05（iPhone 17 Proの物理Safari/VoiceOver等）は未実施です。R6の後続変更で正式名「セキバンマワシ」と実プレイ画面を使った共有画像を設定しました。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。Q05の未実施を自動検査結果で置き換えません。
 

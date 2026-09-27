@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。PR #12はmainへマージ済み。正式名・共有画像を反映する後続PRを準備中 | unit72・問題庫検査・Pages artifact検査成功。browser90件は89 pass + 1 flaky（retry成功）、最終失敗0・skip0。ローカルbrowser取得はblocked。Q05・dispatch・実deployは未実施。PR CIと独立レビュー確認後も、Q05の受入または個別明示waiverまでdispatchしない |
+| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。PR #12はmainへマージ済み。正式名・共有画像の後続PR #13を作成済み（CI・独立レビュー進行中） | unit72・問題庫検査・Pages artifact検査成功。browser90件は89 pass + 1 flaky（retry成功）、最終失敗0・skip0。ローカルbrowser取得はblocked。Q05・dispatch・実deployは未実施。PR CIと独立レビュー確認後も、Q05の受入または個別明示waiverまでdispatchしない |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
