@@ -1,6 +1,6 @@
 # GitHub Pages の公開手順（R6）
 
-ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。この後続PRで正式名「セキバンマワシ」と共有画像を設定しました。今後の本番deployは、画像・名称を含む変更がmainへマージされ、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録され、mainとCIを再確認した後に行います。Pages Settingsはこの作業では変更しません。
+ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13) で正式名「セキバンマワシ」と共有画像を設定し、2026-09-28 JST時点でmainへマージ済みです。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。今後の本番deployは、このmain SHAのpush `CI / verify` 成功を確認し、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録された後に行います。Pages Settingsはこの作業では変更しません。
 
 Q05（iPhone 17 Proの物理Safari/VoiceOver等）は未実施です。R6の後続変更で正式名「セキバンマワシ」と実プレイ画面を使った共有画像を設定しました。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。Q05の未実施を自動検査結果で置き換えません。
 
@@ -44,7 +44,7 @@ deploy-pagesが完了した後、`scripts/check-pages.mjs published` が `site.c
 
 ## R6での実行と戻し方
 
-PR mergeだけではdispatchしません。dispatch前に、計画8.2の実機受入Q05、正式名・URL・共有画像、必須自動検査と独立レビューを完了します。共有画像と正式名は後続PRで設定します。Q05が未達のままなら、その項目についてユーザーの個別明示waiverが記録されている場合に限りdispatchします。2026-09-27の公開許可と「本番公開作業を実施」の指示は公開操作の許可ですが、Q05の個別waiverとは区別して記録します。
+PR mergeだけではdispatchしません。dispatch前に、計画8.2の実機受入Q05、正式名・URL・共有画像、必須自動検査と独立レビューを完了します。正式名と共有画像はPR #13でmainへ反映済みです。残る事前ゲートは、公開候補SHA `662d0fe79cce888094eb265a71c3f56cc60ff331` のmain push `CI / verify` 成功確認とQ05です。Q05が未達のままなら、その項目についてユーザーの個別明示waiverが記録されている場合に限りdispatchします。2026-09-27の公開許可と「本番公開作業を実施」の指示は公開操作の許可ですが、Q05の個別waiverとは区別して記録します。
 
 これらの事前ゲートが満たされた後、rootはmainの新headと `CI / verify` を再確認し、Actionsの **Publish Pages → Run workflow** でmainを選び、対象 `source_sha` に受入対象commitの完全SHAを渡します。Workflowはその時点のmain祖先・同一SHAの成功push CIを再確認してからbuild/deployします。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Pagesの `Source: GitHub Actions` 設定が必要なら、権限を持つ人がGitHub Settingsで設定します。この実装作業ではその設定を変更していません。
 
