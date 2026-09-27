@@ -764,6 +764,11 @@ figcaption {
     padding-inline: 0.55rem;
   }
 
+  .app-header h1 {
+    font-size: 1.28rem;
+    letter-spacing: 0.04em;
+  }
+
   .puzzle-status {
     gap: 0.35rem;
   }
