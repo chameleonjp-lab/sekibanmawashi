@@ -3,7 +3,7 @@
 更新日: 2026-09-27 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
-今回の記録更新PRの基準main: `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（PR #10マージ後、tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`）
+R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
 
 ## 段階
 
@@ -15,7 +15,7 @@ R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マ�
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・正式名・共有画像・公開指示は未完了 |
-| R6 公開 | 保留 | 受入完了とユーザーの公開指示が必要 |
+| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。Draft [PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12) の[CI 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213)は成功 | unit72・問題庫検査・Pages artifact検査成功。browser90件は89 pass + 1 flaky（retry成功）、最終失敗0・skip0。ローカルbrowser取得はblocked。dispatch・実deployは未実施。Q05・正式名・共有画像は未完了で、gate完了または個別明示waiverまでdispatchしない |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
@@ -73,3 +73,13 @@ R4のPR #9をユーザーがマージしたmain `0709e7ff2faaaf8b5e28e4038e60ca1
 2026-09-26にPR #10の失敗対応を再開しました。head `3ad17c5226ab1026b7878678d1ae466f98c6722d` の[CI 35650672638](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/35650672638)はsmoke 4件成功、全体70件中67件成功・3件失敗でした。残りは連続20回検査のlistener計数（両エンジン）と横画面844×390・文字200%の時間欄（WebKit）です。診断head `10b4890902e2ddfeed97af100485825ba5038285` では上限を変えず対象・呼出元・矩形を記録します。新規cloneからの `npm ci`、型検査、lint、72単体、P01〜P09、ライセンス、buildは成功。実装/診断はLuna Max、独立レビューはSol Highが担当しています。詳細と失敗履歴は[R5検査記録](../reviews/R5_VERIFICATION.md)に追記しています。一般公開は引き続き保留です。
 
 診断では増えた13 listenerが全てPlaywright検査ツールの初回注入と判明しました。注入を基準取得前に済ませ、増加許容なしのQ03を両ブラウザで20回ずつ通過しました。375/390pxでの時間欄はカード余白を調整し、900.00は200%文字で一行に、1800.00は小画面でも要素・カード内に収まることを検査します。例外境界と5問進行側の後始末を接続し、確定結果を通常描画で復元して4操作を再び使えることも検査しました。規則・90問・900組のデータは変更していません。最新のCI・flaky・資源集計は[R5検査記録](../reviews/R5_VERIFICATION.md)と[CI集計](../../reports/r5/ci-36252821838.json)を参照してください。
+
+## R6の公開Workflow実装
+
+R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`、作業branchは `chore/06-publication` です。ユーザーは2026-09-27に本番公開を許可しましたが、これは計画の未達受入ゲートを包括的にwaiveする指示ではありません。この作業は手動公開Workflowと検査の実装までで、R6 PRのmerge、workflow dispatch、本番deploy、Pages Settings操作はしていません。Q05、正式名、共有画像など事前ゲート完了か個別の明示waiverが記録されるまではdispatchしません。
+
+`.github/workflows/publish-pages.yml` は `workflow_dispatch` のみです。`source_sha` の完全な40桁形式、現在の `origin/main` の祖先であること、同一SHAのmain pushでCI `verify` jobが成功済みであることをActions APIで照合してからbuildします。buildとdeployは分離し、Pages用artifactをdeployします。deploy完了後は公開URLのHTML、SHA、JS/CSS/faviconをHTTPで有限回再試行して検査します。Playwrightのライブサイト操作は追加せず、公開後確認は配信応答のHTTP smokeまでです。
+
+Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint、licenses、unit72、P01-P09、regular build、Pages build・artifact静的検査が成功しました。performance:r5は155,520 samplesを測定しp50 `0.032238 ms` / p95 `0.064076 ms` / max `5.104793 ms`; 測定コマンドは閾値gateではなく、観測したmaxは従来の5ms目標よりわずかに高い値です。ローカルのPlaywright installはapt権限エラー、aptなし再取得は0 MiB / truncated archiveで失敗しましたが、Draft [PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12) の[CI 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213)は成功しました。browser90件中89 pass、WebKit 390×844・文字200%で1件flakyが再試行成功、最終失敗0・skip0。flakyの根因は未確定で、詳細は[R6検査記録](../reviews/R6_VERIFICATION.md)。
+
+Q05のiPhone 17 Pro物理Safari/VoiceOver/ロック復帰・実機音は未実施です。正式名「石板回し」は仮表示、`shareImageUrl` は `null` のままです。ユーザーの公開許可はこれらを受入済み・個別waiver済みとはしません。HTTP smokeやCI結果をこれらの受入としません。規則、UI、90問、900券は変更していません。deploy後はHTTP smokeに加え、計画8.2の実URL画面/共有/実験場フローも確認するまでR6公開完了としません。
