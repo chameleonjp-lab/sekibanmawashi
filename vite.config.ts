@@ -16,8 +16,18 @@ const siteMetadata = {
   description: escapeHtml(siteConfig.description),
   publicUrl: escapeHtml(siteConfig.publicUrl),
   labUrl: escapeHtml(siteConfig.labUrl),
+  twitterCard: siteConfig.shareImageUrl ? "summary_large_image" : "summary",
   ogImage: siteConfig.shareImageUrl
-    ? `<meta property="og:image" content="${escapeHtml(siteConfig.shareImageUrl)}" />`
+    ? [
+      `<meta property="og:image" content="${escapeHtml(siteConfig.shareImageUrl)}" />`,
+      `<meta property="og:image:alt" content="${escapeHtml(siteConfig.shareImageAlt)}" />`,
+      `<meta property="og:image:type" content="${escapeHtml(siteConfig.shareImageType)}" />`,
+      `<meta property="og:image:width" content="${siteConfig.shareImageWidth}" />`,
+      `<meta property="og:image:height" content="${siteConfig.shareImageHeight}" />`,
+    ].join("\n    ")
+    : "",
+  twitterImage: siteConfig.shareImageUrl
+    ? `<meta name="twitter:image" content="${escapeHtml(siteConfig.shareImageUrl)}" />\n    <meta name="twitter:image:alt" content="${escapeHtml(siteConfig.shareImageAlt)}" />`
     : "",
 };
 
@@ -29,7 +39,9 @@ const metadataPlugin = {
       .replaceAll("%SITE_DESCRIPTION%", siteMetadata.description)
       .replaceAll("%SITE_URL%", siteMetadata.publicUrl)
       .replaceAll("%SITE_LAB_URL%", siteMetadata.labUrl)
-      .replaceAll("%SITE_OG_IMAGE%", siteMetadata.ogImage);
+      .replaceAll("%SITE_OG_IMAGE%", siteMetadata.ogImage)
+      .replaceAll("%SITE_TWITTER_CARD%", siteMetadata.twitterCard)
+      .replaceAll("%SITE_TWITTER_IMAGE%", siteMetadata.twitterImage);
   },
 };
 

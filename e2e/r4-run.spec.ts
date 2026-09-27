@@ -144,7 +144,7 @@ async function dispatchLifecycle(page: Page, hidden: boolean, duplicate = false)
 
 async function gotoHome(page: Page): Promise<void> {
   await page.goto("/", { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { name: /石板回し/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /セキバンマワシ/ })).toBeVisible();
   await expect(home(page)).toBeVisible();
   await expect(page.locator("[data-error='fatal'], [data-fatal-error]")).toHaveCount(0);
 }
@@ -781,7 +781,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     });
     for (const value of ["{", "null", "[null]", "{}", '{"name":123,"best":{"timeMs":-1}}']) {
       await page.goto(`/?r4Storage=${encodeURIComponent(value)}`, { waitUntil: "networkidle" });
-      await expect(page.getByRole("heading", { name: /石板回し/ })).toBeVisible();
+      await expect(page.getByRole("heading", { name: /セキバンマワシ/ })).toBeVisible();
       await expect(home(page)).toBeVisible();
       await expect(page.locator("[data-fatal-error], [data-error='fatal']")).toHaveCount(0);
     }
