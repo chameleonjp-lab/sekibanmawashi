@@ -539,7 +539,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
 
     await expect(phaseLocator(page, "intermission")).toBeVisible();
     await expect(game(page)).toHaveAttribute("data-puzzle-id", puzzleId);
-    const solvedBoardBox = await board(page).locator("svg").boundingBox();
+    const solvedBoardBox = await game(page).locator("[data-board] svg").boundingBox();
     expect(solvedBoardBox).not.toBeNull();
     if (solvedBoardBox) expect(solvedBoardBox.width).toBeGreaterThan(340);
     const statusBox = await game(page).locator(".puzzle-status").boundingBox();
