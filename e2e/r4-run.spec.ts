@@ -524,7 +524,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       window.dispatchEvent(new Event("pageshow"));
     });
     await expect(moveCount).toHaveText(beforeMoves ?? "");
-    await visibleDialog(page).getByRole("button", { name: /盤面へ戻る|閉じる|続ける/ }).click();
+    await visibleDialog(page).getByRole("button", { name: /問題へ戻る|盤面へ戻る|閉じる|続ける/ }).click();
     await expect(visibleDialog(page)).toHaveCount(0);
     expect(await readPuzzleId(page)).toBe(puzzleBefore);
 
@@ -764,7 +764,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(visibleDialog(page)).toBeVisible();
     await advance(400, 400);
     await dispatchLifecycle(page, false, true);
-    await visibleDialog(page).getByRole("button", { name: /盤面へ戻る|閉じる|続ける/ }).click();
+    await visibleDialog(page).getByRole("button", { name: /問題へ戻る|盤面へ戻る|閉じる|続ける/ }).click();
     expect(await readClock()).toBe(500);
 
     const abort = page.getByRole("button", { name: "中断" }).first();

@@ -1082,7 +1082,7 @@ test.describe("R5 release readiness", () => {
       await expect(visibleDialog(page)).toBeVisible();
       await expect(page.locator("[data-game-content]")).toHaveAttribute("aria-hidden", "true");
       await page.screenshot({ path: testInfo.outputPath(`r5-${viewport.name}-help.png`), fullPage: true });
-      await visibleDialog(page).getByRole("button", { name: /盤面へ戻る|閉じる|続ける/ }).click();
+      await visibleDialog(page).getByRole("button", { name: /問題へ戻る|盤面へ戻る|閉じる|続ける/ }).click();
       await expect(visibleDialog(page)).toHaveCount(0);
       await waitForPlaying(page);
       await assertBoardVisible(page);

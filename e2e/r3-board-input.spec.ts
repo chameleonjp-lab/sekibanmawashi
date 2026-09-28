@@ -375,7 +375,7 @@ test.describe("R3 board rendering", () => {
         await expect(button).toBeVisible();
       }
       if ((viewport.width === 320 && viewport.height === 568) || (viewport.width === 844 && viewport.height === 390)) {
-        for (const [openerName, closeName] of [["遊び方", "盤面へ戻る"], ["中断", "続ける"]] as const) {
+        for (const [openerName, closeName] of [["遊び方", "問題へ戻る"], ["中断", "続ける"]] as const) {
           await page.getByRole("button", { name: openerName }).click();
           const dialog = page.locator("[role=dialog]:visible").first();
           await expect(dialog).toBeVisible();
@@ -476,7 +476,12 @@ test.describe("R3 board rendering", () => {
     await openGame(page, SOLVING_PUZZLE_ID);
     await page.evaluate(() => window.scrollTo(0, 0));
     const before = await page.evaluate(() => window.scrollY);
-    await ringHitRegions(page).nth(0).click();
+    // The center of a ring path's bounding box is its hole; tap on the annulus itself.
+    const svgBox = await board(page).locator("svg.stone-board").boundingBox();
+    expect(svgBox).not.toBeNull();
+    if (!svgBox) return;
+    const scale = svgBox.width / 300;
+    await page.touchscreen.tap(svgBox.x + 150 * scale, svgBox.y + (150 - 43) * scale);
     const after = await page.evaluate(() => window.scrollY);
     expect(after).toBe(before);
     expect(await readMoves(page)).toBe(0);
@@ -766,7 +771,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await right.click();
     await rings.nth(1).click();
     await left.click();
-    await expect(stateStatus(page)).toContainText(/できました/);
+    await expect(stateStatus(page)).toContainText(/正解/);
     const solvedMoves = await readMoves(page);
     await expect(right).toBeDisabled();
     await right.evaluate((element) => (element as HTMLButtonElement).click());
@@ -777,7 +782,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.keyboard.press("ArrowRight");
     await page.keyboard.press("2");
     await page.keyboard.press("ArrowLeft");
-    await expect(stateStatus(page)).toContainText(/できました/);
+    await expect(stateStatus(page)).toContainText(/正解/);
 
     await openGame(page, SOLVING_PUZZLE_ID);
     const innerBox = await rings.nth(0).boundingBox();
@@ -793,6 +798,6 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.touchscreen.tap(rightBox.x + rightBox.width / 2, rightBox.y + rightBox.height / 2);
     await page.touchscreen.tap(middleBox.x + middleBox.width / 2, middleBox.y + middleBox.height / 2);
     await page.touchscreen.tap(leftBox.x + leftBox.width / 2, leftBox.y + leftBox.height / 2);
-    await expect(stateStatus(page)).toContainText(/できました/);
+    await expect(stateStatus(page)).toContainText(/正解/);
   });
 });
