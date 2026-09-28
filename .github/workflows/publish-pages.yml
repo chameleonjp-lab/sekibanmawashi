@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: "受入済みmain上の公開元コミット（完全な40桁SHA）"
-        required: true
+        description: "通常公開は空欄。ロールバック時のみ受入済みmain上の完全な40桁SHAを指定"
+        required: false
+        default: ""
         type: string
 
 permissions: {}
@@ -33,17 +34,21 @@ jobs:
       - name: Validate dispatch source and current main ancestry
         id: validate
         env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
+          REQUESTED_SOURCE_SHA: ${{ steps.validate.outputs.source_sha }}
         run: |
           if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
             echo "::error::Pages publication can only be dispatched from refs/heads/main."
             exit 1
           fi
-          if [[ ! "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::source_sha must be a full lowercase 40-character commit SHA."
+          git fetch --no-tags origin main
+          SOURCE_SHA="${REQUESTED_SOURCE_SHA//[[:space:]]/}"
+          if [[ -z "$SOURCE_SHA" ]]; then
+            SOURCE_SHA="$(git rev-parse refs/remotes/origin/main)"
+            echo "No source_sha supplied; using current main $SOURCE_SHA."
+          elif [[ ! "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::When source_sha is supplied, it must be a full lowercase 40-character commit SHA."
             exit 1
           fi
-          git fetch --no-tags origin main
           git cat-file -e "${SOURCE_SHA}^{commit}"
           if ! git merge-base --is-ancestor "$SOURCE_SHA" refs/remotes/origin/main; then
             echo "::error::source_sha is not an ancestor of current origin/main."
@@ -54,7 +59,7 @@ jobs:
       - name: Require successful CI verify push run for exact source SHA
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_SHA: ${{ inputs.source_sha }}
+          SOURCE_SHA: ${{ steps.validate.outputs.source_sha }}
         run: |
           runs="$(gh api \
             --method GET \
@@ -93,7 +98,7 @@ jobs:
 
       - name: Check out the requested source commit
         env:
-          SOURCE_SHA: ${{ inputs.source_sha }}
+          SOURCE_SHA: ${{ steps.validate.outputs.source_sha }}
         run: |
           git checkout --detach "$SOURCE_SHA"
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
@@ -118,7 +123,7 @@ jobs:
 
       - name: Record SHA and verify Pages artifact
         env:
-          PAGES_REQUESTED_SHA: ${{ inputs.source_sha }}
+          PAGES_REQUESTED_SHA: ${{ steps.validate.outputs.source_sha }}
           PAGES_SITE_CONFIG: ${{ runner.temp }}/pages-smoke-tools/site.config.ts
         run: node "$RUNNER_TEMP/pages-smoke-tools/check-pages.mjs" artifact
 
