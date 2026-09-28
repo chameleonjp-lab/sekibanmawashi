@@ -1,6 +1,6 @@
 # 実装と受入の進捗
 
-更新日: 2026-09-27 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
+更新日: 2026-09-28 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。PR #12はmainへマージ済み。正式名・共有画像の後続PR #13を作成済み。CI・独立レビュー状況は[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13)で追跡 | unit72・問題庫検査・Pages artifact検査成功。browser90件は89 pass + 1 flaky（retry成功）、最終失敗0・skip0。ローカルbrowser取得はblocked。Q05・dispatch・実deployは未実施。PR CIと独立レビュー確認後も、Q05の受入または個別明示waiverまでdispatchしない |
+| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。PR #12と[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13)はmainへマージ済み。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331` | PR #13 headのCI 36347915124は成功済み。公開workflowはmain merge SHA自身のpush CI成功を要求するため、`662d0fe...` のpush `CI / verify`をdispatch前に確認する。Q05・dispatch・実deployは未実施。Q05の受入または個別明示waiverまでdispatchしない |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
@@ -60,7 +60,7 @@ iPhone実機・VoiceOver・端末ロック復帰は未実施です。公開名�
 
 ## 未確定・未検証
 
-R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認と実験場掲載方式は後続段階です。正式な公開名・共有画像はR6後続のPR #13で対応し、CI・独立レビューの結果も同PRに記録します。旧版のテスト成功をv2へ持ち越しません。
+R2の難度・校正範囲は初期案の数値を維持して成立を確認しました。人による難しさの確認と実験場掲載方式は後続段階です。正式な公開名・共有画像はR6後続のPR #13で対応し、mainへマージ済みです。旧版のテスト成功をv2へ持ち越しません。
 
 R4のPR #9をユーザーがマージしたmain `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5` をR5開始時の基準にしました。PR #10はその後ユーザーがmainへマージしました（上記）。本番公開は行っていません。
 
@@ -82,6 +82,11 @@ R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` 
 
 Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint、licenses、unit72、P01-P09、regular build、Pages build・artifact静的検査が成功しました。performance:r5は155,520 samplesを測定しp50 `0.032238 ms` / p95 `0.064076 ms` / max `5.104793 ms`; 測定コマンドは閾値gateではなく、観測したmaxは従来の5ms目標よりわずかに高い値です。ローカルのPlaywright installはapt権限エラー、aptなし再取得は0 MiB / truncated archiveで失敗しましたが、Draft [PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12) の[CI 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213)は成功しました。browser90件中89 pass、WebKit 390×844・文字200%で1件flakyが再試行成功、最終失敗0・skip0。flakyの根因は未確定で、詳細は[R6検査記録](../reviews/R6_VERIFICATION.md)。
 
-R6後続PRで、正式名「セキバンマワシ」をUI・共有文・HTML metadataに反映し、main SHA `989784641d7cc04b6ae63c878b53e6acd1c39777` の成功CI artifact内WebKit実プレイ画面を基に1200×630 PNG共有カードを作成しました。盤面、状態、操作UIは画像内で再描画していません。ローカルWebKitは実行環境の `libgstreamer-1.0.so.0` 不足とapt権限制約で起動できず、同じmain push CIから画面証跡を取得しました。Q05のiPhone 17 Pro物理Safari/VoiceOver/ロック復帰・実機音は未実施です。ユーザーの公開許可はQ05の個別waiverではなく、HTTP smokeやCI結果を実機受入とはしません。規則、90問、900券は変更していません。deploy後はHTTP smokeに加え、計画8.2の実URL画面/共有/実験場フローも確認するまでR6公開完了としません。
+R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML metadataに反映してmainへマージし、main SHA `989784641d7cc04b6ae63c878b53e6acd1c39777` の成功CI artifact内WebKit実プレイ画面を基に1200×630 PNG共有カードを作成しました。盤面、状態、操作UIは画像内で再描画していません。ローカルWebKitは実行環境の `libgstreamer-1.0.so.0` 不足とapt権限制約で起動できず、同じmain push CIから画面証跡を取得しました。Q05のiPhone 17 Pro物理Safari/VoiceOver/ロック復帰・実機音は未実施です。ユーザーの公開許可はQ05の個別waiverではなく、HTTP smokeやCI結果を実機受入とはしません。規則、90問、900券は変更していません。deploy後はHTTP smokeに加え、計画8.2の実URL画面/共有/実験場フローも確認するまでR6公開完了としません。
 
 公開名・画像の構成、検査結果、未実施項目は[追補検証記録](../reviews/R6_PUBLICATION_ASSETS.md)を参照してください。
+
+
+### 2026-09-28 PR #13マージ後
+
+PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
