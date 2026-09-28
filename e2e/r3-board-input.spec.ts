@@ -766,7 +766,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await right.click();
     await rings.nth(1).click();
     await left.click();
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/できました/);
     const solvedMoves = await readMoves(page);
     await expect(right).toBeDisabled();
     await right.evaluate((element) => (element as HTMLButtonElement).click());
@@ -777,7 +777,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.keyboard.press("ArrowRight");
     await page.keyboard.press("2");
     await page.keyboard.press("ArrowLeft");
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/できました/);
 
     await openGame(page, SOLVING_PUZZLE_ID);
     const innerBox = await rings.nth(0).boundingBox();
@@ -793,6 +793,6 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.touchscreen.tap(rightBox.x + rightBox.width / 2, rightBox.y + rightBox.height / 2);
     await page.touchscreen.tap(middleBox.x + middleBox.width / 2, middleBox.y + middleBox.height / 2);
     await page.touchscreen.tap(leftBox.x + leftBox.width / 2, leftBox.y + leftBox.height / 2);
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/できました/);
   });
 });

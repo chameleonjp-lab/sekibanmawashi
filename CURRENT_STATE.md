@@ -50,4 +50,4 @@ iPhone 17 Pro物理Safari・VoiceOver・ロック復帰・正式アプリ全体�
 
 ユーザー依頼の画面改善を、main `b717de9a46e06b18b33c6b1af0ab796adb4bb867` から分岐した `fix/gameplay-board-clarity` で実装し、[Draft PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17) を作成しました。石板の質感と大きさ、黒く塗る遮断区画、上下に動かない入力、ゲーム画面からの音設定削除、簡潔な状態表示・言葉、成功時の紙吹雪と1.5秒の完成盤面表示が対象です。問題規則やデータは変更していません。未マージ・未公開です。
 
-Node 24.19.0 / npm 11.9.0 で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwright 100件のtest discoveryが成功しました。ローカルChromium/WebKitはブラウザー取得が0 MiBの切れたzipとなり未実行です。PR #17の前回CIは375×667で操作欄が画面外へはみ出し、ボタン高さが48px未満になる問題を検出しました。短い画面では盤面を42svhに縮めて操作欄の余白を調整し、ボタンは48px以上に保ちます。修正版のCI確認待ちです。iPhone実機・VoiceOverは未実施です。
+Node 24.19.0 / npm 11.9.0 で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwright 100件のtest discoveryが成功しました。ローカルChromium/WebKitは0 MiBのブラウザー配布物により未実行です。先行headのCI 36474425955では短画面検査と90件が成功し、I06の2件だけが現在の簡潔な成功表示に対する古い文言期待で失敗しました。I06の確認語を「できました」に合わせ、PR checksで最新headの結果を確認します。iPhone実機・VoiceOverは未実施です。
