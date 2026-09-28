@@ -91,8 +91,7 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
 
-## 2026-09-28 ゲーム画面改善（Draft PR #17）
 
-ユーザー依頼の画面改善を `fix/gameplay-board-clarity` で実装しています。基準mainは `b717de9a46e06b18b33c6b1af0ab796adb4bb867` で、Draft [PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17) のheadは `43d4509eb8a85cf9616e6373faaac741b7225fd2` です。今回の変更は盤面の質感・大きさ、30度分を黒く塗る遮断区画、画面の上下動防止、ゲーム画面の音設定削除、状態欄と言葉の簡素化、左右からの紙吹雪と1.5秒の完成盤面表示です。問題規則・90問・900組は変更していません。
+## R6後の画面仕上げ（2026-09-28）
 
-Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、licenses:check、buildが成功しました。ローカルPlaywright E2Eはブラウザーが存在せず、取得も0 MiBの壊れたzipで失敗しました。初回[CI 36471993298](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36471993298)は `e2e/r4-run.spec.ts` の未定義な盤面参照で失敗し、実画面から盤面を選ぶ参照に修正しました。[CI 36472625962](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36472625962)では型検査・lint・unit73件・P01〜P09・build・Pages artifact・性能検査が成功し、ブラウザー検査の375×667で操作欄が画面外へはみ出すことが分かりました。ボタンを44pxにした試みも同じCIで48pxの最小高さ要件を下回ると判明したため撤回し、短い画面では盤面を42svhに調整しながらボタンは48pxのまま保ちます。最新head `b6588a1e22ff292129ec50805c6e36a90cd48eb5` の[CI 36473653955](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36473653955)はこのボタン高さ要件で失敗しました。修正後のローカルtypecheck、lint、unit73件、P01〜P09、licenses:check、build、該当E2Eのtest discoveryは成功し、再修正をCIで確認中です。iPhone実機・VoiceOverは未実施です。Draftのままにし、マージしません。
+Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。過去のPR CIでは375×667で操作欄が画面外へはみ出し、ボタン高さも48px未満になりました。短い画面では盤面を42svhに調整し、ボタンを48px以上に保ちます。統合後の独立レビューでコード上の未解決指摘はありません。更新後のPR CIは確認待ちです。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。

@@ -8,6 +8,7 @@ import {
 import { GAME_TITLE, LAB_URL } from "./core/index.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { validatePuzzle } from "./core/validation.ts";
+import { createDefaultSettings, setAudioEnabled, type UserSettings } from "./core/settings.ts";
 import { createBoardSvg } from "./board.ts";
 import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
@@ -152,24 +153,26 @@ export function renderFatalError(root: HTMLElement): void {
 export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   teardownByRoot.get(root)?.();
   let session: CoreSession = createSession(puzzle);
-  const audioEnabled = loadSave().audioEnabled;
+  const settings: UserSettings = setAudioEnabled(createDefaultSettings(), loadSave().audioEnabled);
   let selectedRing = 1;
   let phase: InputPhase = session.status === "solved" ? "solved" : "playing";
   let sessionActive = phase === "playing";
   let activeModal: ModalName | null = null;
   let modalOpener: HTMLButtonElement | null = null;
   let startedAt = Date.now();
-  let statusMessage = phase === "solved" ? "この問題は、すでに解けています。" : "操作できます。";
   const initialLight = evaluate(puzzle, session.state);
+  let statusMessage = phase === "solved"
+    ? "最初から正解です"
+    : `目標 ${initialLight.litRequired}/${initialLight.requiredCount}`;
 
   root.innerHTML = `
-    <section class="app-shell" data-testid="puzzle-screen">
+    <section class="app-shell game-screen" data-testid="puzzle-screen">
       <div class="game-content" data-game-content>
       <header class="app-header">
         <div>
           <p class="eyebrow">1問の盤面確認</p>
           <h1 id="game-title">${GAME_TITLE}</h1>
-          <p class="subtitle">3本の輪を選び、左か右へ1つずつ動かします。</p>
+          <p class="subtitle">3つの輪を選び、左か右へ1つ分ずつ回します。</p>
         </div>
         <div class="header-actions" aria-label="補助操作">
           <button type="button" class="secondary-button" data-action="help" id="how-to-play">遊び方</button>
@@ -180,8 +183,8 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <section class="puzzle-status" aria-labelledby="puzzle-status-title">
         <h2 id="puzzle-status-title" class="visually-hidden">問題の状態</h2>
         <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 1</strong><span class="status-subtext" data-field="difficulty">${DIFFICULTY_LABELS[puzzle.difficulty]}</span></div>
-        <div class="status-card"><span class="status-label">光った目標</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
-        <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count">0</strong></div>
+        <div class="status-card"><span class="status-label">光った数</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
+        <div class="status-card"><span class="status-label">回した数</span><strong data-field="move-count">0</strong></div>
         <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">記録なし</span></div>
         <p class="status-message" data-field="state" aria-live="polite">${statusMessage}</p>
       </section>
@@ -189,22 +192,22 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <div class="game-layout">
         <figure class="board-panel" data-board="board" aria-labelledby="board-caption">
           <div class="board-host" data-board-host></div>
-          <figcaption id="board-caption">外側の目標を全部光らせてください。光る石は光を出し続けます。</figcaption>
+          <figcaption id="board-caption">外側にあるすべての目標へ光を届けてください。光を出す点はいつも光っています。</figcaption>
         </figure>
 
         <section class="control-panel" aria-labelledby="control-title">
           <h2 id="control-title">回す輪を選ぶ</h2>
-          <p class="control-help">輪を選ぶだけでは手数は増えません。動かすたびに1手です。</p>
-          <div class="ring-controls" role="group" aria-label="動かす輪">
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-label="内側の輪" aria-pressed="false">内側 <span class="key-hint">1</span></button>
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-label="真ん中の輪" aria-pressed="true">中央 <span class="key-hint">2</span></button>
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-label="外側の輪" aria-pressed="false">外側 <span class="key-hint">3</span></button>
+          <p class="control-help">輪を選ぶだけでは回数に入りません。回すたびに1回と数えます。</p>
+          <div class="ring-controls" role="group" aria-label="回す輪">
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-pressed="false">内側 <span class="key-hint">1</span></button>
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-pressed="true">中央 <span class="key-hint">2</span></button>
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-pressed="false">外側 <span class="key-hint">3</span></button>
           </div>
-          <div class="rotate-controls" role="group" aria-label="輪を動かす操作">
+          <div class="rotate-controls" role="group" aria-label="輪を回す操作">
             <button type="button" class="rotate-button" data-action="rotate-left" data-rotate="left" id="rotate-left"><span aria-hidden="true">↺</span> 左へ回す</button>
             <button type="button" class="rotate-button" data-action="rotate-right" data-rotate="right" id="rotate-right"><span aria-hidden="true">↻</span> 右へ回す</button>
           </div>
-          <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で輪を選び、←・→で動かします。</p>
+          <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で輪を選び、←・→で回します</p>
         </section>
       </div>
 
@@ -214,9 +217,9 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <div class="modal-layer" data-modal="help" hidden>
         <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title" tabindex="-1">
           <h2 id="help-title">遊び方</h2>
-          <p>石板には3本の輪があります。輪を選び、左か右へ1つずつ動かしてください。光る石は光を出し続け、黒い場所では光が止まります。</p>
-          <p>外側の目標が全部光れば成功です。光が交差しても互いを止めません。</p>
-          <button type="button" class="primary-button" data-action="close-help">盤面へ戻る</button>
+          <p>内側・中央・外側から輪を選び、左か右へ1つ分ずつ回します。光は光を出す点から進み、黒い場所で止まります。</p>
+          <p>外側にあるすべての目標へ光が届くと成功です。光が交差しても止まりません。</p>
+          <button type="button" class="primary-button" data-action="close-help">問題へ戻る</button>
         </section>
       </div>
       <div class="modal-layer" data-modal="abort" hidden>
@@ -249,7 +252,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
   if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !helpLayer || !abortLayer || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
   shell.setAttribute("data-puzzle-id", puzzle.id);
-  const sound = new SoundController({ enabled: audioEnabled });
+  const sound = new SoundController({ enabled: settings.audioEnabled });
   const listenerController = new AbortController();
 
   const getInputState = () => ({
@@ -288,11 +291,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       selectedRing,
       disabled: !accepting,
       onSelectRing: (ring) => {
-        if (!controller.boardSelection(ring)) return;
-        // The SVG is rebuilt after every selection. Move focus to the
-        // equivalent labelled HTML control so touch selection never strands
-        // keyboard focus on a removed path.
-        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus({ preventScroll: true });
+        controller.boardSelection(ring);
       },
     }));
   };
@@ -312,7 +311,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     const result = acceptRotation(session, type, selectedRing, elapsed);
     if (!result.accepted) {
       sound.play("error");
-      statusMessage = result.reason === "solved" ? "成功済み" : "入力を受け付けません";
+      statusMessage = result.reason === "solved" ? "正解済みです" : "この操作はできませんでした";
       refresh();
       return;
     }
@@ -322,11 +321,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       phase = "solved";
       sessionActive = false;
       sound.play("success");
-      statusMessage = "できました！ 目標が全部光りました。";
+      statusMessage = "正解です！";
     } else {
       sound.play("rotate");
       if (light.litRequired > before.litRequired) sound.play("light");
-      statusMessage = `操作できます。光った目標 ${light.litRequired} / ${light.requiredCount}`;
+      statusMessage = `目標 ${light.litRequired}/${light.requiredCount}`;
     }
     refresh();
   };
@@ -350,7 +349,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     const opener = modalOpener;
     modalOpener = null;
     refresh();
-    if (opener && opener.isConnected && !opener.disabled) opener.focus();
+    if (opener && opener.isConnected && !opener.disabled) opener.focus({ preventScroll: true });
   };
 
   const openModal = (name: ModalName, opener: HTMLButtonElement): void => {
@@ -363,7 +362,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     layer.removeAttribute("aria-hidden");
     refresh();
     const first = focusable(layer)[0] ?? layer.querySelector<HTMLElement>('[role="dialog"]');
-    first?.focus();
+    first?.focus({ preventScroll: true });
   };
 
   const confirmAbort = (): void => {

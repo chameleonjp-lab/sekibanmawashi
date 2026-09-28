@@ -55,7 +55,7 @@ export type BoardRenderModel = {
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const RING_LABELS = ["内側の輪", "真ん中の輪", "外側の輪"] as const;
+const RING_LABELS = ["内側", "中央", "外側"] as const;
 
 function assertSlot(slot: number): void {
   if (!Number.isInteger(slot) || slot < 0 || slot >= SLOT_COUNT) {
@@ -102,19 +102,20 @@ export function ringPath(inner: number, outer: number): string {
   ].join(" ");
 }
 
-/** Return one 30-degree slice of a ring, centered on a numbered direction. */
-export function ringSlotPath(inner: number, outer: number, slot: number): string {
+/** Return the wedge occupied by one of the twelve positions in a ring. */
+export function ringSectorPath(inner: number, outer: number, slot: number): string {
+  assertSlot(slot);
   if (!(inner > 0) || !(outer > inner)) throw new RangeError("ring radii must be positive and ordered");
+  const halfSlot = Math.PI / SLOT_COUNT;
   const centerAngle = slotAngle(slot);
-  const halfStep = Math.PI / SLOT_COUNT;
   const pointAt = (radius: number, angle: number): BoardPoint => ({
     x: BOARD_CENTER.x + radius * Math.cos(angle),
     y: BOARD_CENTER.y + radius * Math.sin(angle),
   });
-  const outerStart = pointAt(outer, centerAngle - halfStep);
-  const outerEnd = pointAt(outer, centerAngle + halfStep);
-  const innerEnd = pointAt(inner, centerAngle + halfStep);
-  const innerStart = pointAt(inner, centerAngle - halfStep);
+  const outerStart = pointAt(outer, centerAngle - halfSlot);
+  const outerEnd = pointAt(outer, centerAngle + halfSlot);
+  const innerEnd = pointAt(inner, centerAngle + halfSlot);
+  const innerStart = pointAt(inner, centerAngle - halfSlot);
   return [
     `M ${outerStart.x} ${outerStart.y}`,
     `A ${outer} ${outer} 0 0 1 ${outerEnd.x} ${outerEnd.y}`,
@@ -295,7 +296,7 @@ function emitterGlyph(parent: Element, point: BoardPoint, radius: number): void 
 function receiverGlyph(parent: Element, point: BoardPoint, slot: number, required: boolean, lit: boolean): void {
   const group = svgElement("g");
   group.setAttribute("data-receiver-slot", String(slot));
-  group.setAttribute("aria-label", required ? `目標 ${slot + 1}${lit ? "（光っている）" : "（まだ光っていない）"}` : `方向 ${slot + 1}`);
+  group.setAttribute("aria-label", required ? `目標 ${slot + 1}${lit ? "（光が届いています）" : "（光が届いていません）"}` : `方向 ${slot + 1}`);
   group.setAttribute("class", required ? (lit ? "receiver receiver-required receiver-lit" : "receiver receiver-required") : "receiver receiver-idle");
   if (required) {
     appendCircle(group, point, 8, "receiver-ring");
@@ -330,7 +331,7 @@ export function createBoardSvg(
   setAttributes(svg, {
     viewBox: `${BOARD_VIEWBOX.minX} ${BOARD_VIEWBOX.minY} ${BOARD_VIEWBOX.width} ${BOARD_VIEWBOX.height}`,
     role: "img",
-    "aria-label": "石板。3本の輪と、外側にある12か所の目標",
+    "aria-label": "石板の盤面。3つの輪と外側の目標",
     class: "stone-board",
     focusable: "false",
   });
@@ -340,6 +341,28 @@ export function createBoardSvg(
   svg.addEventListener("dragstart", (event) => event.preventDefault());
 
   const defs = svgElement("defs");
+  const discGradient = svgElement("radialGradient");
+  setAttributes(discGradient, { id: "stone-disc-gradient", cx: "42%", cy: "34%", r: "72%" });
+  for (const [offset, color] of [["0%", "#42413d"], ["62%", "#302f2c"], ["100%", "#1e2022"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    discGradient.append(stop);
+  }
+  const ringGradient = svgElement("linearGradient");
+  setAttributes(ringGradient, { id: "stone-ring-gradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+  for (const [offset, color] of [["0%", "#85847a"], ["45%", "#6f706a"], ["100%", "#575955"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    ringGradient.append(stop);
+  }
+  const selectedGradient = svgElement("linearGradient");
+  setAttributes(selectedGradient, { id: "stone-ring-selected-gradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+  for (const [offset, color] of [["0%", "#a09b87"], ["48%", "#858171"], ["100%", "#6b685f"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    selectedGradient.append(stop);
+  }
+  defs.append(discGradient, ringGradient, selectedGradient);
   const filter = svgElement("filter");
   setAttributes(filter, {
     id: "beam-glow",
@@ -370,6 +393,7 @@ export function createBoardSvg(
   svg.append(defs);
 
   appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS, "board-disc");
+  appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS - 1.5, "board-disc-texture");
   appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS - 4, "board-edge");
   const tickGroup = svgElement("g");
   tickGroup.setAttribute("class", "board-ticks");
@@ -397,27 +421,32 @@ export function createBoardSvg(
     });
     const ringShape = svgElement("path");
     setAttributes(ringShape, { d: ringPath(inner, outer), class: "ring-surface" });
-    group.append(ringShape);
+    const texture = svgElement("path");
+    setAttributes(texture, { d: ringPath(inner, outer), class: "ring-texture", "aria-hidden": "true" });
+    group.append(ringShape, texture);
     ringGroup.append(group);
   }
   svg.append(ringGroup);
 
-  const blockerZones = svgElement("g");
-  blockerZones.setAttribute("class", "board-blocker-zones");
+  const blockerGroup = svgElement("g");
+  blockerGroup.setAttribute("class", "board-blocker-zones");
   for (const part of model.parts) {
     if (part.kind !== "blocker") continue;
-    const zone = svgElement("path");
-    const [inner, outer] = RING_RADII[part.ring];
-    setAttributes(zone, {
-      d: ringSlotPath(inner, outer, part.slot),
+    const [inner, outer] = RING_RADII[part.ring]!;
+    const cell = svgElement("path");
+    setAttributes(cell, {
+      d: ringSectorPath(inner, outer, part.slot),
       class: "blocker-zone",
+      "data-blocker-cell": "true",
       "data-blocker-zone": String(part.ring),
+      "data-kind": "blocker",
       "data-ring": String(part.ring),
       "data-slot": String(part.slot),
+      "aria-label": `${RING_LABELS[part.ring]}の光を止める黒い場所`,
     });
-    blockerZones.append(zone);
+    blockerGroup.append(cell);
   }
-  svg.append(blockerZones);
+  svg.append(blockerGroup);
 
   const centre = svgElement("g");
   centre.setAttribute("class", "board-centre");
@@ -457,6 +486,7 @@ export function createBoardSvg(
       "data-kind": part.kind,
       "data-slot": String(part.slot),
     });
+    if (part.kind !== "emitter") continue;
     emitterGlyph(partGroup, point, 8.5);
     partsGroup.append(partGroup);
   }

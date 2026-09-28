@@ -4,6 +4,7 @@ import { test } from "node:test";
 import { resolve } from "node:path";
 import {
   ASSIGNMENT_RETENTION_MS,
+  INTERMISSION_MS,
   boundedHistory,
   createAssignment,
   createRunState,
@@ -26,6 +27,10 @@ import type { HistoryAction } from "./core/types.ts";
 const puzzleInput = JSON.parse(readFileSync(resolve(process.cwd(), "content/puzzles-v2.json"), "utf8")) as unknown;
 const poolInput = JSON.parse(readFileSync(resolve(process.cwd(), "content/pool-v2.json"), "utf8")) as unknown;
 const ticketInput = JSON.parse(readFileSync(resolve(process.cwd(), "content/tickets-v2.json"), "utf8")) as unknown;
+
+test("R4 keeps the success-board pause at one and a half seconds", () => {
+  assert.equal(INTERMISSION_MS, 1_500);
+});
 
 test("R4 validates display names by Unicode length and control characters", () => {
   assert.equal(validatePlayerName("").ok, false);

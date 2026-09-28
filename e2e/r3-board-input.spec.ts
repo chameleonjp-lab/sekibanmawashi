@@ -227,6 +227,13 @@ test.describe("R3 board rendering", () => {
         (count, ring) => count + ring.parts.filter((part) => part.kind === "emitter").length,
         0,
       );
+      const expectedBlockers = puzzle.rings.reduce(
+        (count, ring) => count + ring.parts.filter((part) => part.kind === "blocker").length,
+        0,
+      );
+      await expect(board(page).locator("[data-blocker-cell]")).toHaveCount(expectedBlockers);
+      await expect(board(page).locator(".blocker-mark")).toHaveCount(0);
+      await expect(board(page).locator(".ring-texture")).toHaveCount(3);
       const beams = board(page).locator("[data-beam], [data-beam-index]");
       const expectedLight = evaluate(puzzle as CorePuzzle, (puzzle as CorePuzzle).initialState);
       const expectedRenderSegments = expectedSegments(expectedLight);
@@ -463,6 +470,17 @@ test.describe("R3 board rendering", () => {
       expect(await readMoves(page)).toBe(0);
     }
   });
+
+  test("V02/I03: selecting a ring directly on the board does not scroll the page", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openGame(page, SOLVING_PUZZLE_ID);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const before = await page.evaluate(() => window.scrollY);
+    await ringHitRegions(page).nth(0).click();
+    const after = await page.evaluate(() => window.scrollY);
+    expect(after).toBe(before);
+    expect(await readMoves(page)).toBe(0);
+  });
 });
 
 test.describe("R3 input contract", () => {
@@ -541,7 +559,7 @@ test.describe("R3 input contract", () => {
     expect(await readMoves(page)).toBe(beforeEnter + 1);
   });
 
-  test("I04 keeps focus on the accessible HTML ring control after the SVG is replaced", async ({ page }) => {
+  test("I04 keeps keyboard focus on the HTML ring control after the SVG is replaced", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openGame(page, SOLVING_PUZZLE_ID);
     const control = ringButtons(page).nth(0);

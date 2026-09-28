@@ -607,9 +607,8 @@ async function solveVisibleQuestion(page: Page): Promise<{ id: string; moves: nu
     await ring.click();
     await rotateButton(page, move.type).click();
     expectedMoves += 1;
-    // The fifth question is committed by replacing the game DOM with the
-    // result screen immediately. Read its authoritative result row in that
-    // case; intermediate questions still assert the live game counter.
+    // The live game stays in its success pause after every question. Once the
+    // result renders, read its authoritative row instead of the removed game DOM.
     await expect.poll(readCommittedMoves, { timeout: 12_000 }).toBe(String(expectedMoves));
   }
   await expect.poll(async () => {
@@ -628,11 +627,12 @@ async function runChallenge(page: Page, name = "R5検査"): Promise<{ ids: strin
   let totalMoves = 0;
   for (let index = 0; index < 5; index += 1) {
     await waitForPlaying(page);
+    await expect(page.locator("[data-testid='game-screen'] [data-action='audio']")).toHaveCount(0);
     ids.push(await readPuzzleId(page));
     difficulties.push(await readDifficulty(page));
     const solved = await solveVisibleQuestion(page);
     totalMoves += solved.moves;
-    if (index < 4) await expect(phase(page, "intermission")).toBeVisible();
+    await expect(phase(page, "intermission")).toBeVisible();
   }
   await expect(result(page)).toBeVisible();
   await expect(page.locator("[data-result-question]")).toHaveCount(5);
@@ -784,7 +784,7 @@ async function assertNonColorControls(page: Page): Promise<void> {
   await expect(page.locator("[data-testid='game-screen'] [data-action='select-ring']")).toHaveCount(3);
   await expect(page.getByRole("button", { name: /左へ回す/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /右へ回す/ })).toBeVisible();
-  await expect(page.locator("[data-testid='game-screen'] figcaption")).toContainText(/目標|光ら/);
+  await expect(page.locator("[data-testid='game-screen'] figcaption")).toContainText(/目標|光/);
 }
 
 async function assertNoButtonOverlap(page: Page): Promise<void> {
@@ -1355,7 +1355,7 @@ test.describe("R5 release readiness", () => {
       expect(challenge.totalMoves).toBeGreaterThan(0);
       const history = await readPhaseHistory(page);
       expect(history.filter((value) => value === "countdown"), "one preparation countdown").toHaveLength(1);
-      expect(history.filter((value) => value === "intermission"), "four success boundaries").toHaveLength(4);
+      expect(history.filter((value) => value === "intermission"), "five success pauses").toHaveLength(5);
       expect(history.filter((value) => value === "result"), "one final result transition").toHaveLength(1);
       const resultRows = page.locator("[data-testid='result-screen'] [data-result-question]");
       await expect(resultRows).toHaveCount(5);
@@ -1431,7 +1431,7 @@ async function runChallengeAfterBegin(page: Page): Promise<void> {
   for (let index = 0; index < 5; index += 1) {
     await waitForPlaying(page);
     await solveVisibleQuestion(page);
-    if (index < 4) await expect(phase(page, "intermission")).toBeVisible();
+    await expect(phase(page, "intermission")).toBeVisible();
   }
   await expect(result(page)).toBeVisible();
 }

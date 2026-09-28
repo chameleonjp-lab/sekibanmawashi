@@ -51,7 +51,7 @@ button {
   background: #2f3031;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+  transition: background-color 120ms ease, border-color 120ms ease;
 }
 
 button:hover:not(:disabled) {
@@ -60,7 +60,7 @@ button:hover:not(:disabled) {
 }
 
 button:active:not(:disabled) {
-  transform: translateY(1px);
+  background-color: #464744;
 }
 
 button:focus-visible,
@@ -87,8 +87,7 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.game-screen,
-[data-testid="puzzle-screen"] {
+.game-screen {
   overflow-anchor: none;
 }
 
@@ -216,6 +215,11 @@ figcaption {
   line-height: 1.3;
 }
 
+.game-screen .status-message[data-state="playing"],
+.game-screen .status-message[data-state="intermission"] {
+  white-space: nowrap;
+}
+
 .game-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
@@ -246,6 +250,8 @@ figcaption {
   width: min(100%, 42rem, 80svh);
   aspect-ratio: 1;
   margin: 0 auto;
+  flex: 0 0 auto;
+  overflow-anchor: none;
 }
 
 .stone-board {
@@ -357,9 +363,15 @@ figcaption {
 
 /* SVG board: the beam uses a solid stroke plus a wide user-space filter. */
 .board-disc {
+  fill: url(#stone-disc-gradient);
+  stroke: #77766d;
+  stroke-width: 1.1;
+}
+
+.board-disc-texture {
   fill: url(#stone-grain);
-  stroke: #252523;
-  stroke-width: 2.4;
+  opacity: 0.72;
+  pointer-events: none;
 }
 
 .board-edge {
@@ -379,15 +391,21 @@ figcaption {
 }
 
 .ring-surface {
+  fill: url(#stone-ring-gradient);
+  stroke: #aaa797;
+  stroke-width: 1;
+}
+
+.ring-texture {
   fill: url(#stone-grain);
-  stroke: #aca899;
-  stroke-width: 1.15;
+  opacity: 0.78;
+  pointer-events: none;
 }
 
 .board-ring-selected .ring-surface {
-  stroke: var(--beam);
-  stroke-width: 2;
-  filter: brightness(1.2);
+  fill: url(#stone-ring-selected-gradient);
+  stroke: #ffe28a;
+  stroke-width: 1.9;
 }
 
 .blocker-zone {
@@ -395,6 +413,7 @@ figcaption {
   stroke: #c4ad74;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+  pointer-events: none;
 }
 
 .board-beams {
@@ -488,6 +507,55 @@ figcaption {
 
 .centre-mark {
   fill: var(--beam);
+}
+
+.confetti-overlay {
+  position: fixed;
+  z-index: 9;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: var(--confetti-y);
+  width: 0.48rem;
+  height: 0.82rem;
+  border-radius: 1px;
+  opacity: 0;
+  transform-origin: center;
+  animation-duration: 1.24s;
+  animation-delay: var(--confetti-delay);
+  animation-timing-function: cubic-bezier(0.16, 0.62, 0.35, 1);
+  animation-fill-mode: both;
+}
+
+.confetti-piece[data-confetti-side="left"] {
+  left: 0;
+  animation-name: confetti-from-left;
+}
+
+.confetti-piece[data-confetti-side="right"] {
+  right: 0;
+  animation-name: confetti-from-right;
+}
+
+.confetti-piece[data-confetti-color="gold"] { background: #ffd96d; }
+.confetti-piece[data-confetti-color="cream"] { background: #fff3cf; }
+.confetti-piece[data-confetti-color="green"] { background: #a8d5a1; }
+.confetti-piece[data-confetti-color="orange"] { background: #f6ae50; }
+
+@keyframes confetti-from-left {
+  0% { opacity: 0; transform: translate3d(-0.8rem, -0.4rem, 0) rotate(0deg); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(calc(50vw + var(--confetti-drift)), var(--confetti-fall), 0) rotate(620deg); }
+}
+
+@keyframes confetti-from-right {
+  0% { opacity: 0; transform: translate3d(0.8rem, -0.4rem, 0) rotate(0deg); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(calc(-50vw + var(--confetti-drift)), var(--confetti-fall), 0) rotate(-620deg); }
 }
 
 .modal-layer {
@@ -618,7 +686,6 @@ figcaption {
   }
 
   .status-card strong {
-    white-space: nowrap;
   }
 
   .game-layout {
@@ -696,49 +763,35 @@ figcaption {
     /* At most four tracks fit with gaps. Doubling rem raises the minimum
        to 128px, leaving two readable cards per row on narrow screens. */
     grid-template-columns: repeat(auto-fit, minmax(min(100%, max(4rem, 20%)), 1fr));
-    gap: 0.4rem;
+    gap: 0.3rem;
     margin-bottom: 0.35rem;
   }
 
-  .game-screen .status-card,
-  .game-screen .status-message {
-    padding-block: 0.28rem;
-  }
-
   .game-screen .status-card {
-    gap: 0.02rem;
-  }
-
-  .game-screen .status-label {
-    font-size: 0.66rem;
-  }
-
-  .game-screen .status-card strong {
-    font-size: 0.9rem;
-  }
-
-  .game-screen .status-subtext {
-    font-size: 0.6rem;
-  }
-
-  .game-screen .status-message {
-    min-height: 2rem;
-    padding-inline: 0.45rem;
-    font-size: 0.82rem;
+    gap: 0;
+    padding: 0.3rem 0.38rem;
   }
 
   .status-card strong {
+    font-size: 0.95rem;
     white-space: nowrap;
   }
 
   .status-label {
+    font-size: 0.68rem;
     word-break: keep-all;
+  }
+
+  .status-subtext {
+    font-size: 0.64rem;
   }
 
   .status-message {
     grid-column: 1 / -1;
-    min-height: 2.35rem;
-    padding-block: 0.35rem;
+    min-height: 2.15rem;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.88rem;
+    line-height: 1.25;
   }
 
   .board-panel {
@@ -746,7 +799,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 48svh, 25rem);
+    width: min(100%, 45svh, 24rem);
   }
 
   figcaption,
@@ -842,7 +895,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 34svh, 12.5rem);
+    width: min(100%, 36svh, 14rem);
   }
 
   .game-layout {
@@ -900,6 +953,10 @@ figcaption {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .confetti-piece {
+    display: none;
   }
 }
 
@@ -1068,70 +1125,13 @@ figcaption {
 }
 
 .countdown-banner {
-  margin: 0 auto 1rem;
+  margin: 0 auto 0.5rem;
   border: 1px solid var(--beam);
   border-radius: 0.8rem;
-  padding: 0.75rem 1rem;
+  padding: 0.45rem 0.7rem;
   color: var(--beam);
   text-align: center;
   background: rgb(88 68 19 / 55%);
-}
-
-.success-confetti {
-  position: fixed;
-  z-index: 8;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.confetti-piece {
-  position: absolute;
-  top: var(--confetti-top);
-  width: var(--confetti-width);
-  height: var(--confetti-height);
-  border-radius: var(--confetti-radius);
-  background: var(--confetti-color);
-  opacity: 0;
-  box-shadow: 0 0 0.4rem rgb(255 255 255 / 22%);
-  animation: confetti-burst 1.35s cubic-bezier(0.16, 0.7, 0.35, 1) var(--confetti-delay) both;
-  will-change: transform, opacity;
-}
-
-.confetti-from-left {
-  left: 0;
-  --confetti-x: var(--confetti-distance);
-}
-
-.confetti-from-right {
-  right: 0;
-  --confetti-x: calc(0px - var(--confetti-distance));
-}
-
-@keyframes confetti-burst {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(0deg) scale(0.65);
-  }
-  18% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--confetti-x), var(--confetti-fall)) rotate(var(--confetti-rotation)) scale(1);
-  }
-}
-
-@keyframes confetti-reduced {
-  0%, 100% { opacity: 0; }
-  25%, 70% { opacity: 0.9; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .confetti-piece {
-    animation-name: confetti-reduced;
-    animation-duration: 1.5s;
-  }
 }
 
 .game-screen[data-phase="countdown"] .board-panel {
