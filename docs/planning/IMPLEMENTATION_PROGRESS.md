@@ -94,4 +94,4 @@ PR #13はmainへマージ済みで、現在確認できる最新main commitは `
 
 ## R6後の画面仕上げ（2026-09-28）
 
-Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474425955](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474425955)では短画面検査を通過し、全E2Eの90件が成功しました。残った2件はChromium/WebKitでのI06が成功表示に古い「成功・完成・解決」を期待していた検査文言の不一致です。簡潔な成功表示「できました」に合わせて期待語を更新しました。最新headのCI結果はPR #17のchecksで確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。
+Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474442114](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474442114)では短画面検査を通過し、全E2Eの90件が成功しました。残った2件はChromium/WebKitでのI06が成功表示に古い「成功・完成・解決」を期待していた検査文言の不一致です。簡潔な成功表示「できました」に合わせて期待語を更新しました。最新headのCI結果はPR #17のchecksで確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。
