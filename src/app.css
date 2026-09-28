@@ -794,7 +794,7 @@ figcaption {
 /* Keep the larger board while fitting both control rows on a short phone. */
 @media (min-width: 22.01rem) and (max-width: 36rem) and (max-height: 42rem) {
   .board-host {
-    width: min(100%, 44svh, 25rem);
+    width: min(100%, 42svh, 25rem);
   }
 
   .puzzle-status {
@@ -808,11 +808,6 @@ figcaption {
   .ring-controls,
   .rotate-controls {
     margin-block: 0.25rem;
-  }
-
-  .ring-button,
-  .rotate-button {
-    min-height: 2.75rem;
   }
 }
 
