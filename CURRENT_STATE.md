@@ -44,6 +44,6 @@ iPhone 17 Pro物理Safari・VoiceOver・ロック復帰・正式アプリ全体�
 
 ## 2026-09-28 ゲーム画面の改善
 
-ユーザー依頼の画面改善を、main `b717de9a46e06b18b33c6b1af0ab796adb4bb867` から分岐した `fix/gameplay-board-clarity` で実装中です。石板の質感と大きさ、黒く塗る遮断区画、上下に動かない入力、ゲーム画面からの音設定削除、簡潔な状態表示・言葉、成功時の紙吹雪と1.5秒の完成盤面表示が対象です。問題規則やデータは変更していません。Draft PRはローカル検査後に作成します。未マージ・未公開です。
+ユーザー依頼の画面改善を、main `b717de9a46e06b18b33c6b1af0ab796adb4bb867` から分岐した `fix/gameplay-board-clarity` で実装し、[Draft PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17) を作成しました。石板の質感と大きさ、黒く塗る遮断区画、上下に動かない入力、ゲーム画面からの音設定削除、簡潔な状態表示・言葉、成功時の紙吹雪と1.5秒の完成盤面表示が対象です。問題規則やデータは変更していません。未マージ・未公開です。
 
-Node 24.19.0 / npm 11.9.0 で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、license metadata、buildが成功しました。ローカルE2EはPlaywright本体がありませんでした。ブラウザー取得が0 MiBの切れたzipで失敗し、Chromium/WebKitを起動できません。対象ブラウザー検査はDraft PRのCIで確認します。iPhone実機・VoiceOverは未実施です。
+Node 24.19.0 / npm 11.9.0 で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、license metadata、buildが成功しました。ローカルE2EはPlaywright本体がありませんでした。ブラウザー取得が0 MiBの切れたzipで失敗し、Chromium/WebKitを起動できません。PR #17のCI 36472625962は、375×667で操作ボタンが画面下へはみ出す問題を検出しました。短い画面向けに盤面と操作欄を調整し、ローカル基本検査は再通過しました。修正版のCIを確認中です。iPhone実機・VoiceOverは未実施です。
