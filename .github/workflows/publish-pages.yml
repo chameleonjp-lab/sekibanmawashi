@@ -34,7 +34,7 @@ jobs:
       - name: Validate dispatch source and current main ancestry
         id: validate
         env:
-          REQUESTED_SOURCE_SHA: ${{ steps.validate.outputs.source_sha }}
+          REQUESTED_SOURCE_SHA: ${{ inputs.source_sha }}
         run: |
           if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
             echo "::error::Pages publication can only be dispatched from refs/heads/main."
