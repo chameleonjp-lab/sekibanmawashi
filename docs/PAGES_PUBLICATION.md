@@ -2,18 +2,18 @@
 
 ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13) で正式名「セキバンマワシ」と共有画像を設定し、2026-09-28 JST時点でmainへマージ済みです。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。今後の本番deployは、このmain SHAのpush `CI / verify` 成功を確認し、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録された後に行います。Pages Settingsはこの作業では変更しません。
 
-Q05（iPhone 17 Proの物理Safari/VoiceOver等）は未実施です。R6の後続変更で正式名「セキバンマワシ」と実プレイ画面を使った共有画像を設定しました。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。Q05の未実施を自動検査結果で置き換えません。
+Q05（iPhone 17 Proの物理Safari/VoiceOver等）は未実施ですが、ユーザーが2026-09-28 JSTに「Q05は今回免除して本番公開して良い」と明示し、PR #14のConversationへ今回のR6公開に限る個別waiverとして記録しました。R6の後続変更で正式名「セキバンマワシ」と実プレイ画面を使った共有画像を設定しました。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。Q05を実施済みとは扱いません。
 
 画像の出所・構成と検査結果は[公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md)に記録します。
 
 ## Workflowの安全境界
 
-`.github/workflows/publish-pages.yml` は `workflow_dispatch` だけで起動します。PR、push、scheduleからdeployするtriggerはありません。build/deploy両jobが `refs/heads/main` を条件にし、dispatch元がmain以外ならdeployしません。`source_sha` は小文字16進数40桁のcommit SHAだけを受理します。
+`.github/workflows/publish-pages.yml` は `workflow_dispatch` だけで起動します。PR、push、scheduleからdeployするtriggerはありません。build/deploy両jobが `refs/heads/main` を条件にし、dispatch元がmain以外ならdeployしません。通常公開では `source_sha` を空欄にし、workflowがdispatch時点の `origin/main` 完全SHAを確定します。ロールバックなど過去の受入済みmainを明示する場合だけ `source_sha` を指定し、その場合は小文字16進数40桁のcommit SHAだけを受理します。空白文字は除去します。
 
-build jobは、入力SHAが現在の `origin/main` の祖先であること、`.github/workflows/ci.yml` の `push` runが同じSHA・`main` で完了成功し、`verify` jobも成功していることをGitHub Actions API（`actions:read`）で確認してからcheckout/buildします。タグ、ブランチ名、PR専用run、別SHAのCI結果では代用できません。公開後検査scriptはdispatch workflow revisionから先にrunner tempへ保存し、後からrequested sourceをcheckoutします。これによりR6導入前の受入済みsource SHAも、同じ検査scriptでbuild・rollback可能です。`PAGES_BUILD=1 npm run build` の後、そのscriptがbase付きHTML資産と静的metadataを検査し、`dist/version.json` に次を記録します。
+build jobは、空欄時に確定したcurrent mainまたは明示入力SHAが現在の `origin/main` の祖先であること、`.github/workflows/ci.yml` の `push` runが同じSHA・`main` で完了成功し、`verify` jobも成功していることをGitHub Actions API（`actions:read`）で確認してからcheckout/buildします。タグ、ブランチ名、PR専用run、別SHAのCI結果では代用できません。公開後検査scriptはdispatch workflow revisionから先にrunner tempへ保存し、後からrequested sourceをcheckoutします。これによりR6導入前の受入済みsource SHAも、同じ検査scriptでbuild・rollback可能です。`PAGES_BUILD=1 npm run build` の後、そのscriptがbase付きHTML資産と静的metadataを検査し、`dist/version.json` に次を記録します。
 
 ```json
-{"sourceSha":"<checkoutした完全SHA>","requestedSha":"<workflow inputの完全SHA>"}
+{"sourceSha":"<checkoutした完全SHA>","requestedSha":"<検証後に確定した完全SHA>"}
 ```
 
 buildとdeployは別jobです。buildは `contents:read` / `actions:read`、deployは `pages:write` / `id-token:write` / `actions:read` だけを持ちます。deploy jobは `github-pages` environmentを使い、同時deployは直列化して実行中のdeployをcancelしません。Pages artifactと公開後smoke verifierは別artifactです。公開後検査用のsource checkoutに必要な `contents:read` をdeploy jobへ追加しないため、verifierと設定値だけを短期artifactとして渡します。
@@ -46,6 +46,13 @@ deploy-pagesが完了した後、`scripts/check-pages.mjs published` が `site.c
 
 PR mergeだけではdispatchしません。dispatch前に、計画8.2の実機受入Q05、正式名・URL・共有画像、必須自動検査と独立レビューを完了します。正式名と共有画像はPR #13でmainへ反映済みです。残る事前ゲートは、公開候補SHA `662d0fe79cce888094eb265a71c3f56cc60ff331` のmain push `CI / verify` 成功確認とQ05です。Q05が未達のままなら、その項目についてユーザーの個別明示waiverが記録されている場合に限りdispatchします。2026-09-27の公開許可と「本番公開作業を実施」の指示は公開操作の許可ですが、Q05の個別waiverとは区別して記録します。
 
-これらの事前ゲートが満たされた後、rootはmainの新headと `CI / verify` を再確認し、Actionsの **Publish Pages → Run workflow** でmainを選び、対象 `source_sha` に受入対象commitの完全SHAを渡します。Workflowはその時点のmain祖先・同一SHAの成功push CIを再確認してからbuild/deployします。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Pagesの `Source: GitHub Actions` 設定が必要なら、権限を持つ人がGitHub Settingsで設定します。この実装作業ではその設定を変更していません。
+これらの事前ゲートが満たされた後、rootはmainの新headと `CI / verify` を再確認し、Actionsの **Publish Pages → Run workflow** でmainを選びます。通常公開は `source_sha` を空欄のまま実行し、workflowがcurrent mainの完全SHAを確定します。ロールバック時だけ受入対象commitの完全40桁SHAを明示します。Workflowは確定したSHAがmain祖先であり、同一SHAの成功push CIがあることを再確認してからbuild/deployします。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Pagesの `Source: GitHub Actions` 設定が必要なら、権限を持つ人がGitHub Settingsで設定します。この実装作業ではその設定を変更していません。
 
 公開が失敗または問題があれば、同じ手動Workflowへ直前の確認済みSHAを指定して再deployし、HTTP smokeで戻ったcommitを確認します。rollback対象SHAはR6導入前でもよく、検査scriptはdispatch workflow側のrevisionから実行します。強制push、履歴書換え、branch protection変更、ランキング/Supabase/実験場の本番データ更新はこの手順に含みません。
+
+
+## 2026-09-28 初回dispatch失敗と対策
+
+Publish Pages run `36363555233` は `source_sha` に `662d0fe79cce888094eb265a71c3f56cc60ff33`（39文字）が渡され、完全40桁SHA検査で意図どおり停止しました。正しいcommitは末尾に `1` を含む `662d0fe79cce888094eb265a71c3f56cc60ff331` です。build・deploy処理自体の失敗ではありません。
+
+手入力事故を通常公開から除くため、通常公開ではSHA入力を不要にし、空欄ならworkflowがcurrent mainを採用するよう変更しました。明示SHAの厳密検査、main祖先検査、同一SHAのmain push CI成功検査は維持しています。
