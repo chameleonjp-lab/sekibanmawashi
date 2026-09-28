@@ -91,8 +91,8 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
 
-## 2026-09-28 ゲーム画面改善（PR準備中）
+## 2026-09-28 ゲーム画面改善（Draft PR #17）
 
-ユーザー依頼の画面改善を `fix/gameplay-board-clarity` で実装しています。基準mainは `b717de9a46e06b18b33c6b1af0ab796adb4bb867` で、今回の変更は盤面の質感・大きさ、30度分を黒く塗る遮断区画、画面の上下動防止、ゲーム画面の音設定削除、状態欄と言葉の簡素化、左右からの紙吹雪と1.5秒の完成盤面表示です。問題規則・90問・900組は変更していません。
+ユーザー依頼の画面改善を `fix/gameplay-board-clarity` で実装しています。基準mainは `b717de9a46e06b18b33c6b1af0ab796adb4bb867` で、Draft [PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17) のheadは `8da5ba2470511eeb9df5312171bd2a30e9d634f1` です。今回の変更は盤面の質感・大きさ、30度分を黒く塗る遮断区画、画面の上下動防止、ゲーム画面の音設定削除、状態欄と言葉の簡素化、左右からの紙吹雪と1.5秒の完成盤面表示です。問題規則・90問・900組は変更していません。
 
-Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、licenses:check、buildが成功しました。ローカルPlaywright E2Eはブラウザーが存在せず、取得も0 MiBの壊れたzipで失敗しました。対象のChromium/WebKit検査はDraft PRのCIで実行します。iPhone実機・VoiceOverは未実施です。PRはこれから作成し、マージしません。
+Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、licenses:check、buildが成功しました。ローカルPlaywright E2Eはブラウザーが存在せず、取得も0 MiBの壊れたzipで失敗しました。初回[CI 36471993298](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36471993298)は型検査で `e2e/r4-run.spec.ts` のテスト用盤面参照が未定義として失敗しました。実ゲーム画面から盤面を選ぶ参照に直し、head `8da5ba2470511eeb9df5312171bd2a30e9d634f1` をpushしました。ローカルtypecheckとPlaywright test discoveryは通過し、再CIを確認中です。iPhone実機・VoiceOverは未実施です。Draftのままにし、マージしません。
