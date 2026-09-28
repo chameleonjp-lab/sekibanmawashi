@@ -56,3 +56,14 @@ PR mergeだけではdispatchしません。dispatch前に、計画8.2の実機�
 Publish Pages run `36363555233` は `source_sha` に `662d0fe79cce888094eb265a71c3f56cc60ff33`（39文字）が渡され、完全40桁SHA検査で意図どおり停止しました。正しいcommitは末尾に `1` を含む `662d0fe79cce888094eb265a71c3f56cc60ff331` です。build・deploy処理自体の失敗ではありません。
 
 手入力事故を通常公開から除くため、通常公開ではSHA入力を不要にし、空欄ならworkflowがcurrent mainを採用するよう変更しました。明示SHAの厳密検査、main祖先検査、同一SHAのmain push CI成功検査は維持しています。
+
+
+## 2026-09-28 Publish Pages #2 の404とPages有効化前検査
+
+Publish Pages run `36392473240` では、source SHA確定、main祖先検査、同一SHAのCI成功確認、依存導入、Pages build、artifact静的検査、`github-pages` artifact uploadまで成功しました。deploy jobの `actions/deploy-pages` がPages deployment作成APIでHTTP 404となり、公開後smokeへ進めませんでした。
+
+同時点のGitHub repository APIは `has_pages: false` を返しており、Pagesサイト自体が未有効です。したがって、artifactやゲームbuildの破損ではなく、リポジトリのPages初期設定が未完了であることが直接原因です。
+
+再発防止として、build jobに `pages: read` だけを追加し、重いbuildの前に `GET /repos/{owner}/{repo}/pages` を実行します。Pages未有効ならSettings > PagesでBuild and deploymentのSourceをGitHub Actionsにするよう明示して即停止します。さらに公式 `actions/configure-pages` v6.0.0をimmutable SHAで実行し、Pages metadataを二重確認します。`configure-pages` の `enablement: true` は使いません。公式actionの仕様上、Pagesを自動有効化するには通常の `GITHUB_TOKEN` 以外の、追加の管理権限を持つtokenが必要なためです。不要なPATや長期secretを追加せず、一度だけGitHub SettingsでPagesを有効化する方針を維持します。
+
+Pagesを有効化した後は、同じPublish Pagesをmain・`source_sha`空欄で実行します。workflowはPages設定、main SHA、同一SHAの成功CI、artifact、deploy、公開後HTTP smokeの順に検査します。
