@@ -6,7 +6,6 @@ import {
   selectRing as selectCoreRing,
 } from "./core/engine.ts";
 import { GAME_TITLE, LAB_URL } from "./core/index.ts";
-import { createDefaultSettings, setAudioEnabled, type UserSettings } from "./core/settings.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { validatePuzzle } from "./core/validation.ts";
 import { createBoardSvg } from "./board.ts";
@@ -14,7 +13,7 @@ import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
 import { preparePoolArtifacts } from "./run.ts";
 import { hasFinalizedResultRecovery, renderHome, restoreFinalizedResult, teardownRunUi } from "./run-ui.ts";
-import { loadSave, saveAudioEnabled } from "./storage.ts";
+import { loadSave } from "./storage.ts";
 import {
   canAcceptInput,
   InputController,
@@ -153,14 +152,14 @@ export function renderFatalError(root: HTMLElement): void {
 export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   teardownByRoot.get(root)?.();
   let session: CoreSession = createSession(puzzle);
-  let settings: UserSettings = setAudioEnabled(createDefaultSettings(), loadSave().audioEnabled);
+  const audioEnabled = loadSave().audioEnabled;
   let selectedRing = 1;
   let phase: InputPhase = session.status === "solved" ? "solved" : "playing";
   let sessionActive = phase === "playing";
   let activeModal: ModalName | null = null;
   let modalOpener: HTMLButtonElement | null = null;
   let startedAt = Date.now();
-  let statusMessage = phase === "solved" ? "最初から成功しています" : "操作可能";
+  let statusMessage = phase === "solved" ? "この問題は、すでに解けています。" : "操作できます。";
   const initialLight = evaluate(puzzle, session.state);
 
   root.innerHTML = `
@@ -170,7 +169,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
         <div>
           <p class="eyebrow">1問の盤面確認</p>
           <h1 id="game-title">${GAME_TITLE}</h1>
-          <p class="subtitle">三本の環を選び、左右へ一区画ずつ回します。</p>
+          <p class="subtitle">3本の輪を選び、左か右へ1つずつ動かします。</p>
         </div>
         <div class="header-actions" aria-label="補助操作">
           <button type="button" class="secondary-button" data-action="help" id="how-to-play">遊び方</button>
@@ -181,7 +180,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <section class="puzzle-status" aria-labelledby="puzzle-status-title">
         <h2 id="puzzle-status-title" class="visually-hidden">問題の状態</h2>
         <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 1</strong><span class="status-subtext" data-field="difficulty">${DIFFICULTY_LABELS[puzzle.difficulty]}</span></div>
-        <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
+        <div class="status-card"><span class="status-label">光った目標</span><strong data-field="light-count">${initialLight.litRequired} / ${initialLight.requiredCount}</strong></div>
         <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count">0</strong></div>
         <div class="status-card"><span class="status-label">時間</span><strong data-field="time">未計測</strong><span class="status-subtext">記録なし</span></div>
         <p class="status-message" data-field="state" aria-live="polite">${statusMessage}</p>
@@ -190,23 +189,22 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <div class="game-layout">
         <figure class="board-panel" data-board="board" aria-labelledby="board-caption">
           <div class="board-host" data-board-host></div>
-          <figcaption id="board-caption">外周の受光紋をすべて点灯させてください。光は常に発光しています。</figcaption>
+          <figcaption id="board-caption">外側の目標を全部光らせてください。光る石は光を出し続けます。</figcaption>
         </figure>
 
         <section class="control-panel" aria-labelledby="control-title">
-          <h2 id="control-title">環を選ぶ</h2>
-          <p class="control-help">環の選択は手数に数えません。回転は1回につき1手です。</p>
-          <div class="ring-controls" role="group" aria-label="操作する環">
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-pressed="false">内環 <span class="key-hint">1</span></button>
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-pressed="true">中環 <span class="key-hint">2</span></button>
-            <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-pressed="false">外環 <span class="key-hint">3</span></button>
+          <h2 id="control-title">回す輪を選ぶ</h2>
+          <p class="control-help">輪を選ぶだけでは手数は増えません。動かすたびに1手です。</p>
+          <div class="ring-controls" role="group" aria-label="動かす輪">
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-label="内側の輪" aria-pressed="false">内側 <span class="key-hint">1</span></button>
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-label="真ん中の輪" aria-pressed="true">中央 <span class="key-hint">2</span></button>
+            <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-label="外側の輪" aria-pressed="false">外側 <span class="key-hint">3</span></button>
           </div>
-          <div class="rotate-controls" role="group" aria-label="回転操作">
+          <div class="rotate-controls" role="group" aria-label="輪を動かす操作">
             <button type="button" class="rotate-button" data-action="rotate-left" data-rotate="left" id="rotate-left"><span aria-hidden="true">↺</span> 左へ回す</button>
             <button type="button" class="rotate-button" data-action="rotate-right" data-rotate="right" id="rotate-right"><span aria-hidden="true">↻</span> 右へ回す</button>
           </div>
-          <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で環を選択、←・→で回転</p>
-          <label class="audio-setting"><input type="checkbox" data-action="audio" id="audio" checked /> 音を有効にする</label>
+          <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で輪を選び、←・→で動かします。</p>
         </section>
       </div>
 
@@ -216,8 +214,8 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       <div class="modal-layer" data-modal="help" hidden>
         <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title" tabindex="-1">
           <h2 id="help-title">遊び方</h2>
-          <p>三本の環を選び、左または右へ1区画ずつ回します。発光紋は常に光を出し、遮断石や別の部品が光を止めます。</p>
-          <p>必要な受光紋がすべて点灯すれば成功です。光が交差しても互いを止めません。</p>
+          <p>石板には3本の輪があります。輪を選び、左か右へ1つずつ動かしてください。光る石は光を出し続け、黒い場所では光が止まります。</p>
+          <p>外側の目標が全部光れば成功です。光が交差しても互いを止めません。</p>
           <button type="button" class="primary-button" data-action="close-help">盤面へ戻る</button>
         </section>
       </div>
@@ -240,7 +238,6 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   const stateElement = query<HTMLElement>(root, "[data-field='state']");
   const lightElement = query<HTMLElement>(root, "[data-field='light-count']");
   const movesElement = query<HTMLElement>(root, "[data-field='move-count']");
-  const audio = query<HTMLInputElement>(root, "[data-action='audio']");
   const helpLayer = query<HTMLElement>(root, "[data-modal='help']");
   const abortLayer = query<HTMLElement>(root, "[data-modal='abort']");
   const helpButton = query<HTMLButtonElement>(root, "[data-action='help']");
@@ -250,10 +247,9 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   const confirmAbortButton = query<HTMLButtonElement>(root, "[data-action='confirm-abort']");
   const leftButton = query<HTMLButtonElement>(root, "[data-action='rotate-left']");
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
-  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !audio || !helpLayer || !abortLayer || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
+  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !helpLayer || !abortLayer || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
   shell.setAttribute("data-puzzle-id", puzzle.id);
-  audio.checked = settings.audioEnabled;
-  const sound = new SoundController({ enabled: audio.checked });
+  const sound = new SoundController({ enabled: audioEnabled });
   const listenerController = new AbortController();
 
   const getInputState = () => ({
@@ -296,7 +292,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
         // The SVG is rebuilt after every selection. Move focus to the
         // equivalent labelled HTML control so touch selection never strands
         // keyboard focus on a removed path.
-        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus();
+        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus({ preventScroll: true });
       },
     }));
   };
@@ -305,7 +301,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     void sound.unlockFromGesture();
     selectedRing = selectCoreRing(selectedRing, ring);
     sound.play("select");
-    statusMessage = `選択中: ${["内環", "中環", "外環"][selectedRing]}`;
+    statusMessage = `選択中: ${["内側", "中央", "外側"][selectedRing]}`;
     refresh();
   };
 
@@ -326,11 +322,11 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       phase = "solved";
       sessionActive = false;
       sound.play("success");
-      statusMessage = `成功！ ${light.litRequired}個の受光紋が点灯しました。`;
+      statusMessage = "できました！ 目標が全部光りました。";
     } else {
       sound.play("rotate");
       if (light.litRequired > before.litRequired) sound.play("light");
-      statusMessage = `操作可能。${light.litRequired} / ${light.requiredCount} 個が点灯中`;
+      statusMessage = `操作できます。光った目標 ${light.litRequired} / ${light.requiredCount}`;
     }
     refresh();
   };
@@ -380,15 +376,6 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     refresh();
   };
 
-  audio.addEventListener("change", () => {
-    settings = setAudioEnabled(settings, audio.checked);
-    sound.setEnabled(settings.audioEnabled);
-    if (settings.audioEnabled) void sound.unlockFromGesture();
-    const saved = saveAudioEnabled(settings.audioEnabled);
-    if (!saved.ok) statusMessage = "音設定を保存できませんでした。";
-    shell.dataset.audio = settings.audioEnabled ? "on" : "off";
-    refresh();
-  });
   helpButton.addEventListener("click", () => openModal("help", helpButton));
   abortButton.addEventListener("click", () => openModal("abort", abortButton));
   closeHelpButton.addEventListener("click", closeModal);

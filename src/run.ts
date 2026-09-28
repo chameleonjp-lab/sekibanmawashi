@@ -21,7 +21,7 @@ import { uniformIndex } from "./puzzles/random.ts";
 
 /** The two fixed delays are deliberately kept in one place for the UI and tests. */
 export const COUNTDOWN_MS = 3_000;
-export const INTERMISSION_MS = 1_000;
+export const INTERMISSION_MS = 1_500;
 export const ASSIGNMENT_RETENTION_MS = 30 * 60 * 1_000;
 export const MAX_MOVES_PER_QUESTION = 300;
 export const MAX_MOVES_TOTAL = 1_500;

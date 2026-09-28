@@ -87,6 +87,11 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
+.game-screen,
+[data-testid="puzzle-screen"] {
+  overflow-anchor: none;
+}
+
 .app-header {
   display: flex;
   align-items: flex-start;
@@ -175,29 +180,30 @@ figcaption {
   min-width: 0;
   border: 1px solid #4c4c4a;
   border-radius: 0.75rem;
-  padding: 0.55rem 0.8rem;
+  padding: 0.4rem 0.7rem;
   background: rgb(32 32 33 / 80%);
 }
 
 .status-card {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.04rem;
 }
 
 .status-label {
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .status-card strong {
   color: var(--parchment);
-  font-size: 1.05rem;
+  font-size: 0.96rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .status-subtext {
   color: var(--muted);
-  font-size: 0.7rem;
+  font-size: 0.64rem;
 }
 
 .status-message {
@@ -206,6 +212,8 @@ figcaption {
   margin: 0;
   color: var(--beam);
   font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.3;
 }
 
 .game-layout {
@@ -235,7 +243,7 @@ figcaption {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(100%, 37rem, 70svh);
+  width: min(100%, 42rem, 80svh);
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -349,7 +357,9 @@ figcaption {
 
 /* SVG board: the beam uses a solid stroke plus a wide user-space filter. */
 .board-disc {
-  fill: #252628;
+  fill: url(#stone-grain);
+  stroke: #252523;
+  stroke-width: 2.4;
 }
 
 .board-edge {
@@ -369,15 +379,22 @@ figcaption {
 }
 
 .ring-surface {
-  fill: #676861;
-  stroke: #a4a296;
-  stroke-width: 0.8;
+  fill: url(#stone-grain);
+  stroke: #aca899;
+  stroke-width: 1.15;
 }
 
 .board-ring-selected .ring-surface {
-  fill: #818177;
   stroke: var(--beam);
-  stroke-width: 1.7;
+  stroke-width: 2;
+  filter: brightness(1.2);
+}
+
+.blocker-zone {
+  fill: #070809;
+  stroke: #c4ad74;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 
 .board-beams {
@@ -423,18 +440,6 @@ figcaption {
   fill: #fff7d8;
 }
 
-.board-part-blocker .blocker-body {
-  fill: #252628;
-  stroke: #c0bcac;
-  stroke-width: 0.85;
-}
-
-.board-part-blocker .blocker-mark {
-  fill: #97968b;
-  stroke: #3a3a39;
-  stroke-width: 0.55;
-}
-
 .receiver-required .receiver-ring {
   fill: #414a42;
   stroke: var(--receiver-dim);
@@ -467,7 +472,7 @@ figcaption {
   stroke: none;
   cursor: pointer;
   pointer-events: all;
-  touch-action: manipulation;
+  touch-action: none;
 }
 
 .ring-hit:hover,
@@ -627,7 +632,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 64svh, 19rem);
+    width: min(100%, 72svh, 21rem);
   }
 
   figcaption,
@@ -692,7 +697,34 @@ figcaption {
        to 128px, leaving two readable cards per row on narrow screens. */
     grid-template-columns: repeat(auto-fit, minmax(min(100%, max(4rem, 20%)), 1fr));
     gap: 0.4rem;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .game-screen .status-card,
+  .game-screen .status-message {
+    padding-block: 0.28rem;
+  }
+
+  .game-screen .status-card {
+    gap: 0.02rem;
+  }
+
+  .game-screen .status-label {
+    font-size: 0.66rem;
+  }
+
+  .game-screen .status-card strong {
+    font-size: 0.9rem;
+  }
+
+  .game-screen .status-subtext {
+    font-size: 0.6rem;
+  }
+
+  .game-screen .status-message {
+    min-height: 2rem;
+    padding-inline: 0.45rem;
+    font-size: 0.82rem;
   }
 
   .status-card strong {
@@ -714,7 +746,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 40svh, 22rem);
+    width: min(100%, 48svh, 25rem);
   }
 
   figcaption,
@@ -790,7 +822,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 30svh, 11rem);
+    width: min(100%, 34svh, 12.5rem);
   }
 
   .game-layout {
@@ -828,7 +860,7 @@ figcaption {
   }
 
   .board-host {
-    width: min(100%, 64svh, 20rem);
+    width: min(100%, 72svh, 21rem);
   }
 
   .control-panel {
@@ -1015,8 +1047,7 @@ figcaption {
   text-decoration: none;
 }
 
-.countdown-banner,
-.intermission-banner {
+.countdown-banner {
   margin: 0 auto 1rem;
   border: 1px solid var(--beam);
   border-radius: 0.8rem;
@@ -1024,6 +1055,63 @@ figcaption {
   color: var(--beam);
   text-align: center;
   background: rgb(88 68 19 / 55%);
+}
+
+.success-confetti {
+  position: fixed;
+  z-index: 8;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: var(--confetti-top);
+  width: var(--confetti-width);
+  height: var(--confetti-height);
+  border-radius: var(--confetti-radius);
+  background: var(--confetti-color);
+  opacity: 0;
+  box-shadow: 0 0 0.4rem rgb(255 255 255 / 22%);
+  animation: confetti-burst 1.35s cubic-bezier(0.16, 0.7, 0.35, 1) var(--confetti-delay) both;
+  will-change: transform, opacity;
+}
+
+.confetti-from-left {
+  left: 0;
+  --confetti-x: var(--confetti-distance);
+}
+
+.confetti-from-right {
+  right: 0;
+  --confetti-x: calc(0px - var(--confetti-distance));
+}
+
+@keyframes confetti-burst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(0.65);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--confetti-x), var(--confetti-fall)) rotate(var(--confetti-rotation)) scale(1);
+  }
+}
+
+@keyframes confetti-reduced {
+  0%, 100% { opacity: 0; }
+  25%, 70% { opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece {
+    animation-name: confetti-reduced;
+    animation-duration: 1.5s;
+  }
 }
 
 .game-screen[data-phase="countdown"] .board-panel {

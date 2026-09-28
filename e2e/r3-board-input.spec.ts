@@ -278,6 +278,8 @@ test.describe("R3 board rendering", () => {
         const filter = svg.querySelector("#beam-glow");
         return {
           layers: {
+            rings: layerIndex(".board-rings"),
+            blockers: layerIndex(".board-blocker-zones"),
             beams: layerIndex(".board-beams"),
             parts: layerIndex(".board-parts"),
             stops: layerIndex(".beam-stops"),
@@ -294,6 +296,8 @@ test.describe("R3 board rendering", () => {
           } : null,
         };
       });
+      expect(visualData.layers.blockers).toBeGreaterThan(visualData.layers.rings);
+      expect(visualData.layers.blockers).toBeLessThan(visualData.layers.beams);
       expect(visualData.layers.beams).toBeGreaterThanOrEqual(0);
       expect(visualData.layers.beams).toBeLessThan(visualData.layers.parts);
       expect(visualData.layers.parts).toBeLessThan(visualData.layers.stops);
@@ -408,6 +412,7 @@ test.describe("R3 board rendering", () => {
   test("V03 separates all three ring hit regions and keeps selection at zero moves", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openGame(page, SOLVING_PUZZLE_ID);
+    expect(await page.locator("[data-testid='puzzle-screen'] [data-action='audio']").count()).toBe(0);
     const rings = ringButtons(page);
     const hits = ringHitRegions(page);
     await expect(hits).toHaveCount(3);
@@ -425,15 +430,36 @@ test.describe("R3 board rendering", () => {
       expect(radialExtents[index].max).toBeGreaterThan(radialExtents[index].min);
       if (index > 0) expect(radialExtents[index - 1].max).toBeLessThan(radialExtents[index].min);
     }
+    const blockerZones = board(page).locator(".blocker-zone");
+    const stoneTexture = board(page).locator("defs #stone-grain");
+    await expect(stoneTexture.locator("ellipse")).toHaveCount(76);
+    await expect(stoneTexture.locator("path")).toHaveCount(14);
+    const puzzleForBlockers = puzzles.find((candidate) => candidate.id === SOLVING_PUZZLE_ID);
+    const expectedBlockers = puzzleForBlockers?.rings.flatMap((ring) => ring.parts).filter((part) => part.kind === "blocker").length ?? 0;
+    await expect(blockerZones).toHaveCount(expectedBlockers);
+    await expect(board(page).locator(".blocker-mark")).toHaveCount(0);
+    const blockerPaint = await blockerZones.evaluateAll((elements) => elements.map((element) => {
+      const box = (element as SVGGraphicsElement).getBBox();
+      return { fill: getComputedStyle(element).fill, width: box.width, height: box.height };
+    }));
+    for (const area of blockerPaint) {
+      expect(area.fill).toBe("rgb(7, 8, 9)");
+      expect(area.width).toBeGreaterThan(10);
+      expect(area.height).toBeGreaterThan(10);
+    }
+
     const svgBox = await board(page).locator("svg").boundingBox();
     expect(svgBox).not.toBeNull();
     if (!svgBox) return;
     expect(Math.abs(svgBox.width - svgBox.height)).toBeLessThanOrEqual(1);
+    expect(svgBox.width).toBeGreaterThan(340);
     const svgScale = svgBox.width / 300;
     for (let index = 0; index < 3; index += 1) {
       const radius = (radialExtents[index].min + radialExtents[index].max) / 2;
+      const scrollBefore = await page.evaluate(() => window.scrollY);
       await page.touchscreen.tap(svgBox.x + 150 * svgScale, svgBox.y + (150 - radius) * svgScale);
       await expect(rings.nth(index)).toHaveAttribute("aria-pressed", "true");
+      expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
       expect(await readMoves(page)).toBe(0);
     }
   });

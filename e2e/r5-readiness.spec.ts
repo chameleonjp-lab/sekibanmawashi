@@ -784,7 +784,7 @@ async function assertNonColorControls(page: Page): Promise<void> {
   await expect(page.locator("[data-testid='game-screen'] [data-action='select-ring']")).toHaveCount(3);
   await expect(page.getByRole("button", { name: /左へ回す/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /右へ回す/ })).toBeVisible();
-  await expect(page.locator("[data-testid='game-screen'] figcaption")).toContainText(/受光紋|点灯/);
+  await expect(page.locator("[data-testid='game-screen'] figcaption")).toContainText(/目標|光ら/);
 }
 
 async function assertNoButtonOverlap(page: Page): Promise<void> {

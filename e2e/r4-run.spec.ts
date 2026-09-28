@@ -159,6 +159,7 @@ async function begin(page: Page, mode: RunMode, name = "Luna"): Promise<void> {
   await fillName(page, name);
   await startButton(page, mode).click();
   await expect(game(page)).toBeVisible();
+  await expect(game(page).locator("[data-action='audio']")).toHaveCount(0);
 }
 
 async function readAssignmentPuzzleIds(page: Page): Promise<unknown[] | null> {
@@ -425,6 +426,10 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(total).toHaveAttribute("data-total-time-ms");
     const totalMs = Number(await total.getAttribute("data-total-time-ms"));
     expect(totalMs).toBe(times.reduce((sum, value) => sum + value, 0));
+    const finalCelebration = page.locator("[data-testid='result-screen'] [data-success-confetti]");
+    await expect(finalCelebration.locator(".confetti-piece")).toHaveCount(28);
+    expect(await finalCelebration.locator("[data-confetti-side='left']").count()).toBe(14);
+    expect(await finalCelebration.locator("[data-confetti-side='right']").count()).toBe(14);
   });
 
   test("F03/F04/T02/T03: dialogs and lifecycle events keep the same question and avoid duplicate moves", async ({ page }) => {
@@ -502,7 +507,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
     await expect(home(page)).toBeVisible();
     expect(await readAssignmentPuzzleIds(page)).toEqual(assignmentBeforeAbort);
-    await page.waitForTimeout(1_200);
+    await page.waitForTimeout(1_700);
     await expect(game(page)).toHaveCount(0);
 
     await begin(page, "challenge");
@@ -514,8 +519,49 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(visibleDialog(page)).toBeVisible();
     await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
     await expect(home(page)).toBeVisible();
-    await page.waitForTimeout(1_200);
+    await page.waitForTimeout(1_700);
     await expect(game(page)).toHaveCount(0);
+  });
+
+  test("F02: the solved board stays visible for 1.5 seconds with confetti from both sides", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoHome(page);
+    await begin(page, "challenge");
+    await prepareImmediatelyBeforeSuccess(page);
+    const puzzleId = await readPuzzleId(page);
+    const puzzle = puzzleById.get(puzzleId);
+    if (!puzzle) throw new Error(`No fixture for puzzle ${puzzleId}`);
+    const finalMove = analyzePuzzle(puzzle).representativeSolution.at(-1);
+    if (!finalMove) throw new Error(`No solution move for ${puzzleId}`);
+    const solvedAt = Date.now();
+    await page.locator(`[data-action='select-ring'][data-ring='${finalMove.ring}']`).click();
+    await rotateButton(page, finalMove.type).click();
+
+    await expect(phaseLocator(page, "intermission")).toBeVisible();
+    await expect(game(page)).toHaveAttribute("data-puzzle-id", puzzleId);
+    const solvedBoardBox = await board(page).locator("svg").boundingBox();
+    expect(solvedBoardBox).not.toBeNull();
+    if (solvedBoardBox) expect(solvedBoardBox.width).toBeGreaterThan(340);
+    const statusBox = await game(page).locator(".puzzle-status").boundingBox();
+    expect(statusBox).not.toBeNull();
+    if (statusBox) expect(statusBox.height).toBeLessThan(120);
+    const lightText = await page.locator("[data-testid='game-screen'] [data-field='light-count']").textContent() ?? "";
+    const lightCounts = lightText.match(/(\d+)\s*\/\s*(\d+)/);
+    expect(lightCounts).not.toBeNull();
+    if (lightCounts) expect(lightCounts[1]).toBe(lightCounts[2]);
+    const confetti = page.locator("[data-testid='game-screen'] [data-success-confetti]");
+    await expect(confetti).toBeVisible();
+    await expect(confetti.locator(".confetti-piece")).toHaveCount(28);
+    expect(await confetti.locator("[data-confetti-side='left']").count()).toBe(14);
+    expect(await confetti.locator("[data-confetti-side='right']").count()).toBe(14);
+
+    await page.waitForTimeout(900);
+    await expect(phaseLocator(page, "intermission")).toBeVisible();
+    await expect(game(page)).toHaveAttribute("data-puzzle-id", puzzleId);
+    await expect.poll(() => game(page).getAttribute("data-question-index"), { timeout: 2_000 }).toBe("1");
+    expect(Date.now() - solvedAt).toBeGreaterThanOrEqual(1_400);
+    await expect(game(page)).toHaveAttribute("data-phase", "playing");
+    await expect(game(page).locator("[data-success-confetti]")).toBeHidden();
   });
 
   test("F03/F04: every question boundary cancels stale work before and after success", async ({ page }) => {
@@ -525,7 +571,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await expect(visibleDialog(page)).toBeVisible();
       await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
       await expect(home(page)).toBeVisible();
-      await page.waitForTimeout(1_200);
+      await page.waitForTimeout(1_700);
       await expect(game(page)).toHaveCount(0);
     };
     const solveThrough = async (targetIndex: number): Promise<void> => {
@@ -682,11 +728,11 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     const expectedTimes = [1_500, 200, 300, 400, 500];
     await solveVisibleQuestion(page);
     for (const duration of expectedTimes.slice(1)) {
-      // The one-second intermission is not owned by a question timer. Advance
+      // The 1.5-second intermission is not owned by a question timer. Advance
       // it deliberately and sample the stopped display before the next timer
       // starts, so a test clock cannot accidentally charge the next record.
       const intermissionBefore = await readClock();
-      await advance(1_000, 1_000);
+      await advance(1_500, 1_500);
       await dispatchLifecycle(page, false, true);
       expect(await readClock()).toBe(intermissionBefore);
       await waitForPlaying(page);

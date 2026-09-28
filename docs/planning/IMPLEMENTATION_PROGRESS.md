@@ -1,6 +1,6 @@
 # 実装と受入の進捗
 
-更新日: 2026-09-28 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
+更新日: 2026-09-28 JST / 計画: [文書版2.1](IMPLEMENTATION_PLAN.md)
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
@@ -90,3 +90,9 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 ### 2026-09-28 PR #13マージ後
 
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
+
+## 2026-09-28 ゲーム画面改善（PR準備中）
+
+ユーザー依頼の画面改善を `fix/gameplay-board-clarity` で実装しています。基準mainは `b717de9a46e06b18b33c6b1af0ab796adb4bb867` で、今回の変更は盤面の質感・大きさ、30度分を黒く塗る遮断区画、画面の上下動防止、ゲーム画面の音設定削除、状態欄と言葉の簡素化、左右からの紙吹雪と1.5秒の完成盤面表示です。問題規則・90問・900組は変更していません。
+
+Node `24.19.0` / npm `11.9.0` で `npm ci`、typecheck、lint（39 files）、unit 73件、P01〜P09、licenses:check、buildが成功しました。ローカルPlaywright E2Eはブラウザーが存在せず、取得も0 MiBの壊れたzipで失敗しました。対象のChromium/WebKit検査はDraft PRのCIで実行します。iPhone実機・VoiceOverは未実施です。PRはこれから作成し、マージしません。

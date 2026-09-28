@@ -66,6 +66,42 @@ const teardownByRoot = new WeakMap<HTMLElement, () => void>();
 const finalizedResultByRoot = new WeakMap<HTMLElement, FinalizedResultRecovery>();
 let attemptSerial = 0;
 
+const CONFETTI_COLORS = ["#ffe27b", "#f3aa61", "#b7dfaa", "#94c8e5", "#e6a8cb"] as const;
+
+function confettiPiecesMarkup(): string {
+  return Array.from({ length: 28 }, (_, index) => {
+    const side = index % 2 === 0 ? "left" : "right";
+    const color = CONFETTI_COLORS[index % CONFETTI_COLORS.length];
+    const top = 12 + ((index * 31) % 76);
+    const distance = 38 + ((index * 17) % 48);
+    const fall = 8 + ((index * 23) % 34);
+    const rotation = 220 + ((index * 53) % 440);
+    const delay = (index % 5) * 24;
+    const width = 5 + (index % 4) * 2;
+    const height = 7 + (index % 3) * 4;
+    const radius = index % 4 === 0 ? "50%" : "1px";
+    return `<span class="confetti-piece confetti-from-${side}" data-confetti-side="${side}" style="--confetti-top:${top}%;--confetti-distance:${distance}vw;--confetti-fall:${fall}vh;--confetti-rotation:${rotation}deg;--confetti-delay:${delay}ms;--confetti-width:${width}px;--confetti-height:${height}px;--confetti-radius:${radius};--confetti-color:${color}"></span>`;
+  }).join("");
+}
+
+function confettiMarkup(hidden = true): string {
+  return `<div class="success-confetti" data-success-confetti aria-hidden="true"${hidden ? " hidden" : ""}>${hidden ? "" : confettiPiecesMarkup()}</div>`;
+}
+
+function showSuccessConfetti(root: HTMLElement): void {
+  const host = query<HTMLElement>(root, "[data-success-confetti]");
+  if (!host) return;
+  host.innerHTML = confettiPiecesMarkup();
+  host.hidden = false;
+}
+
+function clearSuccessConfetti(root: HTMLElement): void {
+  const host = query<HTMLElement>(root, "[data-success-confetti]");
+  if (!host) return;
+  host.hidden = true;
+  host.replaceChildren();
+}
+
 function query<T extends Element>(root: ParentNode, selector: string): T | null {
   return root.querySelector<T>(selector);
 }
@@ -163,9 +199,9 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     <section class="app-shell home-screen" data-testid="home-screen" data-screen="home" data-mode="home">
       <header class="app-header home-header">
         <div>
-          <p class="eyebrow">常時発光・回転パズル</p>
+          <p class="eyebrow">光を合わせるパズル</p>
           <h1 id="home-title">${GAME_TITLE}</h1>
-          <p class="subtitle">三本の環を回して、5問を続けて解きます。</p>
+          <p class="subtitle">3本の輪を回して、5問を続けて解きます。</p>
         </div>
         <a class="secondary-button home-lab-link" href="${LAB_URL}">実験場へ戻る</a>
       </header>
@@ -198,9 +234,9 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
         <section class="home-card home-info-card" aria-labelledby="home-info-title">
           <h2 id="home-info-title">遊び方</h2>
           <ol class="how-list">
-            <li>操作する環を選びます。選択は手数に数えません。</li>
-            <li>左または右へ一区画ずつ回します。</li>
-            <li>必要な受光紋をすべて点灯させます。</li>
+            <li>回す輪を選びます。選ぶだけでは手数は増えません。</li>
+            <li>輪を左か右へ1つずつ動かします。</li>
+            <li>外側の目標をすべて光らせます。</li>
           </ol>
           <p class="muted-copy">5問の問題を準備してから始まります。</p>
         </section>
@@ -411,7 +447,7 @@ export function renderRun(
           <div>
             <p class="eyebrow">${assignment.mode === "challenge" ? "5問チャレンジ" : "5問練習"}</p>
             <h1 id="game-title">${GAME_TITLE}</h1>
-            <p class="subtitle">三本の環を選び、左右へ一区画ずつ回します。</p>
+            <p class="subtitle">3本の輪を選び、左か右へ1つずつ動かします。</p>
           </div>
           <div class="header-actions" aria-label="補助操作">
             <button type="button" class="secondary-button" data-action="help" id="how-to-play">遊び方</button>
@@ -422,46 +458,44 @@ export function renderRun(
         <section class="puzzle-status" aria-labelledby="puzzle-status-title">
           <h2 id="puzzle-status-title" class="visually-hidden">問題の状態</h2>
           <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 5</strong><span class="status-subtext" data-field="difficulty" data-difficulty="easy">初級</span></div>
-          <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">0 / 0</strong></div>
+          <div class="status-card"><span class="status-label">光った目標</span><strong data-field="light-count">0 / 0</strong></div>
           <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count" data-move-count="0" data-moves="0">0</strong></div>
           <div class="status-card"><span class="status-label">時間（秒）</span><strong data-field="time" data-time-ms="0">未計測</strong></div>
           <p class="status-message" data-field="state" data-state="loading" aria-live="polite">問題を準備しています</p>
         </section>
 
         <p class="countdown-banner" data-countdown hidden aria-live="assertive">開始まで <strong data-field="countdown">3</strong>秒</p>
-        <p class="intermission-banner" data-intermission hidden role="status">正解！ 次の問題を準備しています。</p>
-
         <div class="game-layout">
           <figure class="board-panel" data-board="board" aria-labelledby="board-caption">
             <div class="board-host" data-board-host></div>
-            <figcaption id="board-caption">外周の受光紋をすべて点灯させてください。光は常に発光しています。</figcaption>
+            <figcaption id="board-caption">外側の目標を全部光らせてください。光る石は光を出し続けます。</figcaption>
           </figure>
 
           <section class="control-panel" aria-labelledby="control-title">
-            <h2 id="control-title">環を選ぶ</h2>
-            <p class="control-help">環の選択は手数に数えません。回転は1回につき1手です。</p>
-            <div class="ring-controls" role="group" aria-label="操作する環">
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-pressed="false">内環 <span class="key-hint">1</span></button>
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-pressed="true">中環 <span class="key-hint">2</span></button>
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-pressed="false">外環 <span class="key-hint">3</span></button>
+            <h2 id="control-title">回す輪を選ぶ</h2>
+            <p class="control-help">輪を選ぶだけでは手数は増えません。動かすたびに1手です。</p>
+            <div class="ring-controls" role="group" aria-label="動かす輪">
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-label="内側の輪" aria-pressed="false">内側 <span class="key-hint">1</span></button>
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-label="真ん中の輪" aria-pressed="true">中央 <span class="key-hint">2</span></button>
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-label="外側の輪" aria-pressed="false">外側 <span class="key-hint">3</span></button>
             </div>
-            <div class="rotate-controls" role="group" aria-label="回転操作">
+            <div class="rotate-controls" role="group" aria-label="輪を動かす操作">
               <button type="button" class="rotate-button" data-action="rotate-left" data-rotate="left" id="rotate-left"><span aria-hidden="true">↺</span> 左へ回す</button>
               <button type="button" class="rotate-button" data-action="rotate-right" data-rotate="right" id="rotate-right"><span aria-hidden="true">↻</span> 右へ回す</button>
             </div>
             <button type="button" class="secondary-button reset-question" data-action="reset-question" hidden>今の問題をやり直す</button>
-            <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で環を選択、←・→で回転</p>
-            <label class="audio-setting"><input type="checkbox" data-action="audio" id="audio" /> 音を有効にする</label>
+            <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で輪を選び、←・→で動かします。</p>
           </section>
         </div>
-        <p class="game-note" data-game-note role="status">記録はこの端末に保存されます。問題の時間は操作可能になった時点から成功入力までです。</p>
+        <p class="game-note" data-game-note role="status">記録はこの端末に保存されます。時間は操作できるようになってから、問題を解くまでを計ります。</p>
       </div>
+      ${confettiMarkup()}
 
       <div class="modal-layer" data-modal="help" hidden>
         <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title" tabindex="-1">
           <h2 id="help-title">遊び方</h2>
-          <p>三本の環を選び、左または右へ1区画ずつ回します。発光紋は常に光を出します。</p>
-          <p>必要な受光紋がすべて点灯すれば成功です。説明を開いている間も、チャレンジの時間は進みます。</p>
+          <p>石板には3本の輪があります。輪を選び、左か右へ1つずつ動かしてください。光る石は光を出し続け、黒い場所では光が止まります。</p>
+          <p>外側の目標が全部光れば成功です。説明を開いている間も、チャレンジの時間は進みます。</p>
           <button type="button" class="primary-button" data-action="close-help">盤面へ戻る</button>
         </section>
       </div>
@@ -489,8 +523,6 @@ export function renderRun(
   const difficultyElement = query<HTMLElement>(root, "[data-field='difficulty']");
   const countdownBanner = query<HTMLElement>(root, "[data-countdown]");
   const countdownElement = query<HTMLElement>(root, "[data-field='countdown']");
-  const intermissionBanner = query<HTMLElement>(root, "[data-intermission]");
-  const audio = query<HTMLInputElement>(root, "[data-action='audio']");
   const resetButton = query<HTMLButtonElement>(root, "[data-action='reset-question']");
   const helpLayer = query<HTMLElement>(root, "[data-modal='help']");
   const abortLayer = query<HTMLElement>(root, "[data-modal='abort']");
@@ -502,13 +534,12 @@ export function renderRun(
   const confirmAbortButton = query<HTMLButtonElement>(root, "[data-action='confirm-abort']");
   const leftButton = query<HTMLButtonElement>(root, "[data-action='rotate-left']");
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
-  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !intermissionBanner || !audio || !resetButton || !helpLayer || !abortLayer || !gameNote || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
+  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !resetButton || !helpLayer || !abortLayer || !gameNote || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
 
   shell.dataset.runId = assignment.runId;
   const settingsSnapshot = loadSave({ prepared });
   let helpSeen = settingsSnapshot.helpSeen;
   const sound = new SoundController({ enabled: settingsSnapshot.audioEnabled });
-  audio.checked = settingsSnapshot.audioEnabled;
 
   const listeners = new AbortController();
   const clearScheduled = (): void => {
@@ -580,10 +611,9 @@ export function renderRun(
     movesElement.dataset.moveCount = String(actualMoves);
     countdownBanner.hidden = phase !== "countdown";
     countdownElement.textContent = String(countdownValue);
-    intermissionBanner.hidden = phase !== "intermission";
     if (phase === "countdown") stateElement.textContent = "問題を準備しています";
-    else if (phase === "intermission") stateElement.textContent = "成功！ 次の問題を準備しています。";
-    else if (phase === "playing") stateElement.textContent = `操作可能。${light.litRequired} / ${light.requiredCount} 個が点灯中`;
+    else if (phase === "intermission") stateElement.textContent = "できました！ 次の問題へ進みます。";
+    else if (phase === "playing") stateElement.textContent = `操作できます。光った目標 ${light.litRequired} / ${light.requiredCount}`;
     else if (phase === "result") stateElement.textContent = "結果を表示しています";
     else stateElement.textContent = "問題を準備しています";
     stateElement.dataset.state = phase;
@@ -618,7 +648,7 @@ export function renderRun(
       onSelectRing: (ring) => {
         if (disposed || renderedQuestion !== questionIndex || renderedGeneration !== generation) return;
         if (!controller.boardSelection(ring)) return;
-        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus();
+        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus({ preventScroll: true });
       },
     }));
   };
@@ -722,7 +752,7 @@ export function renderRun(
     const result = finalizeRun(runState);
     const resultUnlock = sound.unlockFromGesture();
     const resultSound = new SoundController({ enabled: sound.isEnabled() });
-    renderResult(root, prepared, result, playerName, storageWarning, resultSound);
+    renderResult(root, prepared, result, playerName, storageWarning, resultSound, true);
     // Rendering the result tears down the game controller. Emit the terminal
     // effect from the result surface so teardown cannot cut it off.
     void resultUnlock.then((ready) => { if (ready) resultSound.play("success"); });
@@ -771,6 +801,7 @@ export function renderRun(
       completeRun();
       return;
     }
+    showSuccessConfetti(root);
     schedule(INTERMISSION_MS, () => beginQuestion(questionIndex + 1));
   };
 
@@ -848,6 +879,7 @@ export function renderRun(
       return;
     }
     currentPuzzle = puzzle;
+    clearSuccessConfetti(root);
     sound.invalidate();
     session = createSession(puzzle);
     selectedRing = 1;
@@ -946,12 +978,6 @@ export function renderRun(
   leftButton.addEventListener("click", () => controller.rotate("l"), { signal: listeners.signal });
   rightButton.addEventListener("click", () => controller.rotate("r"), { signal: listeners.signal });
   resetButton.addEventListener("click", resetQuestion, { signal: listeners.signal });
-  audio.addEventListener("change", () => {
-    sound.setEnabled(audio.checked);
-    if (audio.checked) void sound.unlockFromGesture();
-    const result = saveAudioEnabled(audio.checked);
-    if (!result.ok) setStorageWarning(storageMessage(result.error));
-  }, { signal: listeners.signal });
   for (const button of Array.from(root.querySelectorAll<HTMLButtonElement>("[data-action='select-ring']"))) {
     button.addEventListener("click", () => controller.selectRing(Number(button.dataset.ring)), { signal: listeners.signal });
   }
@@ -973,7 +999,7 @@ function resultActionButton(root: HTMLElement, selector: string): HTMLButtonElem
 }
 
 /** Render a finalized in-memory result before attempting storage writes. */
-export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = "", terminalSound: SoundController | null = null): void {
+export function renderResult(root: HTMLElement, prepared: PreparedPool, result: FinalRunResult, playerName: string, initialNotice = "", terminalSound: SoundController | null = null, celebrate = false): void {
   teardownRoot(root);
   finalizedResultByRoot.set(root, { prepared, result, playerName, initialNotice });
   root.innerHTML = `
@@ -1011,6 +1037,7 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
         <div class="result-share-area" data-share-area hidden></div>
       </main>
       <footer class="home-footer"><a href="${PUBLIC_GAME_URL}">ゲームURL</a></footer>
+      ${celebrate ? confettiMarkup(false) : ""}
     </section>
   `;
   const listeners = new AbortController();
