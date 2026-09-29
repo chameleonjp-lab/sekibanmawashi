@@ -51,3 +51,9 @@ PR #17後の画面に合わせて、public/share-card.pngをPR #18で更新し�
 | 公開状態 | PR #17後の更新版は未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
 
 Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。
+
+## 2026-09-29 PR #19マージ後のCI基準
+
+PR #19はcommit `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` でmainへマージされました。main pushの[CI run 36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)では、静的検査の `checks`、Chromium、WebKit、必須の `verify` がすべて成功しました。
+
+これはmain上の並列CI構成を検証した結果で、PR #18の検査結果ではありません。検査開始時点のPR #18はhead `2c04ab67a56e4df127e35e4f27cc5c6ee1adb228` で、関連するworkflow runはありませんでした。PR #18の成否は、更新後head自身を対象としたCIで確認します。この記録は成功を先取りするものではありません。
