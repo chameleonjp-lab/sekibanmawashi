@@ -35,3 +35,19 @@ Node `24.19.0` / npm `11.9.0` のローカル作業ツリーで次を実行し�
 ローカルWebKitは `libgstreamer-1.0.so.0` 不足で起動せず、コンテナの権限制約により依存ライブラリのapt導入もできませんでした。画面画像の根拠には、同じmain SHAの成功push CIが記録したWebKit画面を使用しました。これはQ05のiPhone Safari/VoiceOver/ロック復帰/実機音の受入ではありません。
 
 Q05は未達のままです。本番公開は、PR変更のmerge・同一SHA CI・独立レビューの確認後、Q05の受入またはQ05に対するユーザーの個別明示waiverを記録してから行います。
+
+
+## 2026-09-29 PR #17マージ後の共有画像更新案
+
+PR #17後の画面に合わせるため、public/share-card.pngをDraft PR #18で更新します。素材はPR #17 head 68696d6199b8a07e881388877c1da9c3e7bdb387の成功CI [36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084) artifact browser-evidence-36484289084内のWebKit通常プレイ画面 r4-w390-h844-game-normal.png（780×1688、2x）です。main merge commit f069923c249c20b1c553296c8af0f96d3035f8f6のゲーム画面を含むPR headのCI画像です。画面上部から操作パネル末尾までを切り出して縮小し、盤面・光・遮光区画・表示・ボタンを再描画していません。旧カードの右側背景、正式名の装飾、URLは維持し、古い「点灯」表示と音設定が写った左側画面だけを置き換えました。
+
+| 項目 | 更新案 |
+|---|---|
+| ファイル | public/share-card.png |
+| 寸法 | PNG / 1200×630 px |
+| 画像検査 | ImageMagickで1200×630を確認、PNG8化後 約308 KB |
+| 独立レビュー | 別担当が確認。忠実さ・配置・タイトルにblockerなし。縮小プレビューでは細字が読みにくい点を指摘 |
+| PR #18のCI | Pages artifact検査を含め、PR作成後に確認 |
+| 公開状態 | 未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
+
+Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。

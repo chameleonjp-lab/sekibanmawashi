@@ -1,28 +1,27 @@
 # 現在の状態
 
-更新日: 2026-09-28 JST / 対象: `chameleonjp-lab/sekibanmawashi`
+更新日: 2026-09-29 JST / 対象: `chameleonjp-lab/sekibanmawashi`
 
 ## 結論
 
-最新の実装基準は[対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)です。**発光紋が常時発光し、回転だけで解く規則です。R1はPR #6、R2はPR #7、R3（1問の盤面と入力）は[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)、R4（5問進行・時計・保存・結果・共有）は[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)でマージ済みです。R5は[PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)として2026-09-27 01:49:54 JSTにユーザーによりmainへマージ済みです。検証ソース `1cf19149de75b1f970185ec903b6eed7c5896fad` の[CI 36252821838](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は成功し、browser 90件（89 expected + 1 flaky。初回失敗後に再試行成功）、最終失敗0・skip0でした。flakyの原因は未確定です。R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784` です。[PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12) は2026-09-27にmainへマージされ、merge commit `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush [CI 36335601110](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36335601110) が成功しました。ユーザーは本番公開を許可し、正式名を「セキバンマワシ」と指定しました。[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13) はmainへマージ済みで、merge commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みです。公開workflowはmain merge SHAそのもののpush `CI / verify` 成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` のpush CIを別途確認します。Q05実機受入は未実施のため、workflow dispatch・実deployは未実施です。**
+最新の実装基準は[対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)です。発光紋は常に光り、輪を回して解く規則です。R1〜R5とR6公開workflow・正式名の設定は完了しています。
 
-## 画面仕上げ作業（Draft PR #17）
+ユーザー依頼の画面仕上げは[PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)で実装され、2026-09-29にmainへマージ済みです。merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6。PR headの[CI 36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は成功しました。main push [CI 36507252037](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)の最終状態は公開前に再確認します。変更は石板の質感・大きさ、黒い遮光区画、画面揺れ防止、ゲーム画面の音設定削除、分かりやすい表示、成功時の紙吹雪と完成盤面1.5秒表示です。ゲーム規則・問題データは変更していません。
 
-現在の依頼に合わせ、盤面の石らしい模様と大きさ、黒い遮光場所、操作中の上下揺れ防止、ゲーム画面の音設定削除、短い日本語表示、成功時の紙吹雪と完成盤面1.5秒表示を作業中です。作業ブランチ `fix/gameplay-board-clarity` の[Draft PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)は、最新main `b717de9a46e06b18b33c6b1af0ab796adb4bb867` を基準にしています。ユニット74件、型検査、lint、buildは成功。Playwrightブラウザは実行環境の権限不足と0 MiBダウンロードで取得できず、PR CI確認は未完了です。iPhone実機も未確認です。
+R6の本番公開はまだ完了していません。最後に成功したPages公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 の内容です。最新画面に合わない共有画像を先に更新するため、Draft PR #18で public/share-card.png と公開記録を整えます。PR #18をユーザーがマージした後、merge後mainそのもののpush CI成功を確認してからPagesを公開し、HTTP検査と計画8.2の実URLフローを確認します。こちらではマージしません。
 
-R5開始時の基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（GitHub PR #9マージ後）です。今回の記録更新PRの基準mainはPR #10マージ後の `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`）です。正式版はルート直下の `src/` と `content/` に分け、`prototype/` は旧規則の比較資料として残します。
+Q05（iPhone 17 Proの物理Safari、VoiceOver、ロック復帰、実機音）は未実施です。ユーザーの個別waiverが[PR #14の記録](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)にあり、今回のR6本番公開に限って適用します。実機確認済みとは扱いません。
 
 | 項目 | 決定・状態 |
 |---|---|
-| 盤面 | 12方向、可動環3本、外周に受光紋 |
-| 新操作 | 環選択、左回転、右回転。R3で1問の盤面・入力と説明/中断確認を実装。実機は未確認 |
-| 成功 | 必須受光紋が全て点灯。余分な光は許可 |
-| 問題庫 | v2で初級30・中級30・上級30を生成。旧90問を再解析し18問再利用・72問差し替え |
-| 1回の挑戦 | 初級2・中級2・上級1の順に5問。日替わりなし |
-| 今回の実装先 | 正式版の `src/` / `content/` を基本とする。旧試作は比較資料 |
-| 今回の接続 | 端末内で完結。ランキング・プレイ回数・Supabaseは対象外 |
-| 公開 | R6のworkflow_dispatch専用公開workflowはPR #12でmainへマージ済み。正式名「セキバンマワシ」と実画面ベースの共有画像もPR #13でmainへマージ済み。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331`。同SHAのmain push CI確認に加え、Q05実機受入の個別waiverまたは完了まではdispatchしない |
-| 主対象 | iPhone 17 Pro Safari。横画面・PCも同じ規則で検査する |
+| 盤面 | 12方向、可動輪3本、外周の目標へ光を届ける |
+| 操作 | 輪を選び、左か右へ回す |
+| 成功 | 必須の目標がすべて光れば成功。余分な光は許可 |
+| 問題庫 | 初級30・中級30・上級30。1回の挑戦は初級2・中級2・上級1の5問 |
+| 接続 | 端末内で完結。ランキング・プレイ回数・Supabaseは対象外 |
+| 正式名・URL | 「セキバンマワシ」 / https://chameleonjp-lab.github.io/sekibanmawashi/ |
+| 公開 | PR #17の画面は未公開。共有画像をPR #18で更新後、ユーザーのマージと同一main SHAのpush CI成功を待つ |
+| 主対象 | iPhone Safari。横画面・PCも同じ規則で検査 |
 
 ## 完了・未完了の区別
 
@@ -36,18 +35,18 @@ R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https:
 
 ## 次の作業
 
-R3の結果・修正履歴と未確認は[R3検査記録](docs/reviews/R3_VERIFICATION.md)、R4の作業結果は[R4検査記録](docs/reviews/R4_VERIFICATION.md)、R5は[R5検査記録](docs/reviews/R5_VERIFICATION.md)で管理します。R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照してください。PR #12とPR #13はmainへマージ済みです。正式名と共有画像はmainへ入っています。先にDraft PR #17の画面仕上げをCIまで確認します。その後、公開候補SHA `662d0fe79cce888094eb265a71c3f56cc60ff331` のmain push CIとQ05実施または個別waiverを確認してからdispatchを検討します。
+R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。現在はPR #17マージ後の公開準備です。共有画像を最新のCIプレイ画面へ合わせるDraft PR #18をレビュー・提出し、ユーザーがマージした後に、その時点のmain headとpush CI / verifyを確認してからPublish Pagesを実行します。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 
 ## 公開前に残る確認
 
-正式名はユーザー指定の「セキバンマワシ」、共有画像はmainの成功CIが撮影した実プレイ画面を使った1200×630 PNGとしてPR #13で設定し、mainへマージ済みです。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。実験場側の掲載方式と公開先での実動作は、deploy後に確認します。
+正式名「セキバンマワシ」と公開URLは設定済みです。現行の公開ページは b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドで、PR #17の画面はまだ配信されていません。PR #13由来の共有画像もPR #17以前の画面を示すため、Draft PR #18で更新します。
 
-iPhone 17 Pro物理Safari・VoiceOver・ロック復帰・正式アプリ全体の実機受入（Q05）は未実施です。CIやHTTP smokeを実機受入完了とはしません。ユーザーの公開許可はQ05の個別waiverではありません。サーバー抽選とランキングは延期であり、廃止・完了扱いにはしません。
+Q05は未実施ですが、ユーザーは今回のR6本番公開に限った免除をPR #14のコメントに明示しています。Pages公開後はHTTP smokeに加え、ホームから挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認します。ランキング等のサーバー連携は延期のままで、実装・公開したとは扱いません。
 
-## 2026-09-28 ゲーム画面の改善
+## 2026-09-29 PR #17マージ後
 
-ユーザー依頼の画面改善を、main `b717de9a46e06b18b33c6b1af0ab796adb4bb867` から分岐した `fix/gameplay-board-clarity` で実装し、[Draft PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17) を作成しました。石板の質感と大きさ、黒く塗る遮断区画、上下に動かない入力、ゲーム画面からの音設定削除、簡潔な状態表示・言葉、成功時の紙吹雪と1.5秒の完成盤面表示が対象です。問題規則やデータは変更していません。未マージ・未公開です。
+PR #17はmainへマージ済みです。PR headのCI 36484289084は成功し、main merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6 です。main push CI 36507252037の最終状態はPublish Pages前に再確認します。iPhone実機・VoiceOverは未確認です。
 
-Node 24.19.0 / npm 11.9.0 で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwright 100件のtest discoveryが成功しました。ローカルChromium/WebKitは0 MiBのブラウザー配布物により未実行です。先行CI 36474442114では短画面検査を通過し、ブラウザー検査は90件成功・2件失敗でした。後続CI 36477214131は100件中70件成功・30件失敗し、説明ダイアログの閉じる文言、円環テストが円環の穴をクリックしていたこと、成功表示の文言期待が現行UIと合わないことが主因でした。現在のUI文言「問題へ戻る」「正解！」に合わせ、円環上をタップする検査に直しました。be06d892のCI 36481577892はこの修正前のheadで実行中でした。修正後headのCIで再確認します。iPhone実機・VoiceOverは未実施です。
+公開前の共有画像を最新画面に合わせるDraft PR #18を準備中です。共有画像と運用記録の独立レビュー後にPRを提出し、ユーザーによるマージまでは公開を保留します。PR #18がmainに入った後は、そのmain SHAのpush CIを確認してからR6公開へ進みます。

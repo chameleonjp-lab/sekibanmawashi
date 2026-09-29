@@ -1,6 +1,6 @@
 # 実装と受入の進捗
 
-更新日: 2026-09-28 JST / 計画: [文書版2.1](IMPLEMENTATION_PLAN.md)
+更新日: 2026-09-29 JST / 計画: [文書版2.1](IMPLEMENTATION_PLAN.md)
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
@@ -92,6 +92,10 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
 
 
-## R6後の画面仕上げ（2026-09-28）
+## R6後の画面仕上げ（2026-09-28〜29）
 
-Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474442114](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474442114)は短画面検査を通過し、ブラウザー検査は90件成功・2件失敗でした。後続[CI 36477214131](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36477214131)は100件中70件成功・30件失敗し、主な原因は説明ダイアログの旧ボタン名、I03円環テストの穴へのクリック、成功表示「正解！」と検査期待語の不一致でした。テストを現行文言「問題へ戻る」「正解！」と実際の円環位置へ合わせました。修正後headのCIで再確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。
+ユーザー依頼の石板表示・盤面サイズ・黒い遮光区画・画面揺れ防止・音設定の配置・分かりやすい表示・成功演出はPR #17で実装され、2026-09-29にmainへマージ済みです。merge commit f069923c249c20b1c553296c8af0f96d3035f8f6、基準mainはb717de9a46e06b18b33c6b1af0ab796adb4bb867でした。PR head CI 36484289084は成功しました。main push CI 36507252037の最終状態は公開前に再確認します。ローカルChromium/WebKitは配布元の0 MiBブラウザー取得とapt権限制約で未実施です。iPhone実機・VoiceOverも未確認です。
+
+最後に成功したPages deployはrun 36450381814で、PR #17以前のmain b717de9a46e06b18b33c6b1af0ab796adb4bb867を公開しています。共有画像 public/share-card.png にも以前の音設定と古い状態表示があるため、PR #17の成功CI WebKitスクリーンショットを使って、同画像と公開記録を更新するDraft PR #18を準備しています。画面は実際のCI画像を切り出して縮小し、盤面やUIを描き直しません。独立画像レビューでは重大な問題なし、SNS縮小時に細かい文字が読みにくい点のみ指摘されました。
+
+Q05は未実施ですが、ユーザーの個別waiverがPR #14に記録され、今回のR6公開に限り適用します。PR #18をユーザーがマージした後、そのmain SHAのpush CI成功を確認してからPages dispatchを行い、HTTP smokeと計画8.2の実URLフローを確認します。PRはマージしません。
