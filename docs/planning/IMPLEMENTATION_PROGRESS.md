@@ -96,6 +96,6 @@ PR #13はmainへマージ済みで、現在確認できる最新main commitは `
 
 ユーザー依頼の石板表示・盤面サイズ・黒い遮光区画・画面揺れ防止・音設定の配置・分かりやすい表示・成功演出はPR #17で実装され、2026-09-29にmainへマージ済みです。merge commit f069923c249c20b1c553296c8af0f96d3035f8f6、基準mainはb717de9a46e06b18b33c6b1af0ab796adb4bb867でした。PR head CI 36484289084は成功しました。main push CI 36507252037の最終状態は公開前に再確認します。ローカルChromium/WebKitは配布元の0 MiBブラウザー取得とapt権限制約で未実施です。iPhone実機・VoiceOverも未確認です。
 
-最後に成功したPages deployはrun 36450381814で、PR #17以前のmain b717de9a46e06b18b33c6b1af0ab796adb4bb867を公開しています。共有画像 public/share-card.png にも以前の音設定と古い状態表示があるため、PR #17の成功CI WebKitスクリーンショットを使って、同画像と公開記録を更新するDraft PR #18を準備しています。画面は実際のCI画像を切り出して縮小し、盤面やUIを描き直しません。独立画像レビューでは重大な問題なし、SNS縮小時に細かい文字が読みにくい点のみ指摘されました。
+最後に成功したPages deployはrun 36450381814で、PR #17以前のmain b717de9a46e06b18b33c6b1af0ab796adb4bb867を公開しています。共有画像 public/share-card.png にも以前の音設定と古い状態表示があり、PR #17の成功CI WebKitスクリーンショットを使った更新を[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)として提出済みです。PR CI 36510123886は実行中です。画面は実際のCI画像を切り出して縮小し、盤面やUIを描き直しません。独立画像レビューでは重大な問題なし、SNS縮小時に細かい文字が読みにくい点のみ指摘されました。
 
 Q05は未実施ですが、ユーザーの個別waiverがPR #14に記録され、今回のR6公開に限り適用します。PR #18をユーザーがマージした後、そのmain SHAのpush CI成功を確認してからPages dispatchを行い、HTTP smokeと計画8.2の実URLフローを確認します。PRはマージしません。

@@ -8,7 +8,7 @@
 
 ユーザー依頼の画面仕上げは[PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)で実装され、2026-09-29にmainへマージ済みです。merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6。PR headの[CI 36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は成功しました。main push [CI 36507252037](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)の最終状態は公開前に再確認します。変更は石板の質感・大きさ、黒い遮光区画、画面揺れ防止、ゲーム画面の音設定削除、分かりやすい表示、成功時の紙吹雪と完成盤面1.5秒表示です。ゲーム規則・問題データは変更していません。
 
-R6の本番公開はまだ完了していません。最後に成功したPages公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 の内容です。最新画面に合わない共有画像を先に更新するため、Draft PR #18で public/share-card.png と公開記録を整えます。PR #18をユーザーがマージした後、merge後mainそのもののpush CI成功を確認してからPagesを公開し、HTTP検査と計画8.2の実URLフローを確認します。こちらではマージしません。
+R6の本番公開はまだ完了していません。最後に成功したPages公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 の内容です。最新画面に合わない共有画像と公開記録を更新する[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)を提出済みです。PR #18をユーザーがマージした後、merge後mainそのもののpush CI成功を確認してからPagesを公開し、HTTP検査と計画8.2の実URLフローを確認します。こちらではマージしません。
 
 Q05（iPhone 17 Proの物理Safari、VoiceOver、ロック復帰、実機音）は未実施です。ユーザーの個別waiverが[PR #14の記録](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)にあり、今回のR6本番公開に限って適用します。実機確認済みとは扱いません。
 
@@ -35,7 +35,7 @@ R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https:
 
 ## 次の作業
 
-R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。現在はPR #17マージ後の公開準備です。共有画像を最新のCIプレイ画面へ合わせるDraft PR #18をレビュー・提出し、ユーザーがマージした後に、その時点のmain headとpush CI / verifyを確認してからPublish Pagesを実行します。
+R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。PR #17マージ後の公開準備として[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)を提出済みです。PR CI 36510123886を確認し、ユーザーがマージした後は、その時点のmain headとpush CI / verifyを確認してからPublish Pagesを実行します。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 
@@ -49,4 +49,4 @@ Q05は未実施ですが、ユーザーは今回のR6本番公開に限った免
 
 PR #17はmainへマージ済みです。PR headのCI 36484289084は成功し、main merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6 です。main push CI 36507252037の最終状態はPublish Pages前に再確認します。iPhone実機・VoiceOverは未確認です。
 
-公開前の共有画像を最新画面に合わせるDraft PR #18を準備中です。共有画像と運用記録の独立レビュー後にPRを提出し、ユーザーによるマージまでは公開を保留します。PR #18がmainに入った後は、そのmain SHAのpush CIを確認してからR6公開へ進みます。
+共有画像と運用記録は独立レビュー後、[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)として提出済みです。PR CI 36510123886は実行中です。ユーザーによるマージまでは公開を保留し、PR #18がmainに入った後は、そのmain SHAのpush CIを確認してからR6公開へ進みます。

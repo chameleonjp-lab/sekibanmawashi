@@ -47,7 +47,7 @@ PR #17後の画面に合わせるため、public/share-card.pngをDraft PR #18�
 | 寸法 | PNG / 1200×630 px |
 | 画像検査 | ImageMagickで1200×630を確認、PNG8化後 約308 KB |
 | 独立レビュー | 別担当が確認。忠実さ・配置・タイトルにblockerなし。縮小プレビューでは細字が読みにくい点を指摘 |
-| PR #18のCI | Pages artifact検査を含め、PR作成後に確認 |
+| PR #18のCI | run 36510123886が実行中。Pages artifact検査も含めて確認 |
 | 公開状態 | PR #17後の更新版は未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
 
 Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。
