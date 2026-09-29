@@ -310,13 +310,19 @@ figcaption {
 }
 
 .key-hint {
-  display: inline-block;
+  display: none;
   margin-left: 0.25rem;
   padding: 0.05rem 0.35rem;
   border: 1px solid currentColor;
   border-radius: 0.3rem;
   font-size: 0.75em;
   opacity: 0.7;
+}
+
+@media (min-width: 58.01rem) {
+  .key-hint {
+    display: inline-block;
+  }
 }
 
 .rotate-button {
@@ -364,20 +370,20 @@ figcaption {
 /* SVG board: the beam uses a solid stroke plus a wide user-space filter. */
 .board-disc {
   fill: url(#stone-disc-gradient);
-  stroke: #77766d;
-  stroke-width: 1.1;
+  stroke: #b0aa98;
+  stroke-width: 1.5;
 }
 
 .board-disc-texture {
   fill: url(#stone-grain);
-  opacity: 0.72;
+  opacity: 0.78;
   pointer-events: none;
 }
 
 .board-edge {
   fill: none;
-  stroke: #71736d;
-  stroke-width: 1.5;
+  stroke: #303230;
+  stroke-width: 2;
 }
 
 .board-tick {
@@ -398,7 +404,15 @@ figcaption {
 
 .ring-texture {
   fill: url(#stone-grain);
-  opacity: 0.78;
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.ring-bevel {
+  fill: none;
+  stroke: url(#stone-edge-gradient);
+  stroke-width: 1.8;
+  opacity: 0.72;
   pointer-events: none;
 }
 
@@ -406,6 +420,11 @@ figcaption {
   fill: url(#stone-ring-selected-gradient);
   stroke: #ffe28a;
   stroke-width: 1.9;
+}
+
+.board-ring-selected .ring-bevel {
+  stroke: #f5dfa0;
+  opacity: 0.68;
 }
 
 .blocker-zone {
@@ -460,15 +479,20 @@ figcaption {
 }
 
 .receiver-required .receiver-ring {
-  fill: #414a42;
-  stroke: var(--receiver-dim);
-  stroke-width: 1.4;
+  fill: #45463f;
+  stroke: #c6b47c;
+  stroke-width: 1.5;
 }
 
 .receiver-required .receiver-core,
 .receiver-required .receiver-cross {
   fill: none;
-  stroke: var(--receiver-dim);
+  stroke: #f0dfaa;
+  stroke-width: 1.35;
+}
+
+.receiver-required .receiver-core {
+  fill: #292c2b;
   stroke-width: 1.2;
 }
 
@@ -477,9 +501,19 @@ figcaption {
   stroke: #d6f4c6;
 }
 
-.receiver-lit .receiver-core,
+.receiver-lit .receiver-core {
+  fill: #72a875;
+  stroke: #f1ffd9;
+}
+
 .receiver-lit .receiver-cross {
   stroke: #f1ffd9;
+}
+
+.receiver-center-lit {
+  fill: #fffbe3;
+  stroke: #fffbe3;
+  stroke-width: 0.6;
 }
 
 .receiver-idle-dot {
@@ -1290,5 +1324,67 @@ figcaption {
   .result-summary,
   .result-list {
     padding: 0.7rem;
+  }
+}
+
+/* Fit the complete play surface on short desktop screens. Keep this separate
+   from phone sizing so the 402px portrait board keeps its current scale. */
+@media (min-width: 58.01rem) and (max-height: 50rem) {
+  .app-shell {
+    padding-top: 0.75rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .app-header {
+    gap: 0.7rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .puzzle-status {
+    margin-bottom: 0.65rem;
+  }
+
+  .board-panel {
+    padding: 0.45rem;
+  }
+
+  .board-host {
+    width: min(100%, 57svh, 42rem);
+  }
+
+  figcaption {
+    margin-top: 0.1rem;
+    padding: 0.2rem 0.15rem 0;
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  .game-note {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Landscape phones have little height after the header and status row. Keep
+   the controls readable, but size the board to the remaining vertical space. */
+@media (min-width: 36.01rem) and (max-width: 58rem) and (max-height: 32rem) {
+  .app-shell {
+    padding-top: 0.35rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .app-header {
+    margin-bottom: 0.3rem;
+  }
+
+  .puzzle-status {
+    margin-bottom: 0.3rem;
+  }
+
+  .board-panel {
+    padding: 0.25rem;
+  }
+
+  .board-host {
+    width: min(100%, 60svh, 21rem);
   }
 }
