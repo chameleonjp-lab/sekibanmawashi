@@ -39,7 +39,7 @@ Q05は未達のままです。本番公開は、PR変更のmerge・同一SHA CI�
 
 ## 2026-09-29 PR #17マージ後の共有画像更新案
 
-PR #17後の画面に合わせるため、public/share-card.pngをDraft PR #18で更新します。素材はPR #17 head 68696d6199b8a07e881388877c1da9c3e7bdb387の成功CI [36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084) artifact browser-evidence-36484289084内のWebKit通常プレイ画面 r4-w390-h844-game-normal.png（780×1688、2x）です。main merge commit f069923c249c20b1c553296c8af0f96d3035f8f6のゲーム画面を含むPR headのCI画像です。画面上部から操作パネル末尾までを切り出して縮小し、盤面・光・遮光区画・表示・ボタンを再描画していません。旧カードの右側背景、正式名の装飾、URLは維持し、古い「点灯」表示と音設定が写った左側画面だけを置き換えました。
+PR #17後の画面に合わせて、public/share-card.pngをPR #18で更新しました。素材はPR #17 head 68696d6199b8a07e881388877c1da9c3e7bdb387の成功CI [36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084) artifact browser-evidence-36484289084内のWebKit通常プレイ画面 r4-w390-h844-game-normal.png（780×1688、2x）です。main merge commit f069923c249c20b1c553296c8af0f96d3035f8f6のゲーム画面を含むPR headのCI画像です。画面上部から操作パネル末尾までを切り出して縮小し、盤面・光・遮光区画・表示・ボタンを再描画していません。旧カードの右側背景、正式名の装飾、URLは維持し、古い「点灯」表示と音設定が写った左側画面だけを置き換えました。
 
 | 項目 | 更新案 |
 |---|---|
@@ -47,7 +47,7 @@ PR #17後の画面に合わせるため、public/share-card.pngをDraft PR #18�
 | 寸法 | PNG / 1200×630 px |
 | 画像検査 | ImageMagickで1200×630を確認、PNG8化後 約308 KB |
 | 独立レビュー | 別担当が確認。忠実さ・配置・タイトルにblockerなし。縮小プレビューでは細字が読みにくい点を指摘 |
-| PR #18のCI | run 36510123886と36510468751 attempt 1は、browser検査中に60分job上限へ達してキャンセル。そこまでのtypecheck・lint・unit・問題庫・build・Pages artifact・performance・短いbrowser checkは成功。現在head `24fef9b719b4da96567a67a6ed09a87eb8314d5b` にCI runはまだない。CIでは文書・workflow・共有画像だけなら長いbrowser検査をskipし、製品・問題・テスト変更では実行する。手動overrideを追加 |
+| PR #18のCI | run 36510123886とrun 36510468751 attempt 1はbrowser検査中に60分job上限でキャンセル。そこまでのtypecheck・lint・unit・問題庫・build・Pages artifact・performance・短いbrowser検査は成功。現行headを対象にしたCI成功はまだない。CI workflowは文書・workflow・共有画像のみの変更なら長いbrowser検査をskipし、ゲーム・問題・テストの変更では実行。手動overrideあり。全jobの上限90分 |
 | 公開状態 | PR #17後の更新版は未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
 
 Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。

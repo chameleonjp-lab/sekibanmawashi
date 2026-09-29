@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | workflow・正式名・PR #13の共有画像を設定済み。PR #17の画面仕上げは2026-09-29にmainへマージ済み。最新版公開の準備中 | PR #17 head CI 36484289084成功。現mainは f069923c249c20b1c553296c8af0f96d3035f8f6だが、push CI 36507252037はbrowser検査が60分上限でキャンセル。PR #18のCI 36510123886と36510468751 attempt 1も同じ状態。PR #18のhead 24fef9b719b4da96567a67a6ed09a87eb8314d5bにはまだCI runがない。CI workflowを更新し、文書・workflow・共有画像だけならbrowser検査をskip、ゲーム・問題・検査関連の変更なら実行する。手動overrideと90分の上限を追加。Q05実機受入は未実施だがPR #14に今回のR6公開限定waiverあり。最後に成功したPages deploy 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867。PR #18の最新head CI成功、ユーザーマージ後のmain CIと実URL確認が残る |
+| R6 公開 | workflow・正式名・共有画像の設定済み。PR #17の画面仕上げは2026-09-29にmainへマージ済み。最新公開の準備中 | PR #17 head CI 36484289084は成功。main push CI 36507252037、PR #18のrun 36510123886とrun 36510468751 attempt 1は、browser検査中に60分上限でキャンセル。そこまでの基本検査・build・Pages artifact・短いbrowser検査は成功。PR #18の最新headはまだCI成功を得ていない。CI workflowを更新し、文書・workflow・共有画像のみならbrowser検査をskip、ゲーム・問題・テスト・他の実素材/設定変更なら実行。手動overrideあり、全job上限90分。Q05は未実施だがPR #14のwaiverは今回のR6公開限定。最後に成功したPages deploy 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867。PR #18の現行head CI成功、ユーザーマージ後のmain CI、実URL確認が残る |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
@@ -94,8 +94,8 @@ PR #13はmainへマージ済みで、現在確認できる最新main commitは `
 
 ## R6後の画面仕上げ（2026-09-28〜29）
 
-ユーザー依頼の石板表示・盤面サイズ・黒い遮光区画・画面揺れ防止・音設定の配置・分かりやすい表示・成功演出はPR #17で実装され、2026-09-29にmainへマージ済みです。merge commit f069923c249c20b1c553296c8af0f96d3035f8f6、基準mainはb717de9a46e06b18b33c6b1af0ab796adb4bb867でした。PR head CI 36484289084は成功しました。main push CI 36507252037の最終状態は公開前に再確認します。ローカルChromium/WebKitは配布元の0 MiBブラウザー取得とapt権限制約で未実施です。iPhone実機・VoiceOverも未確認です。
+ユーザー依頼の石板表示・盤面サイズ・黒い遮光区画・画面揺れ防止・音設定の配置・分かりやすい表示・成功演出はPR #17で実装され、2026-09-29にmainへマージ済みです。merge commit f069923c249c20b1c553296c8af0f96d3035f8f6、基準mainはb717de9a46e06b18b33c6b1af0ab796adb4bb867でした。PR head CI 36484289084は成功しました。main push CI 36507252037はbrowser検査中に60分上限でキャンセルされ、成功ではありません。ローカルChromium/WebKitは配布元の0 MiBブラウザー取得とapt権限制約で未実施です。iPhone実機・VoiceOverも未確認です.
 
-最後に成功したPages deployはrun 36450381814で、PR #17以前のmain b717de9a46e06b18b33c6b1af0ab796adb4bb867を公開しています。共有画像 public/share-card.png にも以前の音設定と古い状態表示があり、PR #17の成功CI WebKitスクリーンショットを使った更新を[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)として提出済みです。PR CI 36510123886は実行中です。画面は実際のCI画像を切り出して縮小し、盤面やUIを描き直しません。独立画像レビューでは重大な問題なし、SNS縮小時に細かい文字が読みにくい点のみ指摘されました。
+最後に成功したPages deployはrun 36450381814で、PR #17以前のmain b717de9a46e06b18b33c6b1af0ab796adb4bb867を公開しています。共有画像 public/share-card.png にあった旧表示はPR #17の成功CI WebKit画面を使ってPR #18で更新しました。run 36510123886 と run 36510468751 の attempt 1 は、`Run browser tests` 中に60分のjob上限へ達してキャンセルされました。そこまでの型検査、lint、単体検査、問題庫検査、build、Pages artifact検査、性能検査、短いbrowser検査は成功しています。run 36510468751 の attempt 2 は古いheadでの実行で、更新後のworkflowは検証しません。main push CI 36507252037 も同じ60分上限でbrowser検査中にキャンセルされ、成功していません。独立画像レビューでは重大な問題なし、SNS縮小時に細かい文字が読みにくい点のみ指摘されました。現行headのCI成功後、ユーザーのマージを待ちます.
 
 Q05は未実施ですが、ユーザーの個別waiverがPR #14に記録され、今回のR6公開に限り適用します。PR #18をユーザーがマージした後、そのmain SHAのpush CI成功を確認してからPages dispatchを行い、HTTP smokeと計画8.2の実URLフローを確認します。PRはマージしません。

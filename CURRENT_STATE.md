@@ -6,9 +6,9 @@
 
 最新の実装基準は[対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)です。発光紋は常に光り、輪を回して解く規則です。R1〜R5とR6公開workflow・正式名の設定は完了しています。
 
-ユーザー依頼の画面仕上げは[PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)で実装され、2026-09-29にmainへマージ済みです。merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6。PR headの[CI 36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は成功しました。main push [CI 36507252037](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)はブラウザー検査中に60分の上限へ達し、CI成功ではありません。CI run 36510123886 and run 36510468751 attempt 1 were both cancelled when the verify job reached its 60-minute limit during `Run browser tests`; every preceding step passed. Run 36510468751 attempt 2 is on the older head `7a0a5ba2982104d85f0f4c76d0f71d38a8e91a07` and does not verify the current workflow. Main push CI 36507252037 on `f069923c249c20b1c553296c8af0f96d3035f8f6` also reached the 60-minute limit at the browser suite. The updated CI keeps browser checks for product, puzzle, test, asset, and configuration changes, skips them for documentation/workflow/share-card-only changes, allows a manual browser-suite override, and raises the full-job limit to 90 minutes. Current PR head `24fef9b719b4da96567a67a6ed09a87eb8314d5b` has no CI run yet.変更は石板の質感・大きさ、黒い遮光区画、画面揺れ防止、ゲーム画面の音設定削除、分かりやすい表示、成功時の紙吹雪と完成盤面1.5秒表示です。ゲーム規則・問題データは変更していません。
+ユーザー依頼の画面仕上げは[PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)で実装され、2026-09-29にmainへマージ済みです。merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6。PR headの[CI 36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は成功しました。run 36510123886 と run 36510468751 の attempt 1 は、`Run browser tests` 中に60分のjob上限へ達してキャンセルされました。そこまでの型検査、lint、単体検査、問題庫検査、build、Pages artifact検査、性能検査、短いbrowser検査は成功しています。run 36510468751 の attempt 2 は古いheadでの実行で、更新後のworkflowは検証しません。main push CI 36507252037 も同じ60分上限でbrowser検査中にキャンセルされ、成功していません。変更は石板の質感・大きさ、黒い遮光区画、画面揺れ防止、ゲーム画面の音設定削除、分かりやすい表示、成功時の紙吹雪と完成盤面1.5秒表示です。ゲーム規則・問題データは変更していません。
 
-R6の本番公開はまだ完了していません。最後に成功したPages公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 の内容です。最新画面に合わない共有画像と公開記録を更新する[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)を提出済みです。PR #18をユーザーがマージした後、merge後mainそのもののpush CI成功を確認してからPagesを公開し、HTTP検査と計画8.2の実URLフローを確認します。こちらではマージしません。
+R6の本番公開はまだ完了していません。最後に成功したPages公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867の内容です。PR #18は共有画像と公開記録を更新していますが、現行headのCI成功はまだ確認できていません。ユーザーのマージ後はmain headと同一SHAのpush CI成功を確認し、その後にPagesを公開してHTTP検査と実URLのゲームフローを確認します。こちらではマージしません。
 
 Q05（iPhone 17 Proの物理Safari、VoiceOver、ロック復帰、実機音）は未実施です。ユーザーの個別waiverが[PR #14の記録](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)にあり、今回のR6本番公開に限って適用します。実機確認済みとは扱いません。
 
@@ -35,18 +35,18 @@ R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https:
 
 ## 次の作業
 
-R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。PR #17マージ後の公開準備として[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)を提出済みです。PR #18の現行headは `24fef9b719b4da96567a67a6ed09a87eb8314d5b` です。CI run 36510123886 and run 36510468751 attempt 1 were both cancelled when the verify job reached its 60-minute limit during `Run browser tests`; every preceding step passed. Run 36510468751 attempt 2 is on the older head `7a0a5ba2982104d85f0f4c76d0f71d38a8e91a07` and does not verify the current workflow. Main push CI 36507252037 on `f069923c249c20b1c553296c8af0f96d3035f8f6` also reached the 60-minute limit at the browser suite. The updated CI keeps browser checks for product, puzzle, test, asset, and configuration changes, skips them for documentation/workflow/share-card-only changes, allows a manual browser-suite override, and raises the full-job limit to 90 minutes. Current PR head `24fef9b719b4da96567a67a6ed09a87eb8314d5b` has no CI run yet. ユーザーがPRをマージした後は、merge後のmain headと同一SHAのpush CI / verify成功を確認してからPublish Pagesを実行します。
+R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。PR #18の過去runはブラウザー検査中に60分上限でキャンセルされ、現行headを対象にしたCI成功はまだありません。CI workflowを更新し、文書・workflow・共有画像だけの変更ではbrowser検査をskipし、ゲーム・問題・テスト・その他の実素材や設定を変えた場合は実行するようにしました。必要な場合は手動で全検査を指定でき、job上限は90分です。現行headのCIが成功した後、ユーザーのマージとmain SHA自身のCI成功を確認してからPublish Pagesへ進みます。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 
 ## 公開前に残る確認
 
-正式名「セキバンマワシ」と公開URLは設定済みです。現行の公開ページは b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドで、PR #17の画面はまだ配信されていません。PR #13由来の共有画像もPR #17以前の画面を示すため、Draft PR #18で更新します。
+正式名「セキバンマワシ」と公開URLは設定済みです。現行の公開ページは b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドで、PR #17の画面はまだ配信されていません。PR #13由来の共有画像もPR #17以前の画面を示すため、PR #18で更新します。
 
 Q05は未実施ですが、ユーザーは今回のR6本番公開に限った免除をPR #14のコメントに明示しています。Pages公開後はHTTP smokeに加え、ホームから挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認します。ランキング等のサーバー連携は延期のままで、実装・公開したとは扱いません。
 
 ## 2026-09-29 PR #17マージ後
 
-PR #17はmainへマージ済みです。PR headのCI 36484289084は成功し、main merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6 です。main push CI 36507252037の最終状態はPublish Pages前に再確認します。iPhone実機・VoiceOverは未確認です。
+PR #17はmainへマージ済みです。PR headのCI 36484289084は成功し、main merge commitは f069923c249c20b1c553296c8af0f96d3035f8f6 です。main push CI 36507252037は60分上限でbrowser検査中にキャンセルされました。iPhone実機・VoiceOverは未確認です。
 
-共有画像と運用記録は独立レビュー後、[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)として提出済みです。CI run 36510123886 and run 36510468751 attempt 1 were both cancelled when the verify job reached its 60-minute limit during `Run browser tests`; every preceding step passed. Run 36510468751 attempt 2 is on the older head `7a0a5ba2982104d85f0f4c76d0f71d38a8e91a07` and does not verify the current workflow. Main push CI 36507252037 on `f069923c249c20b1c553296c8af0f96d3035f8f6` also reached the 60-minute limit at the browser suite. The updated CI keeps browser checks for product, puzzle, test, asset, and configuration changes, skips them for documentation/workflow/share-card-only changes, allows a manual browser-suite override, and raises the full-job limit to 90 minutes. Current PR head `24fef9b719b4da96567a67a6ed09a87eb8314d5b` has no CI run yet. 最新headのCIが成功するまではマージ・公開へ進みません。
+共有画像と運用記録は[PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)で更新中です。run 36510123886 と run 36510468751 の attempt 1 は、`Run browser tests` 中に60分のjob上限へ達してキャンセルされました。そこまでの型検査、lint、単体検査、問題庫検査、build、Pages artifact検査、性能検査、短いbrowser検査は成功しています。run 36510468751 の attempt 2 は古いheadでの実行で、更新後のworkflowは検証しません。main push CI 36507252037 も同じ60分上限でbrowser検査中にキャンセルされ、成功していません。最新版CIは文書・workflow・共有画像のみならbrowser検査をskipし、ゲームやテストの変更では実行する方針です。最新headのCI成功まではマージ・公開へ進みません。
