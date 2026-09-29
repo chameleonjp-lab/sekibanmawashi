@@ -1,10 +1,16 @@
 # GitHub Pages の公開手順（R6）
 
-R6の本番公開は2026-09-27にユーザーから許可されています。正式名「セキバンマワシ」とPages公開workflowはmainにあります。PR #17の画面仕上げは2026-09-29にmain f069923c249c20b1c553296c8af0f96d3035f8f6へマージ済みで、PR headのCI 36484289084は成功しました。run 36510123886 と run 36510468751 の attempt 1 は、`Run browser tests` 中に60分のjob上限へ達してキャンセルされました。そこまでの型検査、lint、単体検査、問題庫検査、build、Pages artifact検査、性能検査、短いbrowser検査は成功しています。run 36510468751 の attempt 2 は古いheadでの実行で、更新後のworkflowは検証しません。main push CI 36507252037 も同じ60分上限でbrowser検査中にキャンセルされ、成功していません。PR #19でmainに入ったCIは静的 `checks` とChromium/WebKit並列browser job（各90分）、必須 `verify` の構成です。main run 36521040745はすべて成功しましたが、PR #18の検査結果としては扱いません。PR #18は競合解消とworkflow修正後の最新head自身のChecks成功が未確認です。
+R6の本番公開は2026-09-27にユーザーから許可されています。以下に記す過去の公開準備・失敗記録より、冒頭の最新結果を優先してください。
 
-PR #17以降を含むR6最新版はまだdeployされていません。最後に成功した公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドです。PR #18で共有PNGを最新画面へ更新中です。ユーザーがマージし、そのmain SHAのpush CIが成功するまでdeployしません。Q05（iPhone 17 Pro物理Safari / VoiceOver / ロック復帰 / 実機音）は未実施ですが、ユーザーの「Q05は今回免除して本番公開して良い」という個別waiverが[PR #14のコメント](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に記録されています。このwaiverは今回のR6本番公開に限り適用し、実機受入済みとは扱いません。Pages Settingsは変更しません。
+## 2026-09-29 公開完了
 
-画像の出所・構成と検査結果は[公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md)に記録します。
+PR #18のmerge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` を、同じSHAのmain push CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)成功後に公開しました。[Publish Pages run 36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)のbuild、deploy、公開後HTTP検査はすべて成功しました。
+
+公開URL: https://chameleonjp-lab.github.io/sekibanmawashi/
+
+実際に公開URLを開き、セキバンマワシのホーム画面と練習用盤面を確認しました。今回確認したのはホームと練習画面までです。実URL上で5問を完了する手動確認は行っていません。CIのChromium/WebKit検査とworkflowの配信資産・metadata・SHA検査は成功しています。
+
+Q05（iPhone 17 Pro物理Safari、VoiceOver、ロック復帰、実機音）は未実施で、今回のR6公開に限る免除が[PR #14の記録](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)にあります。実機受入済みとは扱いません。Pages Settings、ランキング、Supabase、実験場の本番データは変更していません。
 
 ## Workflowの安全境界
 
@@ -42,14 +48,11 @@ deploy-pagesが完了した後、`scripts/check-pages.mjs published` が `site.c
 
 これは配信物のHTTP smokeのみで、ライブサイト上でのhome→challenge開始→入力をPlaywrightで操作する検査ではありません。Playwrightの導入・browser取得を本番deploy後に追加して不安定要因を増やさず、既存CIのChromium/WebKit画面検査は通常のローカルpreviewに対して実行します。HTTP smoke成功をQ05や実機受入へ読み替えません。
 
-## R6での実行と戻し方
+## 公開後の確認と戻し方
 
-PR mergeだけではdispatchしません。現在のmainにはPR #17が入り、PR #18では共有画像と運用記録を更新しています。現行headのCI成功を確認できるまで本番deployを保留します。PR #18のマージ後は、その時点のmain SHAと同じSHAのpush CI / verify成功を再確認します。Q05の個別waiverはPR #14に記録済みで、今回のR6公開に限って適用します。正式名・URLは設定済みです。Pages Settings、branch protection、サーバーランキング、Supabase、実験場の本番データは変更しません。
+通常公開としてPages run [36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)を実行し、PR #18 merge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` を公開しました。CI run [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)は同じmain SHAで成功しています。公開workflowはbuildとdeployの両方に成功し、HTTP smokeがページ、`version.json`、hashed JavaScript/CSS、SVG favicon、1200×630の共有PNGとSHAを検査しました。
 
-上記を確認後、Actionsの **Publish Pages → Run workflow** でmainを選び、通常公開ではsource_shaを空欄にします。workflowがdispatch時点のmain完全SHAを確定し、同じSHAがmainの祖先であり、同一SHAの成功push CIがあることを再検査します。ロールバック時だけ受入対象の完全40桁SHAを明示します。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Q05は未実施のまま記録し、個別waiverを超えて実機確認済みとは表現しません。
-
-公開が失敗または問題があれば、同じ手動Workflowへ直前の確認済みSHAを指定して再deployし、HTTP smokeで戻ったcommitを確認します。rollback対象SHAはR6導入前でもよく、検査scriptはdispatch workflow側のrevisionから実行します。強制push、履歴書換え、保護設定の緩和、ランキング/Supabase/実験場の本番データ更新は行いません。
-
+公開後に問題が見つかった場合は、同じ手動workflowをmainから実行し、直前の確認済みmain SHAを `source_sha` に指定します。そのSHAがmainの祖先であり、同じSHAの成功push CIがあることをworkflowが改めて確認してからdeployします。強制push、履歴書換え、保護設定の緩和、ランキング/Supabase/実験場の本番データ更新はこの手順に含みません。
 
 ## 2026-09-28 初回dispatch失敗と対策
 
