@@ -57,3 +57,14 @@ Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限
 PR #19はcommit `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` でmainへマージされました。main pushの[CI run 36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)では、静的検査の `checks`、Chromium、WebKit、必須の `verify` がすべて成功しました。
 
 これはmain上の並列CI構成を検証した結果で、PR #18の検査結果ではありません。検査開始時点のPR #18はhead `2c04ab67a56e4df127e35e4f27cc5c6ee1adb228` で、関連するworkflow runはありませんでした。PR #18の成否は、更新後head自身を対象としたCIで確認します。この記録は成功を先取りするものではありません。
+
+
+## 2026-09-29 PR #18マージ後の公開結果
+
+PR #18のmerge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` で、更新した `public/share-card.png` とPR #17の画面改善を公開しました。同SHAのmain push CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)は、静的検査、Chromium、WebKit、必須 `verify` が成功しました。
+
+Pagesの[公開run 36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)はbuildとdeployに成功し、HTTP smokeがHTML metadata、`version.json` のsource/requested SHA、hashed JavaScript/CSS、SVG favicon、共有PNGのHTTP 200・MIME・1200×630寸法を確認しました。公開されたsource SHAは `41e18e2f05ca39b874e874105b76ce0895adb2dc` です。
+
+公開URLは https://chameleonjp-lab.github.io/sekibanmawashi/ です。公開後に実URLを開き、ホーム画面と練習用盤面を確認しました。実URLで5問を最後まで解く手動確認はしていません。
+
+Q05のiPhone 17 Pro物理Safari・VoiceOver・ロック復帰・実機音は未実施です。PR #14にある今回のR6公開限定の免除を適用し、実機受入済みとは扱いません。
