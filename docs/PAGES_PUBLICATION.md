@@ -1,8 +1,8 @@
 # GitHub Pages の公開手順（R6）
 
-ユーザーは2026-09-27に本番公開を明示的に許可し、PR #12をmainへマージしました。main `989784641d7cc04b6ae63c878b53e6acd1c39777` のpush CIは成功しました。PR #12のmergeだけではdispatchされず、**本番deploy済みではありません**。[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13) で正式名「セキバンマワシ」と共有画像を設定し、2026-09-28 JST時点でmainへマージ済みです。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。今後の本番deployは、このmain SHAのpush `CI / verify` 成功を確認し、事前ゲートが全て完了するか未達ゲートごとの明示waiverが記録された後に行います。Pages Settingsはこの作業では変更しません。
+R6の本番公開は2026-09-27にユーザーから許可されています。正式名「セキバンマワシ」とPages公開workflowはmainにあります。PR #17の画面仕上げは2026-09-29にmain f069923c249c20b1c553296c8af0f96d3035f8f6へマージ済みで、PR headのCI 36484289084は成功しました。run 36510123886 と run 36510468751 の attempt 1 は、`Run browser tests` 中に60分のjob上限へ達してキャンセルされました。そこまでの型検査、lint、単体検査、問題庫検査、build、Pages artifact検査、性能検査、短いbrowser検査は成功しています。run 36510468751 の attempt 2 は古いheadでの実行で、更新後のworkflowは検証しません。main push CI 36507252037 も同じ60分上限でbrowser検査中にキャンセルされ、成功していません。PR #19でmainに入ったCIは静的 `checks` とChromium/WebKit並列browser job（各90分）、必須 `verify` の構成です。main run 36521040745はすべて成功しましたが、PR #18の検査結果としては扱いません。PR #18は競合解消とworkflow修正後の最新head自身のChecks成功が未確認です。
 
-Q05（iPhone 17 Proの物理Safari/VoiceOver等）は未実施ですが、ユーザーが2026-09-28 JSTに「Q05は今回免除して本番公開して良い」と明示し、PR #14のConversationへ今回のR6公開に限る個別waiverとして記録しました。R6の後続変更で正式名「セキバンマワシ」と実プレイ画面を使った共有画像を設定しました。公開先URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。Q05を実施済みとは扱いません。
+PR #17以降を含むR6最新版はまだdeployされていません。最後に成功した公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドです。PR #18で共有PNGを最新画面へ更新中です。ユーザーがマージし、そのmain SHAのpush CIが成功するまでdeployしません。Q05（iPhone 17 Pro物理Safari / VoiceOver / ロック復帰 / 実機音）は未実施ですが、ユーザーの「Q05は今回免除して本番公開して良い」という個別waiverが[PR #14のコメント](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に記録されています。このwaiverは今回のR6本番公開に限り適用し、実機受入済みとは扱いません。Pages Settingsは変更しません。
 
 画像の出所・構成と検査結果は[公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md)に記録します。
 
@@ -44,11 +44,11 @@ deploy-pagesが完了した後、`scripts/check-pages.mjs published` が `site.c
 
 ## R6での実行と戻し方
 
-PR mergeだけではdispatchしません。dispatch前に、計画8.2の実機受入Q05、正式名・URL・共有画像、必須自動検査と独立レビューを完了します。正式名と共有画像はPR #13でmainへ反映済みです。残る事前ゲートは、公開候補SHA `662d0fe79cce888094eb265a71c3f56cc60ff331` のmain push `CI / verify` 成功確認とQ05です。Q05が未達のままなら、その項目についてユーザーの個別明示waiverが記録されている場合に限りdispatchします。2026-09-27の公開許可と「本番公開作業を実施」の指示は公開操作の許可ですが、Q05の個別waiverとは区別して記録します。
+PR mergeだけではdispatchしません。現在のmainにはPR #17が入り、PR #18では共有画像と運用記録を更新しています。現行headのCI成功を確認できるまで本番deployを保留します。PR #18のマージ後は、その時点のmain SHAと同じSHAのpush CI / verify成功を再確認します。Q05の個別waiverはPR #14に記録済みで、今回のR6公開に限って適用します。正式名・URLは設定済みです。Pages Settings、branch protection、サーバーランキング、Supabase、実験場の本番データは変更しません。
 
-これらの事前ゲートが満たされた後、rootはmainの新headと `CI / verify` を再確認し、Actionsの **Publish Pages → Run workflow** でmainを選びます。通常公開は `source_sha` を空欄のまま実行し、workflowがcurrent mainの完全SHAを確定します。ロールバック時だけ受入対象commitの完全40桁SHAを明示します。Workflowは確定したSHAがmain祖先であり、同一SHAの成功push CIがあることを再確認してからbuild/deployします。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Pagesの `Source: GitHub Actions` 設定が必要なら、権限を持つ人がGitHub Settingsで設定します。この実装作業ではその設定を変更していません。
+上記を確認後、Actionsの **Publish Pages → Run workflow** でmainを選び、通常公開ではsource_shaを空欄にします。workflowがdispatch時点のmain完全SHAを確定し、同じSHAがmainの祖先であり、同一SHAの成功push CIがあることを再検査します。ロールバック時だけ受入対象の完全40桁SHAを明示します。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Q05は未実施のまま記録し、個別waiverを超えて実機確認済みとは表現しません。
 
-公開が失敗または問題があれば、同じ手動Workflowへ直前の確認済みSHAを指定して再deployし、HTTP smokeで戻ったcommitを確認します。rollback対象SHAはR6導入前でもよく、検査scriptはdispatch workflow側のrevisionから実行します。強制push、履歴書換え、branch protection変更、ランキング/Supabase/実験場の本番データ更新はこの手順に含みません。
+公開が失敗または問題があれば、同じ手動Workflowへ直前の確認済みSHAを指定して再deployし、HTTP smokeで戻ったcommitを確認します。rollback対象SHAはR6導入前でもよく、検査scriptはdispatch workflow側のrevisionから実行します。強制push、履歴書換え、保護設定の緩和、ランキング/Supabase/実験場の本番データ更新は行いません。
 
 
 ## 2026-09-28 初回dispatch失敗と対策

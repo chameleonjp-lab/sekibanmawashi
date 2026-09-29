@@ -4,7 +4,7 @@
 
 ユーザー指定の正式名「セキバンマワシ」をUI・共有文・ページmetadataへ設定しました。公開URLは `https://chameleonjp-lab.github.io/sekibanmawashi/` です。
 
-## 共有画像
+## 共有画像（PR #13時点）
 
 | 項目 | 設定 |
 |---|---|
@@ -16,7 +16,7 @@
 
 画像にはCIの実プレイ画面から、旧仮タイトルのあるヘッダーを除いたプレイ状態・盤面・操作UIを切り出して配置しました。ゲーム画面部分は描き直しておらず、切り出しと縮小のみです。周囲の石目背景と「セキバンマワシ」のタイトル装飾を別レイヤーにしています。盤面や受光紋、状態表示、操作部品を生成・改変していません。
 
-## 検査結果
+## PR #13時点の検査結果
 
 Node `24.19.0` / npm `11.9.0` のローカル作業ツリーで次を実行しました。
 
@@ -35,3 +35,25 @@ Node `24.19.0` / npm `11.9.0` のローカル作業ツリーで次を実行し�
 ローカルWebKitは `libgstreamer-1.0.so.0` 不足で起動せず、コンテナの権限制約により依存ライブラリのapt導入もできませんでした。画面画像の根拠には、同じmain SHAの成功push CIが記録したWebKit画面を使用しました。これはQ05のiPhone Safari/VoiceOver/ロック復帰/実機音の受入ではありません。
 
 Q05は未達のままです。本番公開は、PR変更のmerge・同一SHA CI・独立レビューの確認後、Q05の受入またはQ05に対するユーザーの個別明示waiverを記録してから行います。
+
+
+## 2026-09-29 PR #17マージ後の共有画像更新案
+
+PR #17後の画面に合わせて、public/share-card.pngをPR #18で更新しました。素材はPR #17 head 68696d6199b8a07e881388877c1da9c3e7bdb387の成功CI [36484289084](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084) artifact browser-evidence-36484289084内のWebKit通常プレイ画面 r4-w390-h844-game-normal.png（780×1688、2x）です。main merge commit f069923c249c20b1c553296c8af0f96d3035f8f6のゲーム画面を含むPR headのCI画像です。画面上部から操作パネル末尾までを切り出して縮小し、盤面・光・遮光区画・表示・ボタンを再描画していません。旧カードの右側背景、正式名の装飾、URLは維持し、古い「点灯」表示と音設定が写った左側画面だけを置き換えました。
+
+| 項目 | 更新案 |
+|---|---|
+| ファイル | public/share-card.png |
+| 寸法 | PNG / 1200×630 px |
+| 画像検査 | ImageMagickで1200×630を確認、PNG8化後 約308 KB |
+| 独立レビュー | 別担当が確認。忠実さ・配置・タイトルにblockerなし。縮小プレビューでは細字が読みにくい点を指摘 |
+| PR #18のCI | 先行run 36510123886と36510468751 attempt 1はbrowser検査中に60分job上限でキャンセル。PR #19で導入したCIは静的 `checks` とChromium/WebKit並列job（各90分）、全てを要求する `verify` で構成され、main run 36521040745で成功。これはPR #18の合格を示さず、PR #18の最新head自身のChecksで判定します |
+| 公開状態 | PR #17後の更新版は未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
+
+Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。
+
+## 2026-09-29 PR #19マージ後のCI基準
+
+PR #19はcommit `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` でmainへマージされました。main pushの[CI run 36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)では、静的検査の `checks`、Chromium、WebKit、必須の `verify` がすべて成功しました。
+
+これはmain上の並列CI構成を検証した結果で、PR #18の検査結果ではありません。検査開始時点のPR #18はhead `2c04ab67a56e4df127e35e4f27cc5c6ee1adb228` で、関連するworkflow runはありませんでした。PR #18の成否は、更新後head自身を対象としたCIで確認します。この記録は成功を先取りするものではありません。
