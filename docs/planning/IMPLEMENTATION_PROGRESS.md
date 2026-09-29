@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | workflow実装・標準非browser検査・Pages artifact静的検査・独立レビュー済み。PR #12と[PR #13](https://github.com/chameleonjp-lab/sekibanmawashi/pull/13)はmainへマージ済み。公開候補SHAは `662d0fe79cce888094eb265a71c3f56cc60ff331` | PR #13 headのCI 36347915124は成功済み。公開workflowはmain merge SHA自身のpush CI成功を要求するため、`662d0fe...` のpush `CI / verify`をdispatch前に確認する。Q05・dispatch・実deployは未実施。Q05の受入または個別明示waiverまでdispatchしない |
+| R6 公開 | workflow・正式名・PR #13の共有画像を設定済み。PR #17の画面仕上げは2026-09-29にmainへマージ済み。最新版公開の準備中 | PR #17 head CI 36484289084成功。現mainは f069923c249c20b1c553296c8af0f96d3035f8f6、push CI 36507252037は公開前に最終確認。Q05実機受入は未実施だがPR #14に今回のR6公開限定waiverあり。最後に成功したPages deploy 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867。PR #18で共有画像を更新し、ユーザーマージ後のmain CIと実URL確認が残る |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。

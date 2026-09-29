@@ -2,7 +2,7 @@
 
 R6の本番公開は2026-09-27にユーザーから許可されています。正式名「セキバンマワシ」とPages公開workflowはmainにあります。PR #17の画面仕上げは2026-09-29にmain f069923c249c20b1c553296c8af0f96d3035f8f6 へマージ済みで、PR headのCI 36484289084は成功しました。main push CI 36507252037の最終状態と、公開前に作成するPR #18のmerge後のmain CIをそれぞれ確認します。
 
-R6のPages deployはまだです。最後に成功した公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドです。PR #17以前の画面を示す共有PNGをDraft PR #18で最新画面へ更新するまでdeployしません。Q05（iPhone 17 Pro物理Safari / VoiceOver / ロック復帰 / 実機音）は未実施ですが、ユーザーの「Q05は今回免除して本番公開して良い」という個別waiverが[PR #14のコメント](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に記録されています。このwaiverは今回のR6本番公開に限り適用し、実機受入済みとは扱いません。Pages Settingsは変更しません。
+PR #17以降を含むR6最新版はまだdeployされていません。最後に成功した公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドです。PR #17以前の画面を示す共有PNGをDraft PR #18で最新画面へ更新するまでdeployしません。Q05（iPhone 17 Pro物理Safari / VoiceOver / ロック復帰 / 実機音）は未実施ですが、ユーザーの「Q05は今回免除して本番公開して良い」という個別waiverが[PR #14のコメント](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に記録されています。このwaiverは今回のR6本番公開に限り適用し、実機受入済みとは扱いません。Pages Settingsは変更しません。
 
 画像の出所・構成と検査結果は[公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md)に記録します。
 
