@@ -1,8 +1,8 @@
 # R6 公開Workflow検査記録
 
-更新日: 2026-09-27 JST / branch: `chore/06-publication` / R6開始基準: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
+更新日: 2026-09-29 JST / R6開始基準: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
 
-R6では、ユーザーの明示的な本番公開許可を受け、workflow_dispatchに限ったGitHub Pages公開・検証の手順を実装します。公開許可は計画8.2の未達ゲートの包括的waiverではありません。PRマージ、Actions dispatch、Pages Settings操作、実deployはこの作業では行いません。事前ゲートが完了するか、各未達項目のユーザー明示waiverが記録された後に、rootがmain/CIを再確認してdispatchできる状態になります。deploy後はHTTP smokeだけでなく計画8.2の実URLフロー確認もR6完了条件に残ります。
+この記録はR6公開workflowの実装・公開前検査を記録したものです。2026-09-29にPR #18をmainへマージし、その同一SHAのCI成功後に公開しました。最終結果は文末の「公開後の状態」を参照してください。
 
 ## 実装範囲
 
@@ -39,14 +39,11 @@ R6では、ユーザーの明示的な本番公開許可を受け、workflow_dis
 | 独立担当レビュー | Draft PR作成可 | Sol Highが最終差分を再レビューし、Draft PRを妨げるblockerなしを確認。GET method、pre-R6 rollback verifier、release-gate/waiver、deployment URLの指摘を修正済み。公開受入完了を意味しない |
 | PR #12 CI | 成功 | [run 36313174213](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36313174213), head `036b0e04f16a2a3b5531ad3411f35db87a8a93d9`; verify成功。unit72、P01-P09、Pages artifact check成功、browser 90件は89 pass + 1 flaky（再試行成功）、最終失敗0・skip0 |
 | PR #12 browser flaky | 未解決 / final CI success | WebKit `w390-h844`・文字200%のstate matrixで初回、開始後に`game-screen`が現れずtimeout。retry成功。根因は未確定で、ゲーム実装はこのPRで変更していない |
-| Pages dispatch / live HTTP smoke | 未実施 | 本番公開はしていない。live smokeはR6 PR merge後のroot実deploy時に実施 |
+| Pages dispatch / live HTTP smoke | 成功 | [Publish Pages run 36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)、source SHA `41e18e2f05ca39b874e874105b76ce0895adb2dc`。build、deploy、公開後HTTP smokeが成功 |
 
-## 残る受入・本番状態
+## 公開後に残る確認と状態
 
-- Q05は未実施: iPhone 17 Pro物理Safariの縦横、200%文字、VoiceOver、ロック復帰、実機音を未確認。
-- 正式名「石板回し」は仮表示のまま。`site.config.ts` の `shareImageUrl` は `null` のままで、正式名・共有画像を確定したとは扱わない。
-- ユーザーの2026-09-27公開許可は記録済みだが、上記Q05、正式名/URL/共有画像、必須自動検査/独立レビューの未達gateを免除しない。各gate完了または個別の明示waiverまではdispatchしない。
-- 公開URLは `https://chameleonjp-lab.github.io/sekibanmawashi/`。このURLへ本番deployしていない。
-- 自動公開後検査はHTTP smokeまでであり、ライブサイト上のチャレンジ開始・入力・5問結果・共有・実験場往復をブラウザ操作した結果ではない。計画8.2のこれらの実URLフロー確認がR6完了前に必要。既存Playwright CIはlocalhost previewで動作する。
-- R6変更のPR merge後でも、rootは事前gate完了または個別waiverの記録、main head・`CI / verify`を再確認してからdispatchする。Pages Settings、branch protection、ランキング、Supabase、実験場本番データは変更しない。
-- Draft PR作成前のSol High独立レビューではblockerなし。actionlint未導入のためYAMLはPyYAMLでparse確認。PR #12 CIは成功したが1 browser flakyを再試行で通過。dispatch・実deploy・実URLフロー・Q05は未実施で、公開ゲート完了または個別明示waiverまではdispatchしない。
+- Q05は未実施です。iPhone 17 Proの物理Safariでの縦横、文字拡大、VoiceOver、ロック復帰、実機音を確認していません。PR #14の個別waiverは今回のR6公開に限り適用し、実機受入済みとは扱いません。
+- 正式名「セキバンマワシ」、共有画像と公開URLは設定済みです。PR #18 merge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` を公開し、同SHAのmain push CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)とPages run [36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)が成功しました。
+- 公開後HTTP smokeはページ、metadata、SHA、JavaScript/CSS/favicon、共有PNGの配信と寸法を確認しました。実URLではホーム画面と練習用の盤面を開いて確認しました。実URL上で5問を最後まで完了する手動確認、共有機能と実験場への往復は行っていません。
+- 公開URLは https://chameleonjp-lab.github.io/sekibanmawashi/ です。ランキング、Supabase、実験場の本番データは変更していません.
