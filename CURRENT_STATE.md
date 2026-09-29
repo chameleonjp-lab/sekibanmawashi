@@ -6,7 +6,7 @@
 
 [PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)はmain `f069923c249c20b1c553296c8af0f96d3035f8f6`へマージ済みです。石板の模様と大きさ、黒い遮断区画、画面の上下揺れ対策、ゲーム画面の音設定削除、短い表示文、左右の紙吹雪と1.5秒の完成盤面表示はコードに入っています。同じtreeのPR head [CI #53](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は100件のブラウザー検査を含め成功しました。
 
-本番サイトではまだ旧版の「環」「受光紋」が表示されています。最新main自身のpush [CI #54](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)では、長いWebKit検査が既定の120秒・個別設定の360秒を使い切り、最終的にjob全体も60分で停止しました。`fix/ci-browser-time-budget` は検査100件を維持してChromium/WebKitを別jobで並行実行し、15問・10画面幅の検査時間を調整します。公開workflowは最新main自身の成功CIを要求するため、この修正PRのマージ後もmain push CI成功を確認してから更新版を公開します。
+本番サイトではまだ旧版の「環」「受光紋」が表示されています。PR #17後のmain push CI 36507252037は、旧workflowのbrowser検査が60分上限に達してキャンセルされました。その後PR #19が `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` でmainへマージされ、main push CI [36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)では静的 `checks`、Chromium、WebKit、必須 `verify` がすべて成功しました。これはmainのCI基準でありPR #18の合格を示しません。
 
 Q05のiPhone実機確認は未実施ですが、今回の公開に限る個別免除が[公開手順](docs/PAGES_PUBLICATION.md)に記録済みです。以下の2026-09-28時点の記述は経過記録です。
 
@@ -43,7 +43,7 @@ R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https:
 
 ## 次の作業
 
-R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。PR #18の過去runはブラウザー検査中に60分上限でキャンセルされ、現行headを対象にしたCI成功はまだありません。CI workflowを更新し、文書・workflow・共有画像だけの変更ではbrowser検査をskipし、ゲーム・問題・テスト・その他の実素材や設定を変えた場合は実行するようにしました。必要な場合は手動で全検査を指定でき、job上限は90分です。現行headのCIが成功した後、ユーザーのマージとmain SHA自身のCI成功を確認してからPublish Pagesへ進みます。
+R3〜R5の履歴は各検査記録、R6は[検査記録](docs/reviews/R6_VERIFICATION.md)と[公開手順](docs/PAGES_PUBLICATION.md)を参照します。PR #18の過去runではbrowser検査中に60分上限でキャンセルされたものがあります。PR #19で静的検査とChromium/WebKitを独立jobへ分け、各browser jobの上限を90分にし、必須 `verify` は3系統すべて成功した場合だけ通る構成をmainへ導入しました。main run 36521040745はこの構成で成功しました。文書・workflow・共有画像だけの変更でもPR CIは全検査を実行し、workflow_dispatchも同じ全検査を実行します。PR #18は解消した競合とworkflow修正を含む最新head自身のChecks成功を確認してから、ユーザーのマージ後にmain SHAのCI成功を確認し、Publish Pagesへ進みます。
 
 旧GitHub PR #1〜#4と計画のR番号を混同しません。旧計画v1.2の「公式PR1〜6」を新計画と並行実行しません。
 

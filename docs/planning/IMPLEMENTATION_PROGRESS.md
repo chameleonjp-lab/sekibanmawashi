@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | workflow・正式名・共有画像の設定済み。PR #17の画面仕上げは2026-09-29にmainへマージ済み。最新公開の準備中 | PR #17 head CI 36484289084は成功。main push CI 36507252037、PR #18のrun 36510123886とrun 36510468751 attempt 1は、browser検査中に60分上限でキャンセル。そこまでの基本検査・build・Pages artifact・短いbrowser検査は成功。PR #18の最新headはまだCI成功を得ていない。CI workflowを更新し、文書・workflow・共有画像のみならbrowser検査をskip、ゲーム・問題・テスト・他の実素材/設定変更なら実行。手動overrideあり、全job上限90分。Q05は未実施だがPR #14のwaiverは今回のR6公開限定。最後に成功したPages deploy 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867。PR #18の現行head CI成功、ユーザーマージ後のmain CI、実URL確認が残る |
+| R6 公開 | PR #17の画面仕上げはmainへマージ済み。PR #19のCI並列化もmainへマージ済み | PR #19 merge commit `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` のmain run [36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)で `checks`、Chromium、WebKit、`verify` がすべて成功。PR #18は競合解消後の最新headを対象に全CIを再実行中。文書・workflow・共有画像だけの変更でもbrowser suiteをskipせず、workflow_dispatchも全検査を行う。PR #18のChecks、ユーザーマージ後のmain CI、実URL確認が残る |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
@@ -105,6 +105,6 @@ Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:chec
 
 PR #17はmain `f069923c249c20b1c553296c8af0f96d3035f8f6`へマージ済みです。同じtreeのPR head `68696d6199b8a07e881388877c1da9c3e7bdb387` の[CI #53](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)はブラウザー100件を51.6分で成功しました。一方、最新main自身の[push CI #54](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)では、WebKitの15問連続操作が120秒、10画面幅の連続操作が360秒の検査時間を使い切り、それぞれ再試行でも失敗しました。job全体も60分の上限でcancelledとなり、最終集計に到達していません。ログから画面規則の失敗は確認できず、時間制限の再設計が先に必要です。
 
-後続ブランチ `fix/ci-browser-time-budget` は、これら2検査の待ち時間上限を240秒・600秒にし、静的検査とChromium/WebKit各50件を並行jobへ分けます。公開条件が参照する正確な名前の `verify` jobは、静的検査と両ブラウザーjobがすべて成功した場合だけ成功します。先に一部を重複実行していた短いブラウザー検査は、同じ項目を全件検査で実行するため一本化しました。検査項目と再試行数、問題規則、UI実装は変えません。
+PR #19で上記の時間上限を240秒・600秒にし、静的検査 `checks` とChromium/WebKitのbrowser matrix（各job 90分）を独立実行する構成をmainへマージしました。公開条件が参照する必須 `verify` は、静的検査と両ブラウザーjobがすべて成功した場合だけ成功します。main run 36521040745で3系統と `verify` が成功しました。これはPR #18の検査結果とは区別し、PR #18の最新head自身のChecksで判定します。
 
 ローカルではNode 24.19.0 / npm 11.9.0で型検査、lint、unit74件、build、Playwrightの両project各50件の検査一覧、YAML構造、`git diff --check`を確認しました。ブラウザー配布物が0 MiBとなりローカル画面検査は未実施です。公開中のページは旧文言のままです。iPhone実機・VoiceOverは確認済みとしません。マージ後に最新main push CIを成功させ、手動公開workflowで新しいSHAを公開し、実URLで画面と5問の流れを確認します。

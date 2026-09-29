@@ -47,7 +47,7 @@ PR #17後の画面に合わせて、public/share-card.pngをPR #18で更新し�
 | 寸法 | PNG / 1200×630 px |
 | 画像検査 | ImageMagickで1200×630を確認、PNG8化後 約308 KB |
 | 独立レビュー | 別担当が確認。忠実さ・配置・タイトルにblockerなし。縮小プレビューでは細字が読みにくい点を指摘 |
-| PR #18のCI | run 36510123886とrun 36510468751 attempt 1はbrowser検査中に60分job上限でキャンセル。そこまでのtypecheck・lint・unit・問題庫・build・Pages artifact・performance・短いbrowser検査は成功。現行headを対象にしたCI成功はまだない。CI workflowは文書・workflow・共有画像のみの変更なら長いbrowser検査をskipし、ゲーム・問題・テストの変更では実行。手動overrideあり。全jobの上限90分 |
+| PR #18のCI | 先行run 36510123886と36510468751 attempt 1はbrowser検査中に60分job上限でキャンセル。PR #19で導入したCIは静的 `checks` とChromium/WebKit並列job（各90分）、全てを要求する `verify` で構成され、main run 36521040745で成功。これはPR #18の合格を示さず、PR #18の最新head自身のChecksで判定します |
 | 公開状態 | PR #17後の更新版は未deploy。最後に成功したPages run 36450381814は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 |
 
 Q05は未実施ですが、ユーザーの個別waiverは今回のR6公開に限ってPR #14に記録済みです。PR #18をユーザーがマージした後、merge後main SHA自身のpush CI成功を確認してからdeployし、公開後HTTP smokeと実URLのゲーム・共有・実験場フローを確認します。
