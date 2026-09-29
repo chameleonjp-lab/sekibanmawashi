@@ -163,9 +163,9 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     <section class="app-shell home-screen" data-testid="home-screen" data-screen="home" data-mode="home">
       <header class="app-header home-header">
         <div>
-          <p class="eyebrow">常時発光・回転パズル</p>
+          <p class="eyebrow">輪を回して光を届けるパズル</p>
           <h1 id="home-title">${GAME_TITLE}</h1>
-          <p class="subtitle">三本の環を回して、5問を続けて解きます。</p>
+          <p class="subtitle">3つの輪を回して、5つの問題を続けて解きます。</p>
         </div>
         <a class="secondary-button home-lab-link" href="${LAB_URL}">実験場へ戻る</a>
       </header>
@@ -198,9 +198,9 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
         <section class="home-card home-info-card" aria-labelledby="home-info-title">
           <h2 id="home-info-title">遊び方</h2>
           <ol class="how-list">
-            <li>操作する環を選びます。選択は手数に数えません。</li>
-            <li>左または右へ一区画ずつ回します。</li>
-            <li>必要な受光紋をすべて点灯させます。</li>
+            <li>内側・中央・外側から、回す輪を選びます。選ぶだけでは回数に入りません。</li>
+            <li>輪を左か右へ1つ分ずつ回します。</li>
+            <li>外側にあるすべての目標へ光を届けます。黒い場所で光は止まります。</li>
           </ol>
           <p class="muted-copy">5問の問題を準備してから始まります。</p>
         </section>
@@ -244,12 +244,12 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
     bestEmpty.hidden = true;
     bestDetails.hidden = false;
     bestTime.textContent = formatElapsed(snapshot.best.totalTimeMs);
-    bestMoves.textContent = ` / ${snapshot.best.totalMoves}手`;
+    bestMoves.textContent = ` / ${snapshot.best.totalMoves}回`;
     bestName.textContent = `（${snapshot.best.name}）`;
   }
   if (snapshot.interrupted) {
     notice.hidden = false;
-    notice.textContent = "前回の挑戦は中断されました。次のチャレンジでは同じ問題割当を使います。盤面は復元しません。";
+    notice.textContent = "前回の挑戦は中断されました。次も同じ5問で始められます。盤面は最初からになります。";
   } else if (options.notice) {
     notice.hidden = false;
     notice.textContent = options.notice;
@@ -300,7 +300,7 @@ export function renderHome(root: HTMLElement, prepared: PreparedPool, options: H
       const noticeWrite = clearInterrupted();
       if (!noticeWrite.ok && mode === "challenge") warning = warning || storageMessage(noticeWrite.error);
     } catch {
-      renderHomeError(root, "問題の割当を作成できませんでした。時間を置いて再試行してください。");
+      renderHomeError(root, "5問を準備できませんでした。少し待ってから、もう一度お試しください。");
       return;
     }
     renderRun(root, prepared, assignment, checked.name, warning ? { storageWarning: warning } : undefined);
@@ -411,7 +411,7 @@ export function renderRun(
           <div>
             <p class="eyebrow">${assignment.mode === "challenge" ? "5問チャレンジ" : "5問練習"}</p>
             <h1 id="game-title">${GAME_TITLE}</h1>
-            <p class="subtitle">三本の環を選び、左右へ一区画ずつ回します。</p>
+            <p class="subtitle">3つの輪を選び、左か右へ1つ分ずつ回します。</p>
           </div>
           <div class="header-actions" aria-label="補助操作">
             <button type="button" class="secondary-button" data-action="help" id="how-to-play">遊び方</button>
@@ -422,47 +422,45 @@ export function renderRun(
         <section class="puzzle-status" aria-labelledby="puzzle-status-title">
           <h2 id="puzzle-status-title" class="visually-hidden">問題の状態</h2>
           <div class="status-card"><span class="status-label">問題</span><strong data-field="problem-number">1 / 5</strong><span class="status-subtext" data-field="difficulty" data-difficulty="easy">初級</span></div>
-          <div class="status-card"><span class="status-label">点灯</span><strong data-field="light-count">0 / 0</strong></div>
-          <div class="status-card"><span class="status-label">手数</span><strong data-field="move-count" data-move-count="0" data-moves="0">0</strong></div>
+          <div class="status-card"><span class="status-label">光った数</span><strong data-field="light-count">0 / 0</strong></div>
+          <div class="status-card"><span class="status-label">回した数</span><strong data-field="move-count" data-move-count="0" data-moves="0">0</strong></div>
           <div class="status-card"><span class="status-label">時間（秒）</span><strong data-field="time" data-time-ms="0">未計測</strong></div>
-          <p class="status-message" data-field="state" data-state="loading" aria-live="polite">問題を準備しています</p>
+          <p class="status-message" data-field="state" data-state="loading" aria-live="polite">準備中</p>
         </section>
 
         <p class="countdown-banner" data-countdown hidden aria-live="assertive">開始まで <strong data-field="countdown">3</strong>秒</p>
-        <p class="intermission-banner" data-intermission hidden role="status">正解！ 次の問題を準備しています。</p>
-
         <div class="game-layout">
           <figure class="board-panel" data-board="board" aria-labelledby="board-caption">
             <div class="board-host" data-board-host></div>
-            <figcaption id="board-caption">外周の受光紋をすべて点灯させてください。光は常に発光しています。</figcaption>
+            <figcaption id="board-caption">外側にあるすべての目標へ光を届けてください。光を出す点はいつも光っています。</figcaption>
           </figure>
 
           <section class="control-panel" aria-labelledby="control-title">
-            <h2 id="control-title">環を選ぶ</h2>
-            <p class="control-help">環の選択は手数に数えません。回転は1回につき1手です。</p>
-            <div class="ring-controls" role="group" aria-label="操作する環">
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-pressed="false">内環 <span class="key-hint">1</span></button>
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-pressed="true">中環 <span class="key-hint">2</span></button>
-              <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-pressed="false">外環 <span class="key-hint">3</span></button>
+            <h2 id="control-title">回す輪を選ぶ</h2>
+            <p class="control-help">輪を選ぶだけでは回数に入りません。回すたびに1回と数えます。</p>
+            <div class="ring-controls" role="group" aria-label="回す輪">
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="0" aria-pressed="false">内側 <span class="key-hint">1</span></button>
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="1" aria-pressed="true">中央 <span class="key-hint">2</span></button>
+              <button type="button" class="ring-button" data-action="select-ring" data-ring="2" aria-pressed="false">外側 <span class="key-hint">3</span></button>
             </div>
-            <div class="rotate-controls" role="group" aria-label="回転操作">
+            <div class="rotate-controls" role="group" aria-label="輪を回す操作">
               <button type="button" class="rotate-button" data-action="rotate-left" data-rotate="left" id="rotate-left"><span aria-hidden="true">↺</span> 左へ回す</button>
               <button type="button" class="rotate-button" data-action="rotate-right" data-rotate="right" id="rotate-right"><span aria-hidden="true">↻</span> 右へ回す</button>
             </div>
             <button type="button" class="secondary-button reset-question" data-action="reset-question" hidden>今の問題をやり直す</button>
-            <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で環を選択、←・→で回転</p>
-            <label class="audio-setting"><input type="checkbox" data-action="audio" id="audio" /> 音を有効にする</label>
+            <p class="keyboard-help">キーボード: 1・2・3 または ↑・↓で輪を選び、←・→で回します</p>
           </section>
         </div>
-        <p class="game-note" data-game-note role="status">記録はこの端末に保存されます。問題の時間は操作可能になった時点から成功入力までです。</p>
+        <p class="game-note" data-game-note role="status">記録はこの端末に保存されます。時間は、問題を動かせるようになってから正解するまでを数えます。</p>
       </div>
+      <div class="confetti-overlay" data-confetti hidden aria-hidden="true"></div>
 
       <div class="modal-layer" data-modal="help" hidden>
         <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-title" tabindex="-1">
           <h2 id="help-title">遊び方</h2>
-          <p>三本の環を選び、左または右へ1区画ずつ回します。発光紋は常に光を出します。</p>
-          <p>必要な受光紋がすべて点灯すれば成功です。説明を開いている間も、チャレンジの時間は進みます。</p>
-          <button type="button" class="primary-button" data-action="close-help">盤面へ戻る</button>
+          <p>内側・中央・外側から輪を選び、左か右へ1つ分ずつ回します。光は光を出す点から進み、黒い場所で止まります。</p>
+          <p>外側にあるすべての目標へ光が届くと成功です。説明を開いている間も、チャレンジの時間は進みます。</p>
+          <button type="button" class="primary-button" data-action="close-help">問題へ戻る</button>
         </section>
       </div>
       <div class="modal-layer" data-modal="abort" hidden>
@@ -489,8 +487,7 @@ export function renderRun(
   const difficultyElement = query<HTMLElement>(root, "[data-field='difficulty']");
   const countdownBanner = query<HTMLElement>(root, "[data-countdown]");
   const countdownElement = query<HTMLElement>(root, "[data-field='countdown']");
-  const intermissionBanner = query<HTMLElement>(root, "[data-intermission]");
-  const audio = query<HTMLInputElement>(root, "[data-action='audio']");
+  const confettiLayer = query<HTMLElement>(root, "[data-confetti]");
   const resetButton = query<HTMLButtonElement>(root, "[data-action='reset-question']");
   const helpLayer = query<HTMLElement>(root, "[data-modal='help']");
   const abortLayer = query<HTMLElement>(root, "[data-modal='abort']");
@@ -502,13 +499,12 @@ export function renderRun(
   const confirmAbortButton = query<HTMLButtonElement>(root, "[data-action='confirm-abort']");
   const leftButton = query<HTMLButtonElement>(root, "[data-action='rotate-left']");
   const rightButton = query<HTMLButtonElement>(root, "[data-action='rotate-right']");
-  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !intermissionBanner || !audio || !resetButton || !helpLayer || !abortLayer || !gameNote || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
+  if (!shell || !gameContent || !boardHost || !stateElement || !lightElement || !movesElement || !timeElement || !numberElement || !difficultyElement || !countdownBanner || !countdownElement || !confettiLayer || !resetButton || !helpLayer || !abortLayer || !gameNote || !helpButton || !abortButton || !closeHelpButton || !closeAbortButton || !confirmAbortButton || !leftButton || !rightButton) return;
 
   shell.dataset.runId = assignment.runId;
   const settingsSnapshot = loadSave({ prepared });
   let helpSeen = settingsSnapshot.helpSeen;
   const sound = new SoundController({ enabled: settingsSnapshot.audioEnabled });
-  audio.checked = settingsSnapshot.audioEnabled;
 
   const listeners = new AbortController();
   const clearScheduled = (): void => {
@@ -580,12 +576,11 @@ export function renderRun(
     movesElement.dataset.moveCount = String(actualMoves);
     countdownBanner.hidden = phase !== "countdown";
     countdownElement.textContent = String(countdownValue);
-    intermissionBanner.hidden = phase !== "intermission";
-    if (phase === "countdown") stateElement.textContent = "問題を準備しています";
-    else if (phase === "intermission") stateElement.textContent = "成功！ 次の問題を準備しています。";
-    else if (phase === "playing") stateElement.textContent = `操作可能。${light.litRequired} / ${light.requiredCount} 個が点灯中`;
+    if (phase === "countdown") stateElement.textContent = "準備中";
+    else if (phase === "intermission") stateElement.textContent = "正解！";
+    else if (phase === "playing") stateElement.textContent = "目標 " + light.litRequired + "/" + light.requiredCount;
     else if (phase === "result") stateElement.textContent = "結果を表示しています";
-    else stateElement.textContent = "問題を準備しています";
+    else stateElement.textContent = "準備中";
     stateElement.dataset.state = phase;
     stateElement.dataset.status = phase;
     leftButton.disabled = !accepting;
@@ -617,8 +612,7 @@ export function renderRun(
       disabled: !isInputOpen(),
       onSelectRing: (ring) => {
         if (disposed || renderedQuestion !== questionIndex || renderedGeneration !== generation) return;
-        if (!controller.boardSelection(ring)) return;
-        query<HTMLButtonElement>(root, `[data-action='select-ring'][data-ring='${ring}']`)?.focus();
+        controller.boardSelection(ring);
       },
     }));
   };
@@ -626,6 +620,25 @@ export function renderRun(
   const refresh = (): void => {
     refreshBoard();
     refreshStatus();
+  };
+
+  const showConfetti = (): void => {
+    const colors = ["gold", "cream", "green", "orange"];
+    confettiLayer.replaceChildren();
+    for (const side of ["left", "right"] as const) {
+      for (let index = 0; index < 14; index += 1) {
+        const piece = document.createElement("span");
+        piece.className = "confetti-piece";
+        piece.dataset.confettiSide = side;
+        piece.dataset.confettiColor = colors[index % colors.length];
+        piece.style.setProperty("--confetti-y", `${8 + ((index * 31) % 80)}%`);
+        piece.style.setProperty("--confetti-delay", `${(index % 5) * 38}ms`);
+        piece.style.setProperty("--confetti-fall", `${90 + ((index * 37) % 190)}px`);
+        piece.style.setProperty("--confetti-drift", `${((index * 17) % 51) - 25}px`);
+        confettiLayer.append(piece);
+      }
+    }
+    confettiLayer.hidden = false;
   };
 
   const setStorageWarning = (message: string): void => {
@@ -674,7 +687,7 @@ export function renderRun(
     const opener = modalOpener;
     modalOpener = null;
     refreshStatus();
-    if (opener?.isConnected && !opener.disabled) opener.focus();
+    if (opener?.isConnected && !opener.disabled) opener.focus({ preventScroll: true });
   };
 
   const abortRun = (): void => {
@@ -705,7 +718,7 @@ export function renderRun(
     layer.removeAttribute("aria-hidden");
     refreshStatus();
     const first = focusable(layer)[0] ?? layer.querySelector<HTMLElement>("[role='dialog']");
-    first?.focus();
+    first?.focus({ preventScroll: true });
   };
 
   const confirmAbort = (): void => {
@@ -720,12 +733,7 @@ export function renderRun(
     phase = "result";
     runState = { ...runState, phase: "result" };
     const result = finalizeRun(runState);
-    const resultUnlock = sound.unlockFromGesture();
-    const resultSound = new SoundController({ enabled: sound.isEnabled() });
-    renderResult(root, prepared, result, playerName, storageWarning, resultSound);
-    // Rendering the result tears down the game controller. Emit the terminal
-    // effect from the result surface so teardown cannot cut it off.
-    void resultUnlock.then((ready) => { if (ready) resultSound.play("success"); });
+    renderResult(root, prepared, result, playerName, storageWarning);
     const best = storageWarning ? null : bestFromResult(result, playerName);
     if (storageWarning) {
       updateResultNotice(root, storageWarning);
@@ -758,20 +766,20 @@ export function renderRun(
     currentTimeMs = reading.elapsedMs;
     runState = {
       ...runState,
-      phase: questionIndex === 4 ? "result" : "intermission",
+      phase: "intermission",
       questionIndex,
       records: [...runState.records, record],
       totalMoves: runState.totalMoves + moves,
       abnormalClock: runState.abnormalClock || reading.abnormal,
       overLimits: runState.overLimits || overLimits,
     };
-    phase = questionIndex === 4 ? "result" : "intermission";
+    phase = "intermission";
     refresh();
-    if (questionIndex === 4) {
-      completeRun();
-      return;
-    }
-    schedule(INTERMISSION_MS, () => beginQuestion(questionIndex + 1));
+    showConfetti();
+    schedule(INTERMISSION_MS, () => {
+      if (questionIndex === 4) completeRun();
+      else beginQuestion(questionIndex + 1);
+    });
   };
 
   const rotate = (type: MoveType): void => {
@@ -794,7 +802,7 @@ export function renderRun(
     if (result.light.solved) {
       // Success is the only terminal effect; a simultaneous rotation/light
       // chord would make the six actions indistinguishable.
-      if (questionIndex < 4) sound.play("success");
+      sound.play("success");
       timer.stop(reading);
       completeQuestion(reading, nextSession, true);
       return;
@@ -840,6 +848,8 @@ export function renderRun(
 
   const beginQuestion = (index: number): void => {
     if (disposed || index < 0 || index >= 5) return;
+    confettiLayer.hidden = true;
+    confettiLayer.replaceChildren();
     questionIndex = index;
     const puzzle = prepared.puzzlesById.get(assignment.puzzleIds[index]);
     if (!puzzle) {
@@ -946,12 +956,6 @@ export function renderRun(
   leftButton.addEventListener("click", () => controller.rotate("l"), { signal: listeners.signal });
   rightButton.addEventListener("click", () => controller.rotate("r"), { signal: listeners.signal });
   resetButton.addEventListener("click", resetQuestion, { signal: listeners.signal });
-  audio.addEventListener("change", () => {
-    sound.setEnabled(audio.checked);
-    if (audio.checked) void sound.unlockFromGesture();
-    const result = saveAudioEnabled(audio.checked);
-    if (!result.ok) setStorageWarning(storageMessage(result.error));
-  }, { signal: listeners.signal });
   for (const button of Array.from(root.querySelectorAll<HTMLButtonElement>("[data-action='select-ring']"))) {
     button.addEventListener("click", () => controller.selectRing(Number(button.dataset.ring)), { signal: listeners.signal });
   }
@@ -989,7 +993,7 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
       <main class="result-main" aria-labelledby="result-title">
         <section class="result-summary" aria-label="合計">
           <div><span class="status-label">合計時間</span><strong data-total-time data-total-time-ms="${result.totalTimeMs}" data-field="total-time">${formatElapsed(result.totalTimeMs)}</strong></div>
-          <div><span class="status-label">合計手数</span><strong data-total-moves="${result.totalMoves}">${result.totalMoves}手</strong></div>
+          <div><span class="status-label">合計で回した数</span><strong data-total-moves="${result.totalMoves}">${result.totalMoves}回</strong></div>
         </section>
         <p class="result-notice" data-result-notice role="status" hidden></p>
         <p class="result-note">記録はこの端末に保存されます。</p>
@@ -998,7 +1002,7 @@ export function renderResult(root: HTMLElement, prepared: PreparedPool, result: 
           ${result.records.map((record, index) => `
             <article class="question-result" data-result-question data-puzzle-id="${record.puzzleId}">
               <h3>問題 ${index + 1}<span data-difficulty="${record.difficulty}">${DIFFICULTY_LABELS[record.difficulty]}</span></h3>
-              <p><span>時間</span><strong data-result-time data-time-ms="${record.timeMs}" data-result-time-ms="${record.timeMs}">${resultTimeLabel(record)}</strong><span>手数</span><strong data-result-moves="${record.moves}" data-moves="${record.moves}">${record.moves}手</strong></p>
+              <p><span>回した数</span><strong data-result-moves="${record.moves}" data-moves="${record.moves}">${record.moves}回</strong><span>時間</span><strong data-result-time data-time-ms="${record.timeMs}" data-result-time-ms="${record.timeMs}">${resultTimeLabel(record)}</strong></p>
             </article>
           `).join("")}
         </section>

@@ -227,6 +227,13 @@ test.describe("R3 board rendering", () => {
         (count, ring) => count + ring.parts.filter((part) => part.kind === "emitter").length,
         0,
       );
+      const expectedBlockers = puzzle.rings.reduce(
+        (count, ring) => count + ring.parts.filter((part) => part.kind === "blocker").length,
+        0,
+      );
+      await expect(board(page).locator("[data-blocker-cell]")).toHaveCount(expectedBlockers);
+      await expect(board(page).locator(".blocker-mark")).toHaveCount(0);
+      await expect(board(page).locator(".ring-texture")).toHaveCount(3);
       const beams = board(page).locator("[data-beam], [data-beam-index]");
       const expectedLight = evaluate(puzzle as CorePuzzle, (puzzle as CorePuzzle).initialState);
       const expectedRenderSegments = expectedSegments(expectedLight);
@@ -278,6 +285,8 @@ test.describe("R3 board rendering", () => {
         const filter = svg.querySelector("#beam-glow");
         return {
           layers: {
+            rings: layerIndex(".board-rings"),
+            blockers: layerIndex(".board-blocker-zones"),
             beams: layerIndex(".board-beams"),
             parts: layerIndex(".board-parts"),
             stops: layerIndex(".beam-stops"),
@@ -294,6 +303,8 @@ test.describe("R3 board rendering", () => {
           } : null,
         };
       });
+      expect(visualData.layers.blockers).toBeGreaterThan(visualData.layers.rings);
+      expect(visualData.layers.blockers).toBeLessThan(visualData.layers.beams);
       expect(visualData.layers.beams).toBeGreaterThanOrEqual(0);
       expect(visualData.layers.beams).toBeLessThan(visualData.layers.parts);
       expect(visualData.layers.parts).toBeLessThan(visualData.layers.stops);
@@ -364,7 +375,7 @@ test.describe("R3 board rendering", () => {
         await expect(button).toBeVisible();
       }
       if ((viewport.width === 320 && viewport.height === 568) || (viewport.width === 844 && viewport.height === 390)) {
-        for (const [openerName, closeName] of [["遊び方", "盤面へ戻る"], ["中断", "続ける"]] as const) {
+        for (const [openerName, closeName] of [["遊び方", "問題へ戻る"], ["中断", "続ける"]] as const) {
           await page.getByRole("button", { name: openerName }).click();
           const dialog = page.locator("[role=dialog]:visible").first();
           await expect(dialog).toBeVisible();
@@ -408,6 +419,7 @@ test.describe("R3 board rendering", () => {
   test("V03 separates all three ring hit regions and keeps selection at zero moves", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openGame(page, SOLVING_PUZZLE_ID);
+    expect(await page.locator("[data-testid='puzzle-screen'] [data-action='audio']").count()).toBe(0);
     const rings = ringButtons(page);
     const hits = ringHitRegions(page);
     await expect(hits).toHaveCount(3);
@@ -425,17 +437,54 @@ test.describe("R3 board rendering", () => {
       expect(radialExtents[index].max).toBeGreaterThan(radialExtents[index].min);
       if (index > 0) expect(radialExtents[index - 1].max).toBeLessThan(radialExtents[index].min);
     }
+    const blockerZones = board(page).locator(".blocker-zone");
+    const stoneTexture = board(page).locator("defs #stone-grain");
+    await expect(stoneTexture.locator("ellipse")).toHaveCount(76);
+    await expect(stoneTexture.locator("path")).toHaveCount(14);
+    const puzzleForBlockers = puzzles.find((candidate) => candidate.id === SOLVING_PUZZLE_ID);
+    const expectedBlockers = puzzleForBlockers?.rings.flatMap((ring) => ring.parts).filter((part) => part.kind === "blocker").length ?? 0;
+    await expect(blockerZones).toHaveCount(expectedBlockers);
+    await expect(board(page).locator(".blocker-mark")).toHaveCount(0);
+    const blockerPaint = await blockerZones.evaluateAll((elements) => elements.map((element) => {
+      const box = (element as SVGGraphicsElement).getBBox();
+      return { fill: getComputedStyle(element).fill, width: box.width, height: box.height };
+    }));
+    for (const area of blockerPaint) {
+      expect(area.fill).toBe("rgb(7, 8, 9)");
+      expect(area.width).toBeGreaterThan(10);
+      expect(area.height).toBeGreaterThan(10);
+    }
+
     const svgBox = await board(page).locator("svg").boundingBox();
     expect(svgBox).not.toBeNull();
     if (!svgBox) return;
     expect(Math.abs(svgBox.width - svgBox.height)).toBeLessThanOrEqual(1);
+    expect(svgBox.width).toBeGreaterThan(340);
     const svgScale = svgBox.width / 300;
     for (let index = 0; index < 3; index += 1) {
       const radius = (radialExtents[index].min + radialExtents[index].max) / 2;
+      const scrollBefore = await page.evaluate(() => window.scrollY);
       await page.touchscreen.tap(svgBox.x + 150 * svgScale, svgBox.y + (150 - radius) * svgScale);
       await expect(rings.nth(index)).toHaveAttribute("aria-pressed", "true");
+      expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
       expect(await readMoves(page)).toBe(0);
     }
+  });
+
+  test("V02/I03: selecting a ring directly on the board does not scroll the page", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openGame(page, SOLVING_PUZZLE_ID);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const before = await page.evaluate(() => window.scrollY);
+    // The center of a ring path's bounding box is its hole; tap on the annulus itself.
+    const svgBox = await board(page).locator("svg.stone-board").boundingBox();
+    expect(svgBox).not.toBeNull();
+    if (!svgBox) return;
+    const scale = svgBox.width / 300;
+    await page.touchscreen.tap(svgBox.x + 150 * scale, svgBox.y + (150 - 43) * scale);
+    const after = await page.evaluate(() => window.scrollY);
+    expect(after).toBe(before);
+    expect(await readMoves(page)).toBe(0);
   });
 });
 
@@ -515,7 +564,7 @@ test.describe("R3 input contract", () => {
     expect(await readMoves(page)).toBe(beforeEnter + 1);
   });
 
-  test("I04 keeps focus on the accessible HTML ring control after the SVG is replaced", async ({ page }) => {
+  test("I04 keeps keyboard focus on the HTML ring control after the SVG is replaced", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openGame(page, SOLVING_PUZZLE_ID);
     const control = ringButtons(page).nth(0);
@@ -722,7 +771,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await right.click();
     await rings.nth(1).click();
     await left.click();
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/正解/);
     const solvedMoves = await readMoves(page);
     await expect(right).toBeDisabled();
     await right.evaluate((element) => (element as HTMLButtonElement).click());
@@ -733,7 +782,7 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.keyboard.press("ArrowRight");
     await page.keyboard.press("2");
     await page.keyboard.press("ArrowLeft");
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/正解/);
 
     await openGame(page, SOLVING_PUZZLE_ID);
     const innerBox = await rings.nth(0).boundingBox();
@@ -749,6 +798,6 @@ test.describe("R3 input contract", () => {
     for (let index = 0; index < 4; index += 1) await page.touchscreen.tap(rightBox.x + rightBox.width / 2, rightBox.y + rightBox.height / 2);
     await page.touchscreen.tap(middleBox.x + middleBox.width / 2, middleBox.y + middleBox.height / 2);
     await page.touchscreen.tap(leftBox.x + leftBox.width / 2, leftBox.y + leftBox.height / 2);
-    await expect(stateStatus(page)).toContainText(/成功|完成|解決/);
+    await expect(stateStatus(page)).toContainText(/正解/);
   });
 });

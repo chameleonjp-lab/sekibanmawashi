@@ -2,7 +2,7 @@
 
 ## 読む資料
 
-最初に `CURRENT_STATE.md` と `docs/planning/IMPLEMENTATION_PROGRESS.md` を確認し、`docs/planning/IMPLEMENTATION_PLAN.md`（文書版2.0）の作業段階と必須検査を読みます。プレイヤー向け仕様は `docs/spec/CURRENT_GAME_SPEC.md` です。補助資料は必要な範囲だけ読みます。
+最初に `CURRENT_STATE.md` と `docs/planning/IMPLEMENTATION_PROGRESS.md` を確認し、`docs/planning/IMPLEMENTATION_PLAN.md`（文書版2.1）の作業段階と必須検査を読みます。プレイヤー向け仕様は `docs/spec/CURRENT_GAME_SPEC.md` です。補助資料は必要な範囲だけ読みます。
 
 最新仕様は常時発光・回転のみです。`docs/archive/`、旧データ例、`prototype/` は旧規則の履歴・比較資料で、最新仕様を上書きしません。画像中の古い問題数・環数・切替操作を実装しません。
 

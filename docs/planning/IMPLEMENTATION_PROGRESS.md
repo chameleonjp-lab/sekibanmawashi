@@ -1,6 +1,6 @@
 # 実装と受入の進捗
 
-更新日: 2026-09-28 JST / 計画: [文書版2.0](IMPLEMENTATION_PLAN.md)
+更新日: 2026-09-28 JST / 計画: [文書版2.1](IMPLEMENTATION_PLAN.md)
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
@@ -90,3 +90,8 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 ### 2026-09-28 PR #13マージ後
 
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
+
+
+## R6後の画面仕上げ（2026-09-28）
+
+Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474442114](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474442114)は短画面検査を通過し、ブラウザー検査は90件成功・2件失敗でした。後続[CI 36477214131](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36477214131)は100件中70件成功・30件失敗し、主な原因は説明ダイアログの旧ボタン名、I03円環テストの穴へのクリック、成功表示「正解！」と検査期待語の不一致でした。テストを現行文言「問題へ戻る」「正解！」と実際の円環位置へ合わせました。修正後headのCIで再確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。

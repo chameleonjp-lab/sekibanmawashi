@@ -55,7 +55,7 @@ export type BoardRenderModel = {
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-const RING_LABELS = ["内環", "中環", "外環"] as const;
+const RING_LABELS = ["内側", "中央", "外側"] as const;
 
 function assertSlot(slot: number): void {
   if (!Number.isInteger(slot) || slot < 0 || slot >= SLOT_COUNT) {
@@ -98,6 +98,29 @@ export function ringPath(inner: number, outer: number): string {
     `A ${outer} ${outer} 0 1 1 ${cx - 0.01} ${cy - outer}`,
     `L ${cx - 0.01} ${cy - inner}`,
     `A ${inner} ${inner} 0 1 0 ${cx} ${cy - inner}`,
+    "Z",
+  ].join(" ");
+}
+
+/** Return the wedge occupied by one of the twelve positions in a ring. */
+export function ringSectorPath(inner: number, outer: number, slot: number): string {
+  assertSlot(slot);
+  if (!(inner > 0) || !(outer > inner)) throw new RangeError("ring radii must be positive and ordered");
+  const halfSlot = Math.PI / SLOT_COUNT;
+  const centerAngle = slotAngle(slot);
+  const pointAt = (radius: number, angle: number): BoardPoint => ({
+    x: BOARD_CENTER.x + radius * Math.cos(angle),
+    y: BOARD_CENTER.y + radius * Math.sin(angle),
+  });
+  const outerStart = pointAt(outer, centerAngle - halfSlot);
+  const outerEnd = pointAt(outer, centerAngle + halfSlot);
+  const innerEnd = pointAt(inner, centerAngle + halfSlot);
+  const innerStart = pointAt(inner, centerAngle - halfSlot);
+  return [
+    `M ${outerStart.x} ${outerStart.y}`,
+    `A ${outer} ${outer} 0 0 1 ${outerEnd.x} ${outerEnd.y}`,
+    `L ${innerEnd.x} ${innerEnd.y}`,
+    `A ${inner} ${inner} 0 0 0 ${innerStart.x} ${innerStart.y}`,
     "Z",
   ].join(" ");
 }
@@ -187,6 +210,64 @@ function appendCircle(parent: Element, point: BoardPoint, radius: number, classN
   return circle;
 }
 
+function createStonePattern(): SVGPatternElement {
+  const pattern = svgElement("pattern");
+  setAttributes(pattern, {
+    id: "stone-grain",
+    patternUnits: "userSpaceOnUse",
+    width: String(BOARD_VIEWBOX.width),
+    height: String(BOARD_VIEWBOX.height),
+  });
+  const background = svgElement("rect");
+  setAttributes(background, {
+    width: String(BOARD_VIEWBOX.width),
+    height: String(BOARD_VIEWBOX.height),
+    fill: "url(#stone-base)",
+  });
+  pattern.append(background);
+
+  // A stable, low-contrast grain keeps the carved surface textured without
+  // loading a bitmap or changing with every tap and redraw.
+  let seed = 0x5e91b1;
+  const random = (): number => {
+    seed = (seed * 1_664_525 + 1_013_904_223) >>> 0;
+    return seed / 0x1_0000_0000;
+  };
+  for (let index = 0; index < 76; index += 1) {
+    const x = 8 + random() * 284;
+    const y = 8 + random() * 284;
+    const radius = 0.2 + random() * 0.9;
+    const fleck = svgElement("ellipse");
+    setAttributes(fleck, {
+      cx: String(x),
+      cy: String(y),
+      rx: String(radius * (0.65 + random() * 0.9)),
+      ry: String(radius * (0.35 + random() * 0.7)),
+      fill: random() > 0.48 ? "#d5d0c1" : "#171a1b",
+      opacity: String(0.055 + random() * 0.085),
+      transform: `rotate(${Math.round(random() * 180)} ${x} ${y})`,
+    });
+    pattern.append(fleck);
+  }
+  for (let index = 0; index < 14; index += 1) {
+    const x = 10 + random() * 280;
+    const y = 10 + random() * 280;
+    const length = 7 + random() * 26;
+    const bend = -2 + random() * 4;
+    const vein = svgElement("path");
+    setAttributes(vein, {
+      d: `M ${x} ${y} q ${length * 0.32} ${bend - 1} ${length * 0.55} ${bend} t ${length * 0.45} ${-bend}`,
+      fill: "none",
+      stroke: random() > 0.5 ? "#d4cdbc" : "#111415",
+      "stroke-width": String(0.25 + random() * 0.4),
+      "stroke-linecap": "round",
+      opacity: String(0.07 + random() * 0.07),
+    });
+    pattern.append(vein);
+  }
+  return pattern;
+}
+
 function emitterGlyph(parent: Element, point: BoardPoint, radius: number): void {
   const group = svgElement("g");
   group.setAttribute("class", "board-emitter");
@@ -212,24 +293,10 @@ function emitterGlyph(parent: Element, point: BoardPoint, radius: number): void 
   parent.append(group);
 }
 
-function blockerGlyph(parent: Element, point: BoardPoint, radius: number): void {
-  const group = svgElement("g");
-  group.setAttribute("class", "board-blocker");
-  appendCircle(group, point, radius * 0.88, "blocker-body");
-  const diamond = svgElement("path");
-  const half = radius * 0.58;
-  setAttributes(diamond, {
-    d: `M ${point.x} ${point.y - half} L ${point.x + half} ${point.y} L ${point.x} ${point.y + half} L ${point.x - half} ${point.y} Z`,
-    class: "blocker-mark",
-  });
-  group.append(diamond);
-  parent.append(group);
-}
-
 function receiverGlyph(parent: Element, point: BoardPoint, slot: number, required: boolean, lit: boolean): void {
   const group = svgElement("g");
   group.setAttribute("data-receiver-slot", String(slot));
-  group.setAttribute("aria-label", required ? `受光紋 ${slot + 1}${lit ? "（点灯）" : "（未点灯）"}` : `方向 ${slot + 1}`);
+  group.setAttribute("aria-label", required ? `目標 ${slot + 1}${lit ? "（光が届いています）" : "（光が届いていません）"}` : `方向 ${slot + 1}`);
   group.setAttribute("class", required ? (lit ? "receiver receiver-required receiver-lit" : "receiver receiver-required") : "receiver receiver-idle");
   if (required) {
     appendCircle(group, point, 8, "receiver-ring");
@@ -264,7 +331,7 @@ export function createBoardSvg(
   setAttributes(svg, {
     viewBox: `${BOARD_VIEWBOX.minX} ${BOARD_VIEWBOX.minY} ${BOARD_VIEWBOX.width} ${BOARD_VIEWBOX.height}`,
     role: "img",
-    "aria-label": "石板の盤面。三本の環と十二方向の受光紋",
+    "aria-label": "石板の盤面。3つの輪と外側の目標",
     class: "stone-board",
     focusable: "false",
   });
@@ -274,6 +341,28 @@ export function createBoardSvg(
   svg.addEventListener("dragstart", (event) => event.preventDefault());
 
   const defs = svgElement("defs");
+  const discGradient = svgElement("radialGradient");
+  setAttributes(discGradient, { id: "stone-disc-gradient", cx: "42%", cy: "34%", r: "72%" });
+  for (const [offset, color] of [["0%", "#42413d"], ["62%", "#302f2c"], ["100%", "#1e2022"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    discGradient.append(stop);
+  }
+  const ringGradient = svgElement("linearGradient");
+  setAttributes(ringGradient, { id: "stone-ring-gradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+  for (const [offset, color] of [["0%", "#85847a"], ["45%", "#6f706a"], ["100%", "#575955"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    ringGradient.append(stop);
+  }
+  const selectedGradient = svgElement("linearGradient");
+  setAttributes(selectedGradient, { id: "stone-ring-selected-gradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+  for (const [offset, color] of [["0%", "#a09b87"], ["48%", "#858171"], ["100%", "#6b685f"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    selectedGradient.append(stop);
+  }
+  defs.append(discGradient, ringGradient, selectedGradient);
   const filter = svgElement("filter");
   setAttributes(filter, {
     id: "beam-glow",
@@ -293,9 +382,18 @@ export function createBoardSvg(
   merge.append(mergeBlur, mergeSource);
   filter.append(blur, merge);
   defs.append(filter);
+  const stoneBase = svgElement("radialGradient");
+  setAttributes(stoneBase, { id: "stone-base", cx: "34%", cy: "20%", r: "92%" });
+  for (const [offset, color] of [["0%", "#8b8b81"], ["43%", "#686a65"], ["100%", "#363837"]] as const) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    stoneBase.append(stop);
+  }
+  defs.append(stoneBase, createStonePattern());
   svg.append(defs);
 
   appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS, "board-disc");
+  appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS - 1.5, "board-disc-texture");
   appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS - 4, "board-edge");
   const tickGroup = svgElement("g");
   tickGroup.setAttribute("class", "board-ticks");
@@ -323,10 +421,32 @@ export function createBoardSvg(
     });
     const ringShape = svgElement("path");
     setAttributes(ringShape, { d: ringPath(inner, outer), class: "ring-surface" });
-    group.append(ringShape);
+    const texture = svgElement("path");
+    setAttributes(texture, { d: ringPath(inner, outer), class: "ring-texture", "aria-hidden": "true" });
+    group.append(ringShape, texture);
     ringGroup.append(group);
   }
   svg.append(ringGroup);
+
+  const blockerGroup = svgElement("g");
+  blockerGroup.setAttribute("class", "board-blocker-zones");
+  for (const part of model.parts) {
+    if (part.kind !== "blocker") continue;
+    const [inner, outer] = RING_RADII[part.ring]!;
+    const cell = svgElement("path");
+    setAttributes(cell, {
+      d: ringSectorPath(inner, outer, part.slot),
+      class: "blocker-zone",
+      "data-blocker-cell": "true",
+      "data-blocker-zone": String(part.ring),
+      "data-kind": "blocker",
+      "data-ring": String(part.ring),
+      "data-slot": String(part.slot),
+      "aria-label": `${RING_LABELS[part.ring]}の光を止める黒い場所`,
+    });
+    blockerGroup.append(cell);
+  }
+  svg.append(blockerGroup);
 
   const centre = svgElement("g");
   centre.setAttribute("class", "board-centre");
@@ -357,6 +477,7 @@ export function createBoardSvg(
   const partsGroup = svgElement("g");
   partsGroup.setAttribute("class", "board-parts");
   for (const part of model.parts) {
+    if (part.kind !== "emitter") continue;
     const partGroup = svgElement("g");
     const point = polarPoint(ringMidRadius(part.ring), part.slot);
     setAttributes(partGroup, {
@@ -365,8 +486,8 @@ export function createBoardSvg(
       "data-kind": part.kind,
       "data-slot": String(part.slot),
     });
-    if (part.kind === "emitter") emitterGlyph(partGroup, point, 8.5);
-    else blockerGlyph(partGroup, point, 8.5);
+    if (part.kind !== "emitter") continue;
+    emitterGlyph(partGroup, point, 8.5);
     partsGroup.append(partGroup);
   }
   svg.append(partsGroup);

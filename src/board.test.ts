@@ -8,6 +8,7 @@ import {
   createBoardRenderModel,
   polarPoint,
   ringPath,
+  ringSectorPath,
 } from "./board.ts";
 import { computePuzzleChecksum, evaluate } from "./core/index.ts";
 import type { Puzzle } from "./core/types.ts";
@@ -43,6 +44,15 @@ test("board geometry keeps all twelve receivers and beams inside the viewBox", (
   }
   assert.deepEqual(BOARD_CENTER, { x: 150, y: 150 });
   assert.match(ringPath(31, 55), /^M 150 95/);
+});
+
+test("blocker cells cover one full position in each of the twelve ring sectors", () => {
+  const sectors = Array.from({ length: 12 }, (_, slot) => ringSectorPath(91, 115, slot));
+  assert.equal(new Set(sectors).size, 12);
+  assert.match(sectors[0] ?? "", /^M 120\.2\d+ 38\.9\d+ A 115 115 0 0 1 179\.7\d+ 38\.9\d+/u);
+  assert.match(sectors[0] ?? "", /L 173\.5\d+ 62\.1\d+ A 91 91 0 0 0 126\.4\d+ 62\.1\d+ Z$/u);
+  assert.throws(() => ringSectorPath(91, 115, 12), RangeError);
+  assert.throws(() => ringSectorPath(115, 91, 0), RangeError);
 });
 
 test("beam geometry stops at the first inward blocker and does not draw past it", () => {
