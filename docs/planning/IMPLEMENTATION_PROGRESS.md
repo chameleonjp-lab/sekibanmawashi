@@ -15,7 +15,7 @@ R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d6
 | R3 盤面と入力 | 実装・V/I自動範囲・独立レビュー済み、[PR #8](https://github.com/chameleonjp-lab/sekibanmawashi/pull/8)マージ済み | iPhone・VoiceOver・実機2本指・人の試遊は未実施。公開の受入は未完了 |
 | R4 5問・時計・保存 | [PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)マージ済み、実装・自動検査・独立レビュー済み | 実機ロック復帰の受入は未完了 |
 | R5 公開品質 | [PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10) 2026-09-27 01:49:54 JSTにユーザーがmainへマージ | 検証source `1cf19149de75b1f970185ec903b6eed7c5896fad` のCI成功。unit72、browser90件（89 expected + 1 flaky、retry成功）、最終失敗0・skip0。Sol HighがQ03資源集計と代表画像を独立確認。実機受入・公開指示は未完了 |
-| R6 公開 | PR #17の画面仕上げはmainへマージ済み。PR #19のCI並列化もmainへマージ済み | PR #19 merge commit `0d6f5369272f4e7e382ce21fbe8fc2864d54f089` のmain run [36521040745](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36521040745)で `checks`、Chromium、WebKit、`verify` がすべて成功。PR #18は競合解消後の最新headを対象に全CIを再実行中。文書・workflow・共有画像だけの変更でもbrowser suiteをskipせず、workflow_dispatchも全検査を行う。PR #18のChecks、ユーザーマージ後のmain CI、実URL確認が残る |
+| R6 公開 | PR #18 merge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` をPagesへ公開済み | 同SHAのmain CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)で `checks`、Chromium、WebKit、必須 `verify` が成功。[Publish Pages #4](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)はbuild・deploy・HTTP smokeが成功。実URLではホームと練習画面を確認。Q05は未実施で、今回のR6公開だけに適用する免除がPR #14に記録済み |
 | ランキング関連 | 今回の対象外 | 延期。接続済み・廃止済みとはしない |
 
 R1は `feat/01-rotation-only-core` で実装しました。GitHub PR番号は6、実装コミットは `4174e3019516f67c110b787455bdae886061a505` です。実装担当はLuna Max、独立レビュー担当はSol Highです。検査と指摘対応の詳細は[R1検査記録](../reviews/R1_VERIFICATION.md)を参照してください。
@@ -74,7 +74,7 @@ R4のPR #9をユーザーがマージしたmain `0709e7ff2faaaf8b5e28e4038e60ca1
 
 診断では増えた13 listenerが全てPlaywright検査ツールの初回注入と判明しました。注入を基準取得前に済ませ、増加許容なしのQ03を両ブラウザで20回ずつ通過しました。375/390pxでの時間欄はカード余白を調整し、900.00は200%文字で一行に、1800.00は小画面でも要素・カード内に収まることを検査します。例外境界と5問進行側の後始末を接続し、確定結果を通常描画で復元して4操作を再び使えることも検査しました。規則・90問・900組のデータは変更していません。最新のCI・flaky・資源集計は[R5検査記録](../reviews/R5_VERIFICATION.md)と[CI集計](../../reports/r5/ci-36252821838.json)を参照してください。
 
-## R6の公開Workflow実装
+## R6の公開Workflow実装（実装履歴）
 
 R6開始基準はPR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`、作業branchは `chore/06-publication` でした。R6の[PR #12](https://github.com/chameleonjp-lab/sekibanmawashi/pull/12)は2026-09-27にmainへマージ済み、merge commitは `989784641d7cc04b6ae63c878b53e6acd1c39777` です。同SHAのpush [CI 36335601110](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36335601110)は成功しました。ユーザーは本番公開を許可し、正式名を「セキバンマワシ」と指定しました。この後続PRで名称・共有画像を設定しています。workflow dispatch、実deploy、Pages Settings操作は未実施です。
 
@@ -92,7 +92,7 @@ R6後続PR #13で、正式名「セキバンマワシ」をUI・共有文・HTML
 PR #13はmainへマージ済みで、現在確認できる最新main commitは `662d0fe79cce888094eb265a71c3f56cc60ff331` です。PR head `bc06184ead790ee80ffea31742589396d29f4693` のCI 36347915124は成功済みですが、公開workflowは公開候補SHA自身のmain push成功を要求するため、dispatch前に `662d0fe79cce888094eb265a71c3f56cc60ff331` の `CI / verify` を確認します。Q05は未実施で、個別waiverもまだ記録していません。したがって、本PRは公開ゲートを弱めず、状態記録のみを更新します。
 
 
-## R6後の画面仕上げ（2026-09-28〜29）
+## R6後の画面仕上げと公開準備（2026-09-28〜29の履歴）
 
 ユーザー依頼の石板表示・盤面サイズ・黒い遮光区画・画面揺れ防止・音設定の配置・分かりやすい表示・成功演出はPR #17で実装され、2026-09-29にmainへマージ済みです。merge commit f069923c249c20b1c553296c8af0f96d3035f8f6、基準mainはb717de9a46e06b18b33c6b1af0ab796adb4bb867でした。PR head CI 36484289084は成功しました。main push CI 36507252037はbrowser検査中に60分上限でキャンセルされ、成功ではありません。ローカルChromium/WebKitは配布元の0 MiBブラウザー取得とapt権限制約で未実施です。iPhone実機・VoiceOverも未確認です.
 
@@ -101,10 +101,19 @@ PR #13はmainへマージ済みで、現在確認できる最新main commitは `
 Q05は未実施ですが、ユーザーの個別waiverがPR #14に記録され、今回のR6公開に限り適用します。PR #18をユーザーがマージした後、そのmain SHAのpush CI成功を確認してからPages dispatchを行い、HTTP smokeと計画8.2の実URLフローを確認します。PRはマージしません。
 Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474442114](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474442114)は短画面検査を通過し、ブラウザー検査は90件成功・2件失敗でした。後続[CI 36477214131](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36477214131)は100件中70件成功・30件失敗し、主な原因は説明ダイアログの旧ボタン名、I03円環テストの穴へのクリック、成功表示「正解！」と検査期待語の不一致でした。テストを現行文言「問題へ戻る」「正解！」と実際の円環位置へ合わせました。修正後headのCIで再確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。
 
-## PR #17マージ後の公開検査（2026-09-29）
+## PR #17マージ後の公開準備検査（履歴）
 
 PR #17はmain `f069923c249c20b1c553296c8af0f96d3035f8f6`へマージ済みです。同じtreeのPR head `68696d6199b8a07e881388877c1da9c3e7bdb387` の[CI #53](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)はブラウザー100件を51.6分で成功しました。一方、最新main自身の[push CI #54](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)では、WebKitの15問連続操作が120秒、10画面幅の連続操作が360秒の検査時間を使い切り、それぞれ再試行でも失敗しました。job全体も60分の上限でcancelledとなり、最終集計に到達していません。ログから画面規則の失敗は確認できず、時間制限の再設計が先に必要です。
 
 PR #19で上記の時間上限を240秒・600秒にし、静的検査 `checks` とChromium/WebKitのbrowser matrix（各job 90分）を独立実行する構成をmainへマージしました。公開条件が参照する必須 `verify` は、静的検査と両ブラウザーjobがすべて成功した場合だけ成功します。main run 36521040745で3系統と `verify` が成功しました。これはPR #18の検査結果とは区別し、PR #18の最新head自身のChecksで判定します。
 
 ローカルではNode 24.19.0 / npm 11.9.0で型検査、lint、unit74件、build、Playwrightの両project各50件の検査一覧、YAML構造、`git diff --check`を確認しました。ブラウザー配布物が0 MiBとなりローカル画面検査は未実施です。公開中のページは旧文言のままです。iPhone実機・VoiceOverは確認済みとしません。マージ後に最新main push CIを成功させ、手動公開workflowで新しいSHAを公開し、実URLで画面と5問の流れを確認します。
+
+
+## 2026-09-29 R6公開結果
+
+PR #18は `41e18e2f05ca39b874e874105b76ce0895adb2dc` でmainへマージされました。同SHAのmain push CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)は成功し、静的検査、Chromium、WebKit、必須 `verify` がすべて成功しました。
+
+Pages公開workflow [36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)はbuild、deploy、公開後HTTP smokeまで成功しました。公開先は https://chameleonjp-lab.github.io/sekibanmawashi/ です。実URLではホーム画面と練習用盤面を確認しました。実URL上の5問完了までは手動で確認していません。
+
+Q05（iPhone 17 Pro物理Safari、VoiceOver、ロック復帰、実機音）は未実施です。ユーザーが今回のR6公開に限る免除をPR #14に記録していますが、実機受入済みとは扱いません。ランキング、Supabase、実験場の本番データは変更していません。
