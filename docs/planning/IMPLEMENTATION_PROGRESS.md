@@ -95,3 +95,11 @@ PR #13はmainへマージ済みで、現在確認できる最新main commitは `
 ## R6後の画面仕上げ（2026-09-28）
 
 Node `24.19.0` / npm `11.9.0` で typecheck、lint（39 files）、licenses:check、unit74件、P01〜P09、build、Playwrightのtest discovery（100件）が成功しました。ローカルのChromium/WebKit E2Eは、apt権限制約と配布元からの0 MiB zipでブラウザーを取得できず未実施です。先行headの[CI 36474442114](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36474442114)は短画面検査を通過し、ブラウザー検査は90件成功・2件失敗でした。後続[CI 36477214131](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36477214131)は100件中70件成功・30件失敗し、主な原因は説明ダイアログの旧ボタン名、I03円環テストの穴へのクリック、成功表示「正解！」と検査期待語の不一致でした。テストを現行文言「問題へ戻る」「正解！」と実際の円環位置へ合わせました。修正後headのCIで再確認します。iPhone実機・VoiceOverは未確認です。詳細は[画面仕上げ検査記録](../reviews/POST_R6_UI_REFINEMENT_2026-09-28.md)を参照してください。
+
+## PR #17マージ後の公開検査（2026-09-29）
+
+PR #17はmain `f069923c249c20b1c553296c8af0f96d3035f8f6`へマージ済みです。同じtreeのPR head `68696d6199b8a07e881388877c1da9c3e7bdb387` の[CI #53](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)はブラウザー100件を51.6分で成功しました。一方、最新main自身の[push CI #54](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)では、WebKitの15問連続操作が120秒、10画面幅の連続操作が360秒の検査時間を使い切り、それぞれ再試行でも失敗しました。job全体も60分の上限でcancelledとなり、最終集計に到達していません。ログから画面規則の失敗は確認できず、時間制限の再設計が先に必要です。
+
+後続ブランチ `fix/ci-browser-time-budget` は、これら2検査の待ち時間上限を240秒・600秒にし、静的検査とChromium/WebKit各50件を並行jobへ分けます。公開条件が参照する正確な名前の `verify` jobは、静的検査と両ブラウザーjobがすべて成功した場合だけ成功します。先に一部を重複実行していた短いブラウザー検査は、同じ項目を全件検査で実行するため一本化しました。検査項目と再試行数、問題規則、UI実装は変えません。
+
+ローカルではNode 24.19.0 / npm 11.9.0で型検査、lint、unit74件、build、Playwrightの両project各50件の検査一覧、YAML構造、`git diff --check`を確認しました。ブラウザー配布物が0 MiBとなりローカル画面検査は未実施です。公開中のページは旧文言のままです。iPhone実機・VoiceOverは確認済みとしません。マージ後に最新main push CIを成功させ、手動公開workflowで新しいSHAを公開し、実URLで画面と5問の流れを確認します。
