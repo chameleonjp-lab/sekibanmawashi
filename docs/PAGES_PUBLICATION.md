@@ -1,6 +1,6 @@
 # GitHub Pages の公開手順（R6）
 
-R6の本番公開は2026-09-27にユーザーから許可されています。正式名「セキバンマワシ」とPages公開workflowはmainにあります。PR #17の画面仕上げは2026-09-29にmain f069923c249c20b1c553296c8af0f96d3035f8f6 へマージ済みで、PR headのCI 36484289084は成功しました。main push CI 36507252037の最終状態と、[Draft PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)のCI 36510123886、ユーザーマージ後のmain CIを順に確認します。
+R6の本番公開は2026-09-27にユーザーから許可されています。正式名「セキバンマワシ」とPages公開workflowはmainにあります。PR #17の画面仕上げは2026-09-29にmain f069923c249c20b1c553296c8af0f96d3035f8f6 へマージ済みで、PR headのCI 36484289084は成功しました。main push CI 36507252037は60分でbrowser検査がキャンセルされ、成功扱いではありません。PR #18のCI 36510123886と36510468751 attempt 1も、同じ60分上限でbrowser検査がキャンセルされました。PR #18の現行head `24fef9b719b4da96567a67a6ed09a87eb8314d5b` にはまだCI runがありません。CIを更新し、文書・workflow・共有画像だけの変更ではbrowser検査をskipし、ゲームや検査コードの変更時には実行する設定としました。手動全検査の指定も追加し、全jobの上限を90分にしています。
 
 PR #17以降を含むR6最新版はまだdeployされていません。最後に成功した公開run [36450381814](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36450381814)は旧main b717de9a46e06b18b33c6b1af0ab796adb4bb867 のビルドです。Draft PR #18で共有PNGを最新画面へ更新中です。ユーザーがマージし、そのmain SHAのpush CIが成功するまでdeployしません。Q05（iPhone 17 Pro物理Safari / VoiceOver / ロック復帰 / 実機音）は未実施ですが、ユーザーの「Q05は今回免除して本番公開して良い」という個別waiverが[PR #14のコメント](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に記録されています。このwaiverは今回のR6本番公開に限り適用し、実機受入済みとは扱いません。Pages Settingsは変更しません。
 
@@ -44,7 +44,7 @@ deploy-pagesが完了した後、`scripts/check-pages.mjs published` が `site.c
 
 ## R6での実行と戻し方
 
-PR mergeだけではdispatchしません。現在のmainにはPR #17が入り、共有画像を更新するDraft PR #18は提出済みです。PR #18をユーザーがマージするまで本番deployを保留し、マージ後はその時点のmain SHAと同じSHAのpush CI / verify成功を再確認します。Q05の個別waiverはPR #14に記録済みで、今回のR6公開に限って適用します。正式名・URLは設定済みです。Pages Settings、branch protection、サーバーランキング、Supabase、実験場の本番データは変更しません。
+PR mergeだけではdispatchしません。現在のmainにはPR #17が入り、共有画像と運用記録を更新するDraft PR #18は提出済みです。PR #18のCIはbrowser検査が60分上限でキャンセルされたため、現行headに対する新しいCI成功を待ちます。PR #18をユーザーがマージするまで本番deployを保留し、マージ後はその時点のmain SHAと同じSHAのpush CI / verify成功を再確認します。Q05の個別waiverはPR #14に記録済みで、今回のR6公開に限って適用します。正式名・URLは設定済みです。Pages Settings、branch protection、サーバーランキング、Supabase、実験場の本番データは変更しません。
 
 上記を確認後、Actionsの **Publish Pages → Run workflow** でmainを選び、通常公開ではsource_shaを空欄にします。workflowがdispatch時点のmain完全SHAを確定し、同じSHAがmainの祖先であり、同一SHAの成功push CIがあることを再検査します。ロールバック時だけ受入対象の完全40桁SHAを明示します。deploy直後は自動HTTP smokeを確認し、その後にトップ、挑戦開始、5問結果、再読込、共有、実験場との往復を実URLで確認してR6を完了します。Q05は未実施のまま記録し、個別waiverを超えて実機確認済みとは表現しません。
 
