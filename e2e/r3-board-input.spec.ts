@@ -155,13 +155,11 @@ async function assertBoardInViewport(page: Page, viewport: Viewport): Promise<vo
   expect(svgBox).not.toBeNull();
   if (!svgBox) return;
   expect(Math.abs(svgBox.width - svgBox.height)).toBeLessThanOrEqual(1);
-  if (viewport.width <= 430 && viewport.height > viewport.width) {
-    expect(svgBox.y).toBeGreaterThanOrEqual(-1);
-    expect(svgBox.y + svgBox.height).toBeLessThanOrEqual(viewport.height + 1);
-    const status = await page.locator(".puzzle-status").boundingBox();
-    expect(status).not.toBeNull();
-    if (status) expect(svgBox.y).toBeGreaterThanOrEqual(status.y + status.height - 1);
-  }
+  expect(svgBox.y).toBeGreaterThanOrEqual(-1);
+  expect(svgBox.y + svgBox.height).toBeLessThanOrEqual(viewport.height + 1);
+  const status = await page.locator(".puzzle-status").boundingBox();
+  expect(status).not.toBeNull();
+  if (status) expect(svgBox.y).toBeGreaterThanOrEqual(status.y + status.height - 1);
 }
 
 async function assertNoHorizontalOverflow(page: Page): Promise<void> {
@@ -403,14 +401,12 @@ test.describe("R3 board rendering", () => {
       await assertPrimaryControls(page);
       await assertNoControlOverlap(page);
       await assertBoardInViewport(page, viewport);
-      if (viewport.width <= 430 && viewport.height > viewport.width) {
-        for (const button of await page.locator("[data-action='select-ring'], [data-action^='rotate-']").all()) {
-          const box = await button.boundingBox();
-          expect(box).not.toBeNull();
-          if (!box) continue;
-          expect(box.y).toBeGreaterThanOrEqual(-1);
-          expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
-        }
+      for (const button of await page.locator("[data-action='select-ring'], [data-action^='rotate-']").all()) {
+        const box = await button.boundingBox();
+        expect(box).not.toBeNull();
+        if (!box) continue;
+        expect(box.y).toBeGreaterThanOrEqual(-1);
+        expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
       }
       await screenshot(testInfo, page, `v02-${viewport.name}-normal`);
     }
@@ -439,8 +435,10 @@ test.describe("R3 board rendering", () => {
     }
     const blockerZones = board(page).locator(".blocker-zone");
     const stoneTexture = board(page).locator("defs #stone-grain");
-    await expect(stoneTexture.locator("ellipse")).toHaveCount(76);
-    await expect(stoneTexture.locator("path")).toHaveCount(14);
+    // The reviewed surface uses 92 mineral flecks and 20 short veins. Keep
+    // this deterministic texture check aligned with the adopted visual edit.
+    await expect(stoneTexture.locator("ellipse")).toHaveCount(92);
+    await expect(stoneTexture.locator("path")).toHaveCount(20);
     const puzzleForBlockers = puzzles.find((candidate) => candidate.id === SOLVING_PUZZLE_ID);
     const expectedBlockers = puzzleForBlockers?.rings.flatMap((ring) => ring.parts).filter((part) => part.kind === "blocker").length ?? 0;
     await expect(blockerZones).toHaveCount(expectedBlockers);

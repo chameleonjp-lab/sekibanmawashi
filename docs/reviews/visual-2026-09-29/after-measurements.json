@@ -1,0 +1,214 @@
+{
+  "browser": "153.0.8010.0",
+  "errors": [],
+  "observations": [
+    {
+      "name": "mobile",
+      "width": 402,
+      "height": 874,
+      "board": {
+        "x": 20.1875,
+        "y": 198.609375,
+        "width": 361.625,
+        "height": 361.625,
+        "bottom": 560.234375
+      },
+      "overflow": 0,
+      "targets": [
+        {
+          "lit": true,
+          "fill": "rgb(91, 141, 97)",
+          "stroke": "rgb(214, 244, 198)"
+        },
+        {
+          "lit": false,
+          "fill": "rgb(69, 70, 63)",
+          "stroke": "rgb(198, 180, 124)"
+        }
+      ],
+      "controls": [
+        {
+          "text": "内側 1",
+          "height": 48,
+          "bottom": 675.078125
+        },
+        {
+          "text": "中央 2",
+          "height": 48,
+          "bottom": 675.078125
+        },
+        {
+          "text": "外側 3",
+          "height": 48,
+          "bottom": 675.078125
+        },
+        {
+          "text": "↺ 左へ回す",
+          "height": 52.78125,
+          "bottom": 735.046875
+        },
+        {
+          "text": "↻ 右へ回す",
+          "height": 52.78125,
+          "bottom": 735.046875
+        }
+      ]
+    },
+    {
+      "name": "desktop",
+      "width": 1280,
+      "height": 720,
+      "board": {
+        "x": 164.390625,
+        "y": 224.9375,
+        "width": 410.390625,
+        "height": 410.390625,
+        "bottom": 635.328125
+      },
+      "overflow": 0,
+      "targets": [
+        {
+          "lit": true,
+          "fill": "rgb(91, 141, 97)",
+          "stroke": "rgb(214, 244, 198)"
+        },
+        {
+          "lit": false,
+          "fill": "rgb(69, 70, 63)",
+          "stroke": "rgb(198, 180, 124)"
+        }
+      ],
+      "controls": [
+        {
+          "text": "内側 1",
+          "height": 48,
+          "bottom": 366.140625
+        },
+        {
+          "text": "中央 2",
+          "height": 48,
+          "bottom": 366.140625
+        },
+        {
+          "text": "外側 3",
+          "height": 48,
+          "bottom": 366.140625
+        },
+        {
+          "text": "↺ 左へ回す",
+          "height": 52.78125,
+          "bottom": 438.109375
+        },
+        {
+          "text": "↻ 右へ回す",
+          "height": 52.78125,
+          "bottom": 438.109375
+        }
+      ]
+    },
+    {
+      "name": "small",
+      "width": 320,
+      "height": 568,
+      "board": {
+        "x": 57.765625,
+        "y": 203.546875,
+        "width": 204.46875,
+        "height": 204.46875,
+        "bottom": 408.015625
+      },
+      "overflow": 0,
+      "targets": [
+        {
+          "lit": true,
+          "fill": "rgb(91, 141, 97)",
+          "stroke": "rgb(214, 244, 198)"
+        },
+        {
+          "lit": false,
+          "fill": "rgb(69, 70, 63)",
+          "stroke": "rgb(198, 180, 124)"
+        }
+      ],
+      "controls": [
+        {
+          "text": "内側 1",
+          "height": 48,
+          "bottom": 502.390625
+        },
+        {
+          "text": "中央 2",
+          "height": 48,
+          "bottom": 502.390625
+        },
+        {
+          "text": "外側 3",
+          "height": 48,
+          "bottom": 502.390625
+        },
+        {
+          "text": "↺ 左へ回す",
+          "height": 48,
+          "bottom": 554.390625
+        },
+        {
+          "text": "↻ 右へ回す",
+          "height": 48,
+          "bottom": 554.390625
+        }
+      ]
+    },
+    {
+      "name": "landscape",
+      "width": 844,
+      "height": 390,
+      "board": {
+        "x": 117.1875,
+        "y": 148.984375,
+        "width": 234,
+        "height": 234,
+        "bottom": 382.984375
+      },
+      "overflow": 0,
+      "targets": [
+        {
+          "lit": true,
+          "fill": "rgb(91, 141, 97)",
+          "stroke": "rgb(214, 244, 198)"
+        },
+        {
+          "lit": false,
+          "fill": "rgb(69, 70, 63)",
+          "stroke": "rgb(198, 180, 124)"
+        }
+      ],
+      "controls": [
+        {
+          "text": "内側 1",
+          "height": 48,
+          "bottom": 241.375
+        },
+        {
+          "text": "中央 2",
+          "height": 48,
+          "bottom": 241.375
+        },
+        {
+          "text": "外側 3",
+          "height": 48,
+          "bottom": 241.375
+        },
+        {
+          "text": "↺ 左へ回す",
+          "height": 52.78125,
+          "bottom": 300.546875
+        },
+        {
+          "text": "↻ 右へ回す",
+          "height": 52.78125,
+          "bottom": 300.546875
+        }
+      ]
+    }
+  ]
+}

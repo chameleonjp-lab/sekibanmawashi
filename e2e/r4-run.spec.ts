@@ -285,19 +285,15 @@ async function assertControls(page: Page): Promise<void> {
 }
 
 async function assertPrimaryControlsInViewport(page: Page, viewport: Viewport): Promise<void> {
-  const compactPortrait = viewport.width <= 430 && viewport.height > viewport.width;
-  if (compactPortrait) await page.evaluate(() => window.scrollTo(0, 0));
-  if (compactPortrait) {
-    const board = page.locator("[data-testid='game-screen'] [data-board] svg.stone-board");
-    const boardBox = await board.boundingBox();
-    expect(boardBox).not.toBeNull();
-    if (boardBox) {
-      expect(boardBox.y).toBeGreaterThanOrEqual(-1);
-      expect(boardBox.y + boardBox.height).toBeLessThanOrEqual(viewport.height + 1);
-    }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const board = page.locator("[data-testid='game-screen'] [data-board] svg.stone-board");
+  const boardBox = await board.boundingBox();
+  expect(boardBox).not.toBeNull();
+  if (boardBox) {
+    expect(boardBox.y).toBeGreaterThanOrEqual(-1);
+    expect(boardBox.y + boardBox.height).toBeLessThanOrEqual(viewport.height + 1);
   }
   for (const control of await page.locator("[data-testid='game-screen'] [data-action='select-ring'], [data-testid='game-screen'] [data-action^='rotate-']").all()) {
-    if (!compactPortrait) await control.scrollIntoViewIfNeeded();
     const box = await control.boundingBox();
     expect(box).not.toBeNull();
     if (!box) continue;

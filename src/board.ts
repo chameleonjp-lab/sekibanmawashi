@@ -218,38 +218,30 @@ function createStonePattern(): SVGPatternElement {
     width: String(BOARD_VIEWBOX.width),
     height: String(BOARD_VIEWBOX.height),
   });
-  const background = svgElement("rect");
-  setAttributes(background, {
-    width: String(BOARD_VIEWBOX.width),
-    height: String(BOARD_VIEWBOX.height),
-    fill: "url(#stone-base)",
-  });
-  pattern.append(background);
-
-  // A stable, low-contrast grain keeps the carved surface textured without
-  // loading a bitmap or changing with every tap and redraw.
+  // Keep the grain transparent so each stone surface retains its own shading.
+  // The deterministic marks remain steady across redraws without a bitmap.
   let seed = 0x5e91b1;
   const random = (): number => {
     seed = (seed * 1_664_525 + 1_013_904_223) >>> 0;
     return seed / 0x1_0000_0000;
   };
-  for (let index = 0; index < 76; index += 1) {
+  for (let index = 0; index < 92; index += 1) {
     const x = 8 + random() * 284;
     const y = 8 + random() * 284;
-    const radius = 0.2 + random() * 0.9;
+    const radius = 0.45 + random() * 1.1;
     const fleck = svgElement("ellipse");
     setAttributes(fleck, {
       cx: String(x),
       cy: String(y),
-      rx: String(radius * (0.65 + random() * 0.9)),
-      ry: String(radius * (0.35 + random() * 0.7)),
-      fill: random() > 0.48 ? "#d5d0c1" : "#171a1b",
-      opacity: String(0.055 + random() * 0.085),
+      rx: String(radius * (0.55 + random() * 1.05)),
+      ry: String(radius * (0.3 + random() * 0.75)),
+      fill: random() > 0.48 ? "#e0dacb" : "#141617",
+      opacity: String(0.1 + random() * 0.12),
       transform: `rotate(${Math.round(random() * 180)} ${x} ${y})`,
     });
     pattern.append(fleck);
   }
-  for (let index = 0; index < 14; index += 1) {
+  for (let index = 0; index < 20; index += 1) {
     const x = 10 + random() * 280;
     const y = 10 + random() * 280;
     const length = 7 + random() * 26;
@@ -258,10 +250,10 @@ function createStonePattern(): SVGPatternElement {
     setAttributes(vein, {
       d: `M ${x} ${y} q ${length * 0.32} ${bend - 1} ${length * 0.55} ${bend} t ${length * 0.45} ${-bend}`,
       fill: "none",
-      stroke: random() > 0.5 ? "#d4cdbc" : "#111415",
-      "stroke-width": String(0.25 + random() * 0.4),
+      stroke: random() > 0.5 ? "#e0dacb" : "#111415",
+      "stroke-width": String(0.45 + random() * 0.5),
       "stroke-linecap": "round",
-      opacity: String(0.07 + random() * 0.07),
+      opacity: String(0.12 + random() * 0.1),
     });
     pattern.append(vein);
   }
@@ -297,16 +289,20 @@ function receiverGlyph(parent: Element, point: BoardPoint, slot: number, require
   const group = svgElement("g");
   group.setAttribute("data-receiver-slot", String(slot));
   group.setAttribute("aria-label", required ? `目標 ${slot + 1}${lit ? "（光が届いています）" : "（光が届いていません）"}` : `方向 ${slot + 1}`);
-  group.setAttribute("class", required ? (lit ? "receiver receiver-required receiver-lit" : "receiver receiver-required") : "receiver receiver-idle");
+  group.setAttribute("class", required ? (lit ? "receiver receiver-required receiver-lit" : "receiver receiver-required receiver-unlit") : "receiver receiver-idle");
   if (required) {
     appendCircle(group, point, 8, "receiver-ring");
     appendCircle(group, point, 4.2, "receiver-core");
     const cross = svgElement("path");
+    const mark = lit
+      ? `M ${point.x - 5} ${point.y} H ${point.x + 5} M ${point.x} ${point.y - 5} V ${point.y + 5}`
+      : `M ${point.x - 3.4} ${point.y - 3.4} L ${point.x + 3.4} ${point.y + 3.4} M ${point.x + 3.4} ${point.y - 3.4} L ${point.x - 3.4} ${point.y + 3.4}`;
     setAttributes(cross, {
-      d: `M ${point.x - 5} ${point.y} H ${point.x + 5} M ${point.x} ${point.y - 5} V ${point.y + 5}`,
-      class: "receiver-cross",
+      d: mark,
+      class: lit ? "receiver-cross receiver-cross-lit" : "receiver-cross receiver-cross-unlit",
     });
     group.append(cross);
+    if (lit) appendCircle(group, point, 1.35, "receiver-center-lit");
   } else {
     appendCircle(group, point, 2.3, "receiver-idle-dot");
   }
@@ -363,6 +359,14 @@ export function createBoardSvg(
     selectedGradient.append(stop);
   }
   defs.append(discGradient, ringGradient, selectedGradient);
+  const edgeGradient = svgElement("linearGradient");
+  setAttributes(edgeGradient, { id: "stone-edge-gradient", x1: "0%", y1: "0%", x2: "100%", y2: "100%" });
+  for (const [offset, color] of [["0%", "#c9c3b1"], ["50%", "#777970"], ["100%", "#292b29"]]) {
+    const stop = svgElement("stop");
+    setAttributes(stop, { offset, "stop-color": color });
+    edgeGradient.append(stop);
+  }
+  defs.append(edgeGradient);
   const filter = svgElement("filter");
   setAttributes(filter, {
     id: "beam-glow",
@@ -382,14 +386,7 @@ export function createBoardSvg(
   merge.append(mergeBlur, mergeSource);
   filter.append(blur, merge);
   defs.append(filter);
-  const stoneBase = svgElement("radialGradient");
-  setAttributes(stoneBase, { id: "stone-base", cx: "34%", cy: "20%", r: "92%" });
-  for (const [offset, color] of [["0%", "#8b8b81"], ["43%", "#686a65"], ["100%", "#363837"]] as const) {
-    const stop = svgElement("stop");
-    setAttributes(stop, { offset, "stop-color": color });
-    stoneBase.append(stop);
-  }
-  defs.append(stoneBase, createStonePattern());
+  defs.append(createStonePattern());
   svg.append(defs);
 
   appendCircle(svg, BOARD_CENTER, OUTER_DISC_RADIUS, "board-disc");
@@ -423,7 +420,9 @@ export function createBoardSvg(
     setAttributes(ringShape, { d: ringPath(inner, outer), class: "ring-surface" });
     const texture = svgElement("path");
     setAttributes(texture, { d: ringPath(inner, outer), class: "ring-texture", "aria-hidden": "true" });
-    group.append(ringShape, texture);
+    const bevel = svgElement("path");
+    setAttributes(bevel, { d: ringPath(inner, outer), class: "ring-bevel", "aria-hidden": "true" });
+    group.append(ringShape, texture, bevel);
     ringGroup.append(group);
   }
   svg.append(ringGroup);
