@@ -2,6 +2,14 @@
 
 更新日: 2026-09-29 JST / 対象: `chameleonjp-lab/sekibanmawashi`
 
+## 2026-09-29 の最新状況
+
+[PR #17](https://github.com/chameleonjp-lab/sekibanmawashi/pull/17)はmain `f069923c249c20b1c553296c8af0f96d3035f8f6`へマージ済みです。石板の模様と大きさ、黒い遮断区画、画面の上下揺れ対策、ゲーム画面の音設定削除、短い表示文、左右の紙吹雪と1.5秒の完成盤面表示はコードに入っています。同じtreeのPR head [CI #53](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36484289084)は100件のブラウザー検査を含め成功しました。
+
+本番サイトではまだ旧版の「環」「受光紋」が表示されています。最新main自身のpush [CI #54](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36507252037)では、長いWebKit検査が既定の120秒・個別設定の360秒を使い切り、最終的にjob全体も60分で停止しました。`fix/ci-browser-time-budget` は検査100件を維持してChromium/WebKitを別jobで並行実行し、15問・10画面幅の検査時間を調整します。公開workflowは最新main自身の成功CIを要求するため、この修正PRのマージ後もmain push CI成功を確認してから更新版を公開します。
+
+Q05のiPhone実機確認は未実施ですが、今回の公開に限る個別免除が[公開手順](docs/PAGES_PUBLICATION.md)に記録済みです。以下の2026-09-28時点の記述は経過記録です。
+
 ## 結論
 
 最新の実装基準は[対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)です。発光紋は常に光り、輪を回して解く規則です。R1〜R5とR6公開workflow・正式名の設定は完了しています。
