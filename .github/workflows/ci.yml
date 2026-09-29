@@ -9,11 +9,9 @@ permissions:
   contents: read
 
 jobs:
-  verify:
+  checks:
     runs-on: ubuntu-latest
-    # The first R5 run took 22.5 minutes despite failing the long flows early.
-    # Allow the full 20-run and ten-viewport acceptance in both engines.
-    timeout-minutes: 60
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,17 +34,32 @@ jobs:
           PAGES_BUILD=1 npm run build
           npm run pages:artifact:check
       - run: npm run performance:r5
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Use the pinned npm version
+        run: npm install --global npm@11.9.0
+      - run: npm ci
       - name: Install Playwright browsers
-        run: npm run test:e2e:install
-      - name: Check browser transitions, recovery and compact layout
-        run: npx playwright test --grep 'V02 keeps the primary controls|Q02/U04|fatal recovery'
-      - name: Run browser tests
-        run: npm run test:e2e
+        run: npx playwright install --with-deps "${{ matrix.project }}"
+      - name: Run browser tests for ${{ matrix.project }}
+        run: npx playwright test --project "${{ matrix.project }}"
       - name: Upload browser test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts-${{ github.run_id }}
+          name: playwright-artifacts-${{ matrix.project }}-${{ github.run_id }}
           path: |
             test-results/
             playwright-report/
@@ -56,10 +69,27 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-evidence-${{ github.run_id }}
+          name: browser-evidence-${{ matrix.project }}-${{ github.run_id }}
           path: |
             test-results/**/*.png
             test-results/**/error-context.md
             test-results/**/*.json
           if-no-files-found: warn
           retention-days: 14
+
+  verify:
+    # Keep the exact "verify" check required by the Pages publication gate.
+    # It succeeds only when both browser projects and the static checks pass.
+    if: always()
+    needs: [checks, browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require every check to pass
+        env:
+          CHECKS_RESULT: ${{ needs.checks.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          echo "Static checks: $CHECKS_RESULT; browser projects: $BROWSER_RESULT"
+          test "$CHECKS_RESULT" = success
+          test "$BROWSER_RESULT" = success

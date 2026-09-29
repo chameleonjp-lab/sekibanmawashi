@@ -1100,6 +1100,9 @@ test.describe("R4 run, timer, and storage acceptance", () => {
   });
 
   test("U01/U02: name validation and result links expose challenge, practice, home, and experiment routes", async ({ page }) => {
+    // This exercises three complete five-question runs. WebKit can take over
+    // the default 120 seconds on a busy CI runner without failing a step.
+    test.setTimeout(240_000);
     await gotoHome(page);
     const input = nameInput(page);
     for (const invalid of ["", "   ", "abcdefghijklmnopq", "bad\u0007name", "\u0007Luna", "Luna\u0007"]) {
@@ -1135,9 +1138,9 @@ test.describe("R4 run, timer, and storage acceptance", () => {
   });
 
   test("R4 responsive acceptance: home, game, and result have no horizontal overflow at every prescribed viewport", async ({ page }, testInfo: TestInfo) => {
-    // Ten real five-question runs already take about 260s on CI WebKit.
-    // Keep each action/assertion bounded separately and budget the whole matrix.
-    test.setTimeout(360_000);
+    // Ten real five-question runs and full-page captures can exceed six
+    // minutes on a loaded WebKit runner. Keep per-action timeouts unchanged.
+    test.setTimeout(600_000);
     for (const viewport of VIEWPORTS) {
       const representative = viewport.name === "w390-h844" || viewport.name === "w375-h667";
       const capture200 = viewport.name === "w390-h844";
