@@ -13,6 +13,7 @@ import {
   isEditableTarget,
   type InputPhase,
 } from "./input.ts";
+import { preventBlockedGameInputTouchZoom } from "./touch-input-guard.ts";
 import {
   ASSIGNMENT_RETENTION_MS,
   INTERMISSION_MS,
@@ -917,6 +918,9 @@ export function renderRun(
     }
     controller.keyboard(event);
   }, { signal: listeners.signal });
+  shell.addEventListener("touchend", (event) => {
+    preventBlockedGameInputTouchZoom(event, isInputOpen());
+  }, { capture: true, passive: false, signal: listeners.signal });
 
   const dialogKeyHandler = (event: KeyboardEvent): void => {
     if (!activeModal) return;
