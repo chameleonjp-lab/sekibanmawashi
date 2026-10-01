@@ -449,6 +449,71 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(page.locator("[data-testid='game-screen'] [data-confetti]")).toBeHidden();
   });
 
+  test("F02/I03: repeated taps across success keep the viewport fixed and the next question usable", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoHome(page);
+    await begin(page, "challenge");
+    await prepareImmediatelyBeforeSuccess(page);
+    const puzzleId = await readPuzzleId(page);
+    const puzzle = puzzleById.get(puzzleId);
+    if (!puzzle) throw new Error(`No fixture for puzzle ${puzzleId}`);
+    const finalMove = analyzePuzzle(puzzle).representativeSolution.at(-1);
+    if (!finalMove) throw new Error(`No solution move for ${puzzleId}`);
+    await page.locator(`[data-action='select-ring'][data-ring='${finalMove.ring}']`).click();
+    const button = rotateButton(page, finalMove.type);
+    const box = await button.boundingBox();
+    if (!box) throw new Error("The final rotation needs a visible touch target");
+    const viewportBefore = await page.evaluate(() => ({
+      scale: window.visualViewport?.scale ?? 1,
+      width: window.visualViewport?.width ?? window.innerWidth,
+      scrollY: window.scrollY,
+    }));
+
+    // Native browser taps cover the final accepted move and continued taps
+    // on the same coordinates after that button becomes disabled.
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(game(page)).toHaveAttribute("data-phase", "intermission");
+    const completedMoves = analyzePuzzle(puzzle).representativeSolution.length;
+    await expect(button).toBeDisabled();
+    for (let index = 0; index < 4; index += 1) {
+      await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    }
+    await expect(game(page)).toHaveAttribute("data-puzzle-id", puzzleId);
+    await expect(game(page).locator("[data-field='move-count']")).toHaveAttribute("data-moves", String(completedMoves));
+    expect(await page.evaluate(() => ({
+      scale: window.visualViewport?.scale ?? 1,
+      width: window.visualViewport?.width ?? window.innerWidth,
+      scrollY: window.scrollY,
+    }))).toEqual(viewportBefore);
+
+    // Desktop WebKit cannot reproduce the iOS system zoom gesture. Check
+    // the cancelled touch boundary as a supplement, including a child span
+    // and the gap between disabled controls rather than only the button.
+    for (const target of [button.locator("span"), game(page).locator(".rotate-controls"), game(page).locator(".ring-controls")]) {
+      expect(await target.evaluate((element) => {
+        const event = new Event("touchend", { bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+        return event.defaultPrevented;
+      })).toBe(true);
+    }
+
+    await waitForPlaying(page);
+    await expect(game(page)).toHaveAttribute("data-question-index", "1");
+    await expect(game(page).locator("[data-field='move-count']")).toHaveAttribute("data-moves", "0");
+    await expect(button).toBeEnabled();
+    await button.tap();
+    await expect(game(page).locator("[data-field='move-count']")).toHaveAttribute("data-moves", "1");
+    await page.getByRole("button", { name: "遊び方", exact: true }).tap();
+    await expect(visibleDialog(page)).toBeVisible();
+    expect(await visibleDialog(page).evaluate((element) => {
+      const event = new Event("touchend", { bubbles: true, cancelable: true });
+      element.dispatchEvent(event);
+      return event.defaultPrevented;
+    })).toBe(false);
+    await visibleDialog(page).getByRole("button", { name: "問題へ戻る" }).tap();
+    await expect(visibleDialog(page)).toHaveCount(0);
+  });
+
   test("F02: the fifth solved board also stays visible with both-sided confetti before results", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoHome(page);

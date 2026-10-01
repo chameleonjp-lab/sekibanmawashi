@@ -22,6 +22,7 @@ import {
   isEditableTarget,
   type InputPhase,
 } from "./input.ts";
+import { preventBlockedGameInputTouchZoom } from "./touch-input-guard.ts";
 import { SoundController } from "./sound.ts";
 import "./app.css";
 
@@ -403,6 +404,9 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
     controller.keyboard(event);
   };
   window.addEventListener("keydown", keyHandler, { signal: listenerController.signal });
+  shell.addEventListener("touchend", (event) => {
+    preventBlockedGameInputTouchZoom(event, canAcceptInput(getInputState()));
+  }, { capture: true, passive: false, signal: listenerController.signal });
   teardownByRoot.set(root, () => {
     listenerController.abort();
     sound.dispose();

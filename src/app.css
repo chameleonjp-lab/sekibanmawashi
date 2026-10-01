@@ -89,6 +89,7 @@ button:disabled {
 
 .game-screen {
   overflow-anchor: none;
+  touch-action: manipulation;
 }
 
 .app-header {
@@ -252,6 +253,7 @@ figcaption {
   margin: 0 auto;
   flex: 0 0 auto;
   overflow-anchor: none;
+  touch-action: none;
 }
 
 .stone-board {
@@ -296,6 +298,11 @@ figcaption {
 .ring-controls,
 .rotate-controls {
   margin: 0.8rem 0 1.2rem;
+  touch-action: none;
+}
+
+.reset-question {
+  touch-action: none;
 }
 
 .ring-button {
