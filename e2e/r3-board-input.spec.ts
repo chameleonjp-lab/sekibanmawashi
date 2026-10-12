@@ -99,11 +99,11 @@ async function readMoves(page: Page): Promise<number> {
   return Number(match[0]);
 }
 
-async function openGame(page: Page, puzzleId?: string): Promise<void> {
+async function openGame(page: Page, puzzleId?: string, waitUntil: "networkidle" | "domcontentloaded" = "networkidle"): Promise<void> {
   // R4 opens the five-question home at /. Preserve every R3 assertion on
   // the same adopted single-puzzle inspection surface, now explicitly named.
   const query = `?puzzleId=${encodeURIComponent(puzzleId ?? puzzles[0].id)}`;
-  await page.goto(`/${query}`, { waitUntil: "networkidle" });
+  await page.goto(`/${query}`, { waitUntil });
   await expect(page.getByRole("heading", { name: "セキバンマワシ" })).toBeVisible();
   await expect(board(page)).toBeVisible();
   await expect(page.locator("[data-error], [role=alert]")).toHaveCount(0);
@@ -217,7 +217,11 @@ test.describe("R3 board rendering", () => {
     const seenDestinationSlots = new Set<number>();
 
     for (const [index, puzzle] of puzzles.entries()) {
-      await openGame(page, puzzle.id);
+      // Await actual renderer/texture readiness, not a fixed 500ms idle period
+      // on every navigation. All 90 real pages and the 180s limit are retained.
+      await openGame(page, puzzle.id, "domcontentloaded");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
       await assertDirectionFrame(page);
       expect(await page.locator("[data-puzzle-id]").getAttribute("data-puzzle-id")).toBe(puzzle.id);
 

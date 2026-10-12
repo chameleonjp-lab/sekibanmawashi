@@ -6,7 +6,11 @@
 
 PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準に、`feat/three-stone-light-20261012` で生成した石の素材画像と三次元描画を追加しました。石の粒、輪の厚みと縁、光の芯・広がり・石への照り返しを描きます。光の終点と点灯状態は従来の判定を使い、黒い30度区画、3本の輪、12方向、操作、成功演出の1.5秒を維持します。
 
-最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージと今回の本番公開は行っていません。iPhoneの物理実機は未確認です。
+最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、最初は[PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)をDraftで提出しました。その後の所有者によるマージと修正提出は次段落を参照してください。正式CIの各headの実際の結果はPR本文とChecksで確認します。iPhoneの物理実機は未確認です。
+
+初回正式CI [38287922273](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38287922273)は静的検査とChromium60件が成功、WebKit56件成功/4件失敗、`verify`失敗でした。その検査中の2026-10-13 03:00:33 JST、PR #23は所有者`chameleonjp-lab`によりmain `7b067b2898e6e98fec9f775ad384fe93988fe975`へマージされていました（Codexはマージしていません）。同mainの[run 38288027604](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38288027604)も両browser/verifyが失敗しています。
+
+最新main（treeは初回PR最終headと同一）を基準とする`fix/three-webkit-lifecycle-20261012`で、native WebGL context再使用、結果遷移と競合する観測、5境界の検査集約、冗長な同輪選択を修正しました。90問の検査も固定network-idle待ちから実際のthree/素材ready待ちへ変更。成功後1500ms・1px・全10中断シナリオ・302回の実回転・全90問/12方向・Q03全20回を維持します。独立レビューと型/lint/単体は成功。元PRはマージ済みのため、後続Draft PRの最新headで正式CIを再確認します。今回の修正をmainへ直接pushせず、Codexによるマージ/本番公開は行いません。
 
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 

@@ -6,7 +6,11 @@
 
 基準main `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` から `feat/three-stone-light-20261012` で実装。6.1Sol Maxが描画と組込み、親担当が素材生成・実画素と資源の検査・文書・PR、6.1Sol Extra Highが独立レビューを担当します。生成した石画像、石の厚み・縁・陰影、光の芯と広がり、通り道に沿う照り返しを追加しました。判定、90問/900組、入力、時計、保存、音、成功演出の規則は変更しません。
 
-検査結果、失敗の原因と再確認、独立レビュー、実機未確認は[今回の記録](../reviews/THREE_STONE_LIGHT_2026-10-12.md)を参照します。2026-10-13、送信先と25ファイルを提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージ・本番公開は未実施です。以下の節は以前の段階の履歴です。
+検査結果、失敗の原因と再確認、独立レビュー、実機未確認は[今回の記録](../reviews/THREE_STONE_LIGHT_2026-10-12.md)を参照します。2026-10-13、送信先と25ファイルを提示した確認に対するユーザーの「後続対応開始」で送信を再開し、最初は[PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)をDraftで提出しました。その後の所有者によるマージと新修正Draft PRは以下に区別します。正式CIの各headの実際の結果はPR本文とChecksを参照してください。Codexはマージ・本番公開を行っていません。
+
+初回正式run 38287922273は静的/Chromium60件成功、WebKit56成功/4失敗、必須verify失敗。6.1Sol Maxがnative context再利用/解放/復帰とTHREE07の20再開・THREE10/11を実装し、親担当がF02の事前browser内観測・全5境界の独立ケース化・不変oracle cache/冗長同輪選択削減を対応。6.1Sol Extra Highが修正後を独立レビューし、必須指摘は解消済み。検査の省略/基準緩和なし（1500ms/1px/10枝/302実回転/5問/旧Q03全20回を保持）。型/lint/単体74・検査一覧132件成功、修正後正式CIでruntimeを再確認します。
+
+初回CI中の2026-10-13 03:00:33 JSTに所有者がPR #23をmain `7b067b2898e6e98fec9f775ad384fe93988fe975`へマージしていたことを後続対応中に確認しました。Codexはマージ/公開していません。main run38288027604も静的成功/両browser失敗/verify失敗。修正の旧branch head b667db80eed83ca0bdccd0382d57e8113c3a3a70はマージ済みPRに対するCIを起動しないため、最新mainを基準とするfix/three-webkit-lifecycle-20261012から新Draft PRへ提出します。mainのChromiumではV01の全90問集約も180秒を超えたため、全90問と12方向の集合集計/180秒を維持し、各問題で固定network-idleを待つ代わりに実three/素材readyを確認します。以下の節は以前の段階の履歴です。
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`

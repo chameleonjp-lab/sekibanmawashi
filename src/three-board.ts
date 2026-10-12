@@ -70,6 +70,97 @@ function loadStoneImage(): Promise<HTMLImageElement> {
   return loadingStoneImage;
 }
 
+type SurfaceOwner = { lost: () => void; ready: () => void };
+
+/**
+ * Keep one native canvas/context per document. WebKit can retain even explicitly
+ * lost contexts in its quota until GC, so replacing canvases on every run leaks
+ * quota slots despite releasing their GPU objects. An idle surface stays lost;
+ * its next owner restores the same context before creating a new StoneScene.
+ */
+class BoardSurface {
+  private owner: SurfaceOwner | null = null;
+  private readonly lossExtension: WEBGL_lose_context | null;
+  private managedLoss = false;
+  private lossEventReceived = false;
+  private restoring = false;
+  private restoreTimer: number | null = null;
+
+  constructor(readonly canvas: HTMLCanvasElement, readonly context: WebGL2RenderingContext) {
+    this.lossExtension = context.getExtension("WEBGL_lose_context");
+    canvas.addEventListener("webglcontextlost", (event) => {
+      event.preventDefault();
+      this.lossEventReceived = true;
+      this.restoring = false;
+      this.owner?.lost();
+      this.requestRestore();
+    });
+    canvas.addEventListener("webglcontextrestored", () => {
+      this.managedLoss = false;
+      this.lossEventReceived = false;
+      this.restoring = false;
+      if (this.owner) this.owner.ready();
+      // A restore already sent to the browser cannot be cancelled. If its owner
+      // exited meanwhile, immediately return the idle surface to zero live GPU.
+      else this.loseIdleContext();
+    });
+  }
+
+  acquire(owner: SurfaceOwner): boolean {
+    // The app has one board. An overlapping host must not steal its canvas or
+    // create another native context; it can continue with its accessible SVG.
+    if (this.owner && this.owner !== owner) return false;
+    this.owner = owner;
+    this.requestRestore();
+    return true;
+  }
+
+  release(owner: SurfaceOwner): void {
+    if (this.owner !== owner) return;
+    this.owner = null;
+    if (this.restoreTimer !== null) window.clearTimeout(this.restoreTimer);
+    this.restoreTimer = null;
+    this.canvas.remove();
+    this.loseIdleContext();
+  }
+
+  private loseIdleContext(): void {
+    // loseContext on an already lost context itself reports INVALID_OPERATION.
+    if (!this.lossExtension || this.context.isContextLost()) return;
+    this.managedLoss = true;
+    this.lossEventReceived = false;
+    this.lossExtension.loseContext();
+  }
+
+  private requestRestore(): void {
+    if (!this.owner || !this.managedLoss || !this.lossEventReceived || !this.lossExtension
+      || !this.context.isContextLost() || this.restoring || this.restoreTimer !== null) return;
+    // Khronos requires webglcontextlost dispatch to finish before restoreContext.
+    // A task (not a microtask/event callback) also lets release cancel this work.
+    this.restoreTimer = window.setTimeout(() => {
+      this.restoreTimer = null;
+      if (!this.owner || !this.managedLoss || !this.context.isContextLost() || this.restoring) return;
+      this.restoring = true;
+      try { this.lossExtension?.restoreContext(); }
+      catch { this.restoring = false; }
+    }, 0);
+  }
+}
+
+let boardSurface: BoardSurface | null = null;
+
+function reusableBoardSurface(): BoardSurface | null {
+  if (boardSurface) return boardSurface;
+  const canvas = document.createElement("canvas");
+  canvas.className = "stone-board-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  canvas.setAttribute("role", "presentation");
+  const context = canvas.getContext("webgl2", { alpha: true, antialias: true, powerPreference: "low-power" });
+  if (!context) return null;
+  boardSurface = new BoardSurface(canvas, context);
+  return boardSurface;
+}
+
 function scenePoint(point: BoardPoint): Vector2 {
   return new Vector2(point.x - BOARD_CENTER.x, BOARD_CENTER.y - point.y);
 }
@@ -203,6 +294,30 @@ function beamMaterial(color: number, strength: number, softness: number): Shader
   });
 }
 
+/** Roll back three's canvas listeners if its constructor fails before return. */
+function createRenderer(canvas: HTMLCanvasElement, context: WebGL2RenderingContext): WebGLRenderer {
+  const descriptor = Object.getOwnPropertyDescriptor(canvas, "addEventListener");
+  const add = canvas.addEventListener;
+  const registered: { type: string; listener: EventListenerOrEventListenerObject; capture: boolean }[] = [];
+  Object.defineProperty(canvas, "addEventListener", {
+    configurable: true,
+    value: (type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions) => {
+      if (!listener) return;
+      registered.push({ type, listener, capture: typeof options === "boolean" ? options : Boolean(options?.capture) });
+      add.call(canvas, type, listener, options);
+    },
+  });
+  try {
+    return new WebGLRenderer({ canvas, context, alpha: true, antialias: true, powerPreference: "low-power" });
+  } catch (error) {
+    for (const { type, listener, capture } of registered) canvas.removeEventListener(type, listener, capture);
+    throw error;
+  } finally {
+    if (descriptor) Object.defineProperty(canvas, "addEventListener", descriptor);
+    else Reflect.deleteProperty(canvas, "addEventListener");
+  }
+}
+
 class StoneScene {
   readonly renderer: WebGLRenderer;
   readonly canvas: HTMLCanvasElement;
@@ -248,97 +363,101 @@ class StoneScene {
 
   constructor(canvas: HTMLCanvasElement, context: WebGL2RenderingContext) {
     this.canvas = canvas;
-    this.renderer = new WebGLRenderer({ canvas, context, alpha: true, antialias: true, powerPreference: "low-power" });
-    this.renderer.setClearColor(0x000000, 0);
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
-    this.camera.position.set(0, 0, 350);
-    this.camera.lookAt(0, 0, 0);
-    this.scene.add(new HemisphereLight(0xd7e0e8, 0x282421, 1.8));
-    const key = new DirectionalLight(0xffefd7, 3.1);
-    key.position.set(-130, 175, 260);
-    const fill = new DirectionalLight(0x92abc2, 0.85);
-    fill.position.set(180, -70, 170);
-    this.scene.add(key, fill);
+    this.renderer = createRenderer(canvas, context);
+    try {
+      this.renderer.setClearColor(0x000000, 0);
+      this.renderer.outputColorSpace = SRGBColorSpace;
+      this.renderer.toneMapping = ACESFilmicToneMapping;
+      this.renderer.toneMappingExposure = 1.05;
+      this.camera.position.set(0, 0, 350);
+      this.camera.lookAt(0, 0, 0);
+      this.scene.add(new HemisphereLight(0xd7e0e8, 0x282421, 1.8));
+      const key = new DirectionalLight(0xffefd7, 3.1);
+      key.position.set(-130, 175, 260);
+      const fill = new DirectionalLight(0x92abc2, 0.85);
+      fill.position.set(180, -70, 170);
+      this.scene.add(key, fill);
 
-    this.unitPlane = this.geometry(new PlaneGeometry(1, 1));
-    this.darkStone = this.stoneMaterial(0x0b0d0e, 0.25);
-    this.darkMetal = this.material(new MeshStandardMaterial({ color: 0x292620, roughness: 0.62, metalness: 0.48 }));
-    this.brass = this.material(new MeshStandardMaterial({ color: 0xa49362, roughness: 0.44, metalness: 0.54 }));
-    this.unlitCore = this.material(new MeshStandardMaterial({ color: 0x262a28, roughness: 0.8, metalness: 0.08 }));
-    this.sourceCore = this.material(new MeshStandardMaterial({ color: 0xffe1a3, emissive: 0xffbf55, emissiveIntensity: 1.5, roughness: 0.28, metalness: 0.15 }));
-    this.whiteCore = this.material(new MeshBasicMaterial({ color: 0xfff6d8, toneMapped: false }));
-    this.darkMark = this.material(new MeshBasicMaterial({ color: 0xb8a880, toneMapped: false }));
-    this.lightMark = this.material(new MeshBasicMaterial({ color: 0xfff1b8, toneMapped: false }));
-    this.sourceHalo = this.material(glowMaterial(0xffbc57, 0.57));
-    this.reachedHalo = this.material(glowMaterial(0xffcb6b, 0.68));
-    this.stopHalo = this.material(glowMaterial(0xffc269, 0.3));
-    this.beamLayers = [
-      { material: this.material(beamMaterial(0xffac3d, 0.23, 4.3)), width: 14 },
-      { material: this.material(beamMaterial(0xffd57d, 0.63, 4)), width: 4.6 },
-      { material: this.material(beamMaterial(0xfff6dc, 0.98, 1.2)), width: 1.25 },
-    ];
+      this.unitPlane = this.geometry(new PlaneGeometry(1, 1));
+      this.darkStone = this.stoneMaterial(0x0b0d0e, 0.25);
+      this.darkMetal = this.material(new MeshStandardMaterial({ color: 0x292620, roughness: 0.62, metalness: 0.48 }));
+      this.brass = this.material(new MeshStandardMaterial({ color: 0xa49362, roughness: 0.44, metalness: 0.54 }));
+      this.unlitCore = this.material(new MeshStandardMaterial({ color: 0x262a28, roughness: 0.8, metalness: 0.08 }));
+      this.sourceCore = this.material(new MeshStandardMaterial({ color: 0xffe1a3, emissive: 0xffbf55, emissiveIntensity: 1.5, roughness: 0.28, metalness: 0.15 }));
+      this.whiteCore = this.material(new MeshBasicMaterial({ color: 0xfff6d8, toneMapped: false }));
+      this.darkMark = this.material(new MeshBasicMaterial({ color: 0xb8a880, toneMapped: false }));
+      this.lightMark = this.material(new MeshBasicMaterial({ color: 0xfff1b8, toneMapped: false }));
+      this.sourceHalo = this.material(glowMaterial(0xffbc57, 0.57));
+      this.reachedHalo = this.material(glowMaterial(0xffcb6b, 0.68));
+      this.stopHalo = this.material(glowMaterial(0xffc269, 0.3));
+      this.beamLayers = [
+        { material: this.material(beamMaterial(0xffac3d, 0.23, 4.3)), width: 14 },
+        { material: this.material(beamMaterial(0xffd57d, 0.63, 4)), width: 4.6 },
+        { material: this.material(beamMaterial(0xfff6dc, 0.98, 1.2)), width: 1.25 },
+      ];
 
-    const shadowGeometry = this.geometry(new CircleGeometry(145, 96));
-    // A soft contact shadow remains visible through the transparent canvas.
-    const shadowMaterial = this.material(new ShaderMaterial({
-      vertexShader: glowVertex,
-      fragmentShader: `varying vec2 vGlowUv; void main() { float r = length((vGlowUv - 0.5) * 2.0); gl_FragColor = vec4(0.0, 0.0, 0.0, 0.65 * (1.0 - smoothstep(0.77, 1.0, r))); }`,
-      transparent: true,
-      depthWrite: false,
-    }));
-    const shadow = this.mesh(shadowGeometry, shadowMaterial);
-    shadow.position.set(2, -4, -10);
-    this.scene.add(shadow);
+      const shadowGeometry = this.geometry(new CircleGeometry(145, 96));
+      // A soft contact shadow remains visible through the transparent canvas.
+      const shadowMaterial = this.material(new ShaderMaterial({
+        vertexShader: glowVertex,
+        fragmentShader: `varying vec2 vGlowUv; void main() { float r = length((vGlowUv - 0.5) * 2.0); gl_FragColor = vec4(0.0, 0.0, 0.0, 0.65 * (1.0 - smoothstep(0.77, 1.0, r))); }`,
+        transparent: true,
+        depthWrite: false,
+      }));
+      const shadow = this.mesh(shadowGeometry, shadowMaterial);
+      shadow.position.set(2, -4, -10);
+      this.scene.add(shadow);
 
-    const baseMaterial = this.stoneMaterial(0x777a74, 0.38);
-    // A full circular face covers the inside of the rounded outer collar.
-    const baseFace = this.mesh(this.geometry(new CircleGeometry(OUTER_DISC_RADIUS - 2, 192)), baseMaterial);
-    const uv = baseFace.geometry.getAttribute("uv");
-    const position = baseFace.geometry.getAttribute("position");
-    for (let index = 0; index < uv.count; index += 1) uv.setXY(index, 0.5 + position.getX(index) / 264, 0.5 + position.getY(index) / 264);
-    baseFace.position.z = -0.8;
-    this.scene.add(baseFace, this.mesh(this.geometry(roundedAnnulus(122, OUTER_DISC_RADIUS, 7.5, 1.5, -0.8)), baseMaterial));
+      const baseMaterial = this.stoneMaterial(0x777a74, 0.38);
+      // A full circular face covers the inside of the rounded outer collar.
+      const baseFace = this.mesh(this.geometry(new CircleGeometry(OUTER_DISC_RADIUS - 2, 192)), baseMaterial);
+      const uv = baseFace.geometry.getAttribute("uv");
+      const position = baseFace.geometry.getAttribute("position");
+      for (let index = 0; index < uv.count; index += 1) uv.setXY(index, 0.5 + position.getX(index) / 264, 0.5 + position.getY(index) / 264);
+      baseFace.position.z = -0.8;
+      this.scene.add(baseFace, this.mesh(this.geometry(roundedAnnulus(122, OUTER_DISC_RADIUS, 7.5, 1.5, -0.8)), baseMaterial));
 
-    this.blockerGeometries = RING_RADII.map(([inner, outer]) => this.geometry(roundedAnnulus(inner, outer, 6.8, 1.4, RING_TOP + 0.065, SLOT_STEP)));
-    for (const [ring, [inner, outer]] of RING_RADII.entries()) {
-      const material = this.stoneMaterial(ring === 1 ? 0xe1ded6 : 0xd6d8d3, 0.43);
-      const mesh = this.mesh(this.geometry(roundedAnnulus(inner, outer, 6.8, 1.4, RING_TOP)), material);
-      this.ringMeshes.push(mesh);
-      this.scene.add(mesh);
-      const rims = new Group();
-      const rimMaterial = this.material(new MeshStandardMaterial({ color: 0xf0d68c, emissive: 0x8c6322, emissiveIntensity: 0.22, roughness: 0.46, metalness: 0.32 }));
-      for (const radius of [inner + 0.9, outer - 0.9]) {
-        const rim = this.mesh(this.geometry(new TorusGeometry(radius, 0.5, 8, 192)), rimMaterial);
-        rim.position.z = RING_TOP - 0.12;
-        rims.add(rim);
+      this.blockerGeometries = RING_RADII.map(([inner, outer]) => this.geometry(roundedAnnulus(inner, outer, 6.8, 1.4, RING_TOP + 0.065, SLOT_STEP)));
+      for (const [ring, [inner, outer]] of RING_RADII.entries()) {
+        const material = this.stoneMaterial(ring === 1 ? 0xe1ded6 : 0xd6d8d3, 0.43);
+        const mesh = this.mesh(this.geometry(roundedAnnulus(inner, outer, 6.8, 1.4, RING_TOP)), material);
+        this.ringMeshes.push(mesh);
+        this.scene.add(mesh);
+        const rims = new Group();
+        const rimMaterial = this.material(new MeshStandardMaterial({ color: 0xf0d68c, emissive: 0x8c6322, emissiveIntensity: 0.22, roughness: 0.46, metalness: 0.32 }));
+        for (const radius of [inner + 0.9, outer - 0.9]) {
+          const rim = this.mesh(this.geometry(new TorusGeometry(radius, 0.5, 8, 192)), rimMaterial);
+          rim.position.z = RING_TOP - 0.12;
+          rims.add(rim);
+        }
+        this.selectionRims.push(rims);
+        this.scene.add(rims);
       }
-      this.selectionRims.push(rims);
-      this.scene.add(rims);
-    }
 
-    for (let slot = 0; slot < SLOT_COUNT; slot += 1) {
-      const from = scenePoint(polarPoint(119, slot));
-      const to = scenePoint(polarPoint(125, slot));
-      this.scene.add(this.bar(from, to, slot % 3 === 0 ? 0.7 : 0.45, this.darkMetal, -0.7));
-    }
-    const centerBody = this.mesh(this.geometry(roundedAnnulus(7, 12, 3, 1, 1.7)), this.darkMetal);
-    this.scene.add(centerBody);
-    const centerInset = this.mesh(this.geometry(new CircleGeometry(7, 48)), this.unlitCore);
-    centerInset.position.z = 0.9;
-    this.scene.add(centerInset);
-    const centerMark = this.bar(new Vector2(-2.4, 0), new Vector2(2.4, 0), 0.55, this.brass, 1.1);
-    this.scene.add(centerMark);
+      for (let slot = 0; slot < SLOT_COUNT; slot += 1) {
+        const from = scenePoint(polarPoint(119, slot));
+        const to = scenePoint(polarPoint(125, slot));
+        this.scene.add(this.bar(from, to, slot % 3 === 0 ? 0.7 : 0.45, this.darkMetal, -0.7));
+      }
+      const centerBody = this.mesh(this.geometry(roundedAnnulus(7, 12, 3, 1, 1.7)), this.darkMetal);
+      this.scene.add(centerBody);
+      const centerInset = this.mesh(this.geometry(new CircleGeometry(7, 48)), this.unlitCore);
+      centerInset.position.z = 0.9;
+      this.scene.add(centerInset);
+      const centerMark = this.bar(new Vector2(-2.4, 0), new Vector2(2.4, 0), 0.55, this.brass, 1.1);
+      this.scene.add(centerMark);
 
-    this.emitterBody = this.geometry(roundedAnnulus(2.8, 5.3, 2.3, 0.55, 7.6));
-    this.emitterBead = this.geometry(new SphereGeometry(2.6, 20, 12));
-    this.emitterRim = this.geometry(new TorusGeometry(4.4, 0.35, 8, 48));
-    this.receiverBody = this.geometry(roundedAnnulus(4, 8, 3, 0.8, 1.5));
-    this.receiverRim = this.geometry(new TorusGeometry(7.25, 0.55, 8, 64));
-    this.receiverInnerRim = this.geometry(new TorusGeometry(4.2, 0.3, 8, 48));
-    this.idleReceiver = this.geometry(new CircleGeometry(1.85, 24));
-    this.scene.add(this.changing);
+      this.emitterBody = this.geometry(roundedAnnulus(2.8, 5.3, 2.3, 0.55, 7.6));
+      this.emitterBead = this.geometry(new SphereGeometry(2.6, 20, 12));
+      this.emitterRim = this.geometry(new TorusGeometry(4.4, 0.35, 8, 48));
+      this.receiverBody = this.geometry(roundedAnnulus(4, 8, 3, 0.8, 1.5));
+      this.receiverRim = this.geometry(new TorusGeometry(7.25, 0.55, 8, 64));
+      this.receiverInnerRim = this.geometry(new TorusGeometry(4.2, 0.3, 8, 48));
+      this.idleReceiver = this.geometry(new CircleGeometry(1.85, 24));
+      this.scene.add(this.changing);
+    } catch (error) {
+      try { this.dispose(); } finally { throw error; }
+    }
   }
 
   private geometry<T extends BufferGeometry>(geometry: T): T {
@@ -570,7 +689,7 @@ class StoneScene {
       this.geometries.clear();
       this.materials.clear();
       this.textures.clear();
-      try { this.renderer.dispose(); } finally { this.renderer.forceContextLoss(); }
+      this.renderer.dispose();
     }
   }
 }
@@ -581,8 +700,24 @@ export class BoardView {
   private readonly listeners = new AbortController();
   private readonly forcedColors = window.matchMedia("(forced-colors: active)");
   private readonly observer: ResizeObserver;
+  private surface: BoardSurface | null = null;
+  private readonly surfaceOwner: SurfaceOwner = {
+    lost: () => {
+      this.contextLost = true;
+      this.host.dataset.boardRenderer = "svg";
+      this.host.dataset.boardContext = "lost";
+      this.cancelDraw();
+    },
+    ready: () => {
+      if (!this.surface || !this.canRender()) return;
+      this.contextLost = false;
+      this.host.dataset.boardContext = "ready";
+      this.ensureScene();
+      this.updateScene();
+      this.requestDraw();
+    },
+  };
   private scene: StoneScene | null = null;
-  private sceneListeners: AbortController | null = null;
   private model: BoardRenderModel | null = null;
   private puzzle: Puzzle | null = null;
   private state: BoardState | null = null;
@@ -636,32 +771,22 @@ export class BoardView {
 
   private ensureScene(): void {
     if (this.scene || !this.canRender() || this.unavailable || this.imageFailed || !this.model || !this.state || !this.options) return;
-    const canvas = document.createElement("canvas");
-    canvas.className = "stone-board-canvas";
-    canvas.setAttribute("aria-hidden", "true");
-    canvas.setAttribute("role", "presentation");
-    let context: WebGL2RenderingContext | null = null;
     try {
-      context = canvas.getContext("webgl2", { alpha: true, antialias: true, powerPreference: "low-power" });
-      if (!context) { this.unavailable = true; return; }
+      if (!this.surface) {
+        const surface = reusableBoardSurface();
+        if (!surface || !surface.acquire(this.surfaceOwner)) { this.unavailable = true; return; }
+        this.surface = surface;
+      }
+      const { canvas, context } = this.surface;
+      this.host.prepend(canvas);
+      if (context.isContextLost()) {
+        this.contextLost = true;
+        this.host.dataset.boardContext = "lost";
+        return;
+      }
+      this.contextLost = false;
       const scene = new StoneScene(canvas, context);
       this.scene = scene;
-      const listeners = new AbortController();
-      this.sceneListeners = listeners;
-      canvas.addEventListener("webglcontextlost", (event) => {
-        event.preventDefault();
-        this.contextLost = true;
-        this.host.dataset.boardRenderer = "svg";
-        this.host.dataset.boardContext = "lost";
-        this.cancelDraw();
-      }, { signal: listeners.signal });
-      canvas.addEventListener("webglcontextrestored", () => {
-        this.contextLost = false;
-        this.host.dataset.boardContext = "ready";
-        this.updateScene();
-        this.requestDraw();
-      }, { signal: listeners.signal });
-      this.host.prepend(canvas);
       scene.update(this.model, this.state, this.options.selectedRing);
       this.host.dataset.boardTexture = "loading";
       this.host.dataset.boardContext = "ready";
@@ -678,8 +803,6 @@ export class BoardView {
     } catch {
       this.unavailable = true;
       this.releaseScene();
-      try { context?.getExtension("WEBGL_lose_context")?.loseContext(); } catch { /* context creation failed */ }
-      canvas.remove();
     }
   }
 
@@ -719,15 +842,15 @@ export class BoardView {
 
   private releaseScene(): void {
     this.cancelDraw();
-    this.sceneListeners?.abort();
-    this.sceneListeners = null;
     const scene = this.scene;
     this.scene = null;
+    const surface = this.surface;
+    this.surface = null;
     this.contextLost = false;
     this.host.dataset.boardRenderer = "svg";
-    if (scene) {
-      try { scene.dispose(); } catch { /* renderer cleanup cannot interrupt play */ }
-      finally { scene.canvas.remove(); }
+    try { scene?.dispose(); } catch { /* renderer cleanup cannot interrupt play */ }
+    finally {
+      try { surface?.release(this.surfaceOwner); } catch { /* context cleanup cannot interrupt play */ }
     }
   }
 

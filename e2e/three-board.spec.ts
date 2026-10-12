@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type ElementHandle, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { evaluate } from "../src/core/engine.ts";
 import type { Puzzle } from "../src/core/types.ts";
@@ -47,13 +47,54 @@ async function sampleCanvas(page: Page, positions: Point[]): Promise<Pixel[]> {
   }, { bytes: Array.from(png), points: positions });
 }
 
-type GpuSnapshot = { contexts: number; buffers: number; textures: number; programs: number; framebuffers: number };
+type GpuSnapshot = { contexts: number; contextsCreated: number; contextListeners: number; buffers: number; textures: number; programs: number; framebuffers: number };
 
 /** Count actual browser-owned GPU objects, including detached live contexts. */
 async function installGpuProbe(page: Page): Promise<void> {
   await page.addInitScript(() => {
-    type GpuRecord = { buffers: Set<unknown>; textures: Set<unknown>; programs: Set<unknown>; framebuffers: Set<unknown> };
+    type ContextListener = { type: string; listener: EventListenerOrEventListenerObject; capture: boolean };
+    type GpuRecord = { listeners: ContextListener[]; buffers: Set<unknown>; textures: Set<unknown>; programs: Set<unknown>; framebuffers: Set<unknown> };
     const records = new Map<WebGL2RenderingContext, GpuRecord>();
+    const canvasRecords = new Map<HTMLCanvasElement, GpuRecord>();
+    const add = HTMLCanvasElement.prototype.addEventListener;
+    const remove = HTMLCanvasElement.prototype.removeEventListener;
+    HTMLCanvasElement.prototype.addEventListener = function (this: HTMLCanvasElement, type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions) {
+      if (!listener) return;
+      add.call(this, type, listener, options);
+      const record = canvasRecords.get(this);
+      const capture = typeof options === "boolean" ? options : Boolean(options?.capture);
+      if (record && type.startsWith("webglcontext") && !record.listeners.some((entry) => entry.type === type && entry.listener === listener && entry.capture === capture)) {
+        record.listeners.push({ type, listener, capture });
+      }
+    } as typeof HTMLCanvasElement.prototype.addEventListener;
+    HTMLCanvasElement.prototype.removeEventListener = function (this: HTMLCanvasElement, type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | EventListenerOptions) {
+      if (!listener) return;
+      remove.call(this, type, listener, options);
+      const record = canvasRecords.get(this);
+      const capture = typeof options === "boolean" ? options : Boolean(options?.capture);
+      if (record) record.listeners = record.listeners.filter((entry) => entry.type !== type || entry.listener !== listener || entry.capture !== capture);
+    } as typeof HTMLCanvasElement.prototype.removeEventListener;
+    const recordFor = (context: WebGL2RenderingContext): GpuRecord => {
+      let record = records.get(context);
+      if (!record) {
+        record = { listeners: [], buffers: new Set(), textures: new Set(), programs: new Set(), framebuffers: new Set() };
+        records.set(context, record);
+        if (context.canvas instanceof HTMLCanvasElement) canvasRecords.set(context.canvas, record);
+        const owned = record;
+        context.canvas.addEventListener("webglcontextlost", () => {
+          // Native loss destroys these objects, even without delete calls. The
+          // context handle itself deliberately stays in the lifetime count.
+          for (const kind of ["buffers", "textures", "programs", "framebuffers"] as const) owned[kind].clear();
+        });
+      }
+      return record;
+    };
+    const getContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, contextId: string, ...arguments_: unknown[]) {
+      const context = Reflect.apply(getContext, this, [contextId, ...arguments_]) as RenderingContext | null;
+      if (contextId === "webgl2" && context) recordFor(context as WebGL2RenderingContext);
+      return context;
+    } as typeof HTMLCanvasElement.prototype.getContext;
     const prototype = WebGL2RenderingContext.prototype as unknown as Record<string, unknown>;
     for (const [create, remove, kind] of [
       ["createBuffer", "deleteBuffer", "buffers"],
@@ -66,12 +107,7 @@ async function installGpuProbe(page: Page): Promise<void> {
       if (typeof factory !== "function" || typeof destroy !== "function") throw new Error("GPU probe method is unavailable");
       prototype[create] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
         const value: unknown = Reflect.apply(factory, this, arguments_);
-        let record = records.get(this);
-        if (!record) {
-          record = { buffers: new Set(), textures: new Set(), programs: new Set(), framebuffers: new Set() };
-          records.set(this, record);
-        }
-        if (value) record[kind].add(value);
+        if (value) recordFor(this)[kind].add(value);
         return value;
       };
       prototype[remove] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
@@ -80,8 +116,9 @@ async function installGpuProbe(page: Page): Promise<void> {
       };
     }
     (window as Window & { __threeGpuSnapshot?: () => GpuSnapshot }).__threeGpuSnapshot = () => {
-      const total: GpuSnapshot = { contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 };
+      const total: GpuSnapshot = { contexts: 0, contextsCreated: records.size, contextListeners: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 };
       for (const [context, record] of records) {
+        total.contextListeners += record.listeners.length;
         if (context.isContextLost()) continue;
         total.contexts += 1;
         for (const kind of ["buffers", "textures", "programs", "framebuffers"] as const) total[kind] += record[kind].size;
@@ -307,13 +344,17 @@ test.describe("Three stone and light acceptance", () => {
     expect(errors).toEqual([]);
   });
 
-  test("THREE07: rotations keep bounded GPU objects and abort releases every live context", async ({ page }, testInfo) => {
-    test.setTimeout(120_000);
+  test("THREE07: rotations stay bounded and twenty abort/restarts reuse one native context with zero idle GPU", async ({ page }, testInfo) => {
+    test.setTimeout(240_000);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     await installGpuProbe(page);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openBoard(page, puzzles.find((puzzle) => puzzle.difficulty === "hard")!);
     const baseline = await gpuSnapshot(page);
     expect(baseline.contexts).toBe(1);
+    expect(baseline.contextsCreated).toBe(1);
     expect(baseline.buffers).toBeGreaterThan(0);
     expect(baseline.textures).toBeGreaterThan(0);
     const cycles: GpuSnapshot[] = [];
@@ -325,15 +366,29 @@ test.describe("Three stone and light acceptance", () => {
     }
     await page.goto("/", { waitUntil: "networkidle" });
     await page.locator("[data-action='audio']").uncheck();
+    // A navigation resets the document lifetime count. Hold the first native
+    // canvas across the following runs, so GC cannot hide context replacement.
+    let practiceCanvas: ElementHandle<SVGElement | HTMLElement> | null = null;
     const released: GpuSnapshot[] = [];
-    for (let run = 0; run < 3; run += 1) {
+    for (let run = 0; run < 20; run += 1) {
       await beginPractice(page);
       await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+      practiceCanvas ??= await page.locator("canvas.stone-board-canvas").elementHandle();
+      expect(await practiceCanvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas")), `run ${run + 1}: same native canvas`).toBe(true);
+      const active = await gpuSnapshot(page);
+      expect(active.contexts, `run ${run + 1}: restored three-dimensional view`).toBe(1);
+      expect(active.contextsCreated, `run ${run + 1}: lifetime contexts, including lost handles`).toBe(1);
+      expect(active.buffers).toBeGreaterThan(0);
+      expect(active.textures).toBeGreaterThan(0);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
       await abortPractice(page);
-      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
       await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
       released.push(await gpuSnapshot(page));
     }
+    expect(errors, "native quota and context API errors must remain visible to acceptance").toEqual([]);
     await testInfo.attach("gpu-resource-lifecycle", { body: JSON.stringify({ baseline, cycles, released }, null, 2), contentType: "application/json" });
   });
 
@@ -355,7 +410,7 @@ test.describe("Three stone and light acceptance", () => {
     await expect.poll(() => started).toBe(true);
     await abortPractice(page);
     releaseImage?.();
-    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
     await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
     await page.waitForLoadState("networkidle");
     await expect(page.locator("[data-testid='home-screen']")).toBeVisible();
@@ -363,5 +418,120 @@ test.describe("Three stone and light acceptance", () => {
     await beginPractice(page);
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+  });
+
+  test("THREE10: a restore completing after abort stays idle and the next owner reuses the canvas", async ({ page }) => {
+    await installGpuProbe(page);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    const canvas = await page.locator("canvas.stone-board-canvas").elementHandle();
+    expect(canvas).not.toBeNull();
+    const canRestore = await canvas?.evaluate((node) => {
+      const canvasNode = node as HTMLCanvasElement;
+      const extension = canvasNode.getContext("webgl2")?.getExtension("WEBGL_lose_context");
+      if (!extension) return false;
+      const restore = extension.restoreContext;
+      (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted = false;
+      const restored = (): void => {
+        canvasNode.removeEventListener("webglcontextrestored", restored);
+        (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted = true;
+      };
+      canvasNode.addEventListener("webglcontextrestored", restored);
+      extension.restoreContext = function (this: WEBGL_lose_context): void {
+        extension.restoreContext = restore;
+        restore.call(this);
+        // The native restore is queued now, but the view is destroyed before
+        // its event arrives. This exercises the otherwise narrow lease race.
+        document.querySelector<HTMLButtonElement>("[data-action='abort']")?.click();
+        document.querySelector<HTMLButtonElement>("[data-action='confirm-abort']")?.click();
+      };
+      window.dispatchEvent(new Event("pagehide"));
+      window.dispatchEvent(new Event("pageshow"));
+      return true;
+    });
+    expect(canRestore, "the real native restore race must be exercised").toBe(true);
+    await expect.poll(() => page.evaluate(() => (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted)).toBe(true);
+    await expect(page.locator("[data-testid='home-screen']")).toBeVisible();
+    await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+    expect(await canvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas"))).toBe(true);
+    await page.locator("[data-action='rotate-right']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("1");
+    await abortPractice(page);
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    expect(errors).toEqual([]);
+  });
+
+  test("THREE11: partial renderer and stone-scene construction roll back before reusing the native context", async ({ page }, testInfo) => {
+    await installGpuProbe(page);
+    await page.addInitScript(() => {
+      type Failure = { stage: "renderer" | "scene" | null; armed: boolean; fired: number };
+      const failure: Failure = { stage: null, armed: false, fired: 0 };
+      (window as Window & { __threeConstructionFailure?: Failure }).__threeConstructionFailure = failure;
+      const getParameter = WebGL2RenderingContext.prototype.getParameter;
+      WebGL2RenderingContext.prototype.getParameter = function (this: WebGL2RenderingContext, parameter: number): unknown {
+        if (failure.stage && !failure.armed) {
+          failure.armed = true;
+          if (failure.stage === "renderer") {
+            failure.fired += 1;
+            throw new Error("Injected renderer-construction failure");
+          }
+          // The first circle geometry follows a successfully constructed
+          // renderer and allocated scene materials. Fail inside that geometry.
+          const cosine = Math.cos;
+          Math.cos = () => {
+            Math.cos = cosine;
+            failure.fired += 1;
+            throw new Error("Injected stone-scene-construction failure");
+          };
+        }
+        return Reflect.apply(getParameter, this, [parameter]) as unknown;
+      };
+    });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    const evidence: { stage: string; rolledBack: GpuSnapshot; restored: GpuSnapshot; released: GpuSnapshot }[] = [];
+    for (const stage of ["renderer", "scene"] as const) {
+      await page.goto("/", { waitUntil: "networkidle" });
+      await page.evaluate((value) => {
+        const failure = (window as Window & { __threeConstructionFailure?: { stage: string | null; fired: number } }).__threeConstructionFailure;
+        if (!failure) throw new Error("Construction-failure probe was not installed");
+        failure.stage = value;
+      }, stage);
+      await beginPractice(page);
+      await expect.poll(() => page.evaluate(() => (window as Window & { __threeConstructionFailure?: { fired: number } }).__threeConstructionFailure?.fired)).toBe(1);
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "svg");
+      await expect(page.locator("svg.stone-board")).toBeVisible();
+      await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      const rolledBack = await gpuSnapshot(page);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
+      await abortPractice(page);
+      await beginPractice(page);
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+      const restored = await gpuSnapshot(page);
+      expect(restored.contexts).toBe(1);
+      expect(restored.contextsCreated).toBe(1);
+      expect(restored.contextListeners, `${stage}: no abandoned renderer listens to restore`).toBe(6);
+      expect(restored.buffers).toBeGreaterThan(0);
+      expect(restored.textures).toBeGreaterThan(0);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
+      await abortPractice(page);
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      evidence.push({ stage, rolledBack, restored, released: await gpuSnapshot(page) });
+    }
+    expect(errors).toEqual([]);
+    await testInfo.attach("gpu-construction-rollback", { body: JSON.stringify(evidence, null, 2), contentType: "application/json" });
   });
 });
