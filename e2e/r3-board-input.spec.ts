@@ -130,10 +130,13 @@ async function assertDirectionFrame(page: Page, compareNative = false): Promise<
     throw new Error("Board SVG has no square rendered bounding box");
   }
   const markers = await directionMarkers(page);
-  // Observe all twelve real marker boxes in one browser round trip. The
-  // fixtures do not move during this read; every original slot/bounds
-  // assertion remains, without twelve traced protocol calls per puzzle.
-  const snapshots = await markers.evaluateAll((elements) =>
+  // Keep the original native boundingBox API for every marker. SVG DOM
+  // rectangles do not include exactly the same stroke box as browser quads.
+  // The inspection board is immutable, so overlap the twelve native reads
+  // instead of paying their protocol/trace waits one after another.
+  const markerLocators = await markers.all();
+  const [semantics, boxes] = await Promise.all([
+    markers.evaluateAll((elements) =>
     elements.map((element) => {
       const value = element.getAttribute("data-direction-slot") ?? element.getAttribute("data-receiver-slot") ?? element.getAttribute("data-slot");
       const rect = element.getBoundingClientRect();
@@ -141,12 +144,13 @@ async function assertDirectionFrame(page: Page, compareNative = false): Promise<
       const visible = element.isConnected && style.display !== "none"
         && style.visibility !== "hidden" && style.visibility !== "collapse"
         && rect.width > 0 && rect.height > 0;
-      return {
-        slot: value === null ? null : Number(value),
-        box: visible ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : null,
-      };
+      return { slot: value === null ? null : Number(value), visible };
     }),
-  );
+    ),
+    Promise.all(markerLocators.map((marker) => marker.boundingBox())),
+  ]);
+  const snapshots = semantics.map((semantic, index) => ({ slot: semantic.slot, box: boxes[index] ?? null }));
+  for (const semantic of semantics) expect(semantic.visible, "direction marker stays connected and laid out").toBe(true);
   expect(new Set(snapshots.map((snapshot) => snapshot.slot).filter((slot): slot is number => slot !== null))).toEqual(
     new Set(Array.from({ length: 12 }, (_, slot) => slot)),
   );
@@ -162,16 +166,16 @@ async function assertDirectionFrame(page: Page, compareNative = false): Promise<
   }
   const nativeBoxes: (FrameBox | null)[] = [];
   if (compareNative) {
-    // Prove the batching proxy against the unchanged native API once per
-    // browser, rather than paying for 90 x 12 separate protocol observations.
-    for (const [index, marker] of (await markers.all()).entries()) {
+    // Prove the concurrent native reads against the original sequential
+    // native reads once per browser. All ninety boards still use native boxes.
+    for (const [index, marker] of markerLocators.entries()) {
       const native = await marker.boundingBox();
       const observed = snapshots[index]?.box;
       expect(native).not.toBeNull();
       expect(observed).not.toBeNull();
       if (native && observed) {
         for (const key of ["x", "y", "width", "height"] as const) {
-          expect(Math.abs(native[key] - observed[key]), `native/batched marker ${index} ${key}`).toBeLessThanOrEqual(0.01);
+          expect(Math.abs(native[key] - observed[key]), `sequential/concurrent native marker ${index} ${key}`).toBeLessThanOrEqual(0.01);
         }
       }
       nativeBoxes.push(native);

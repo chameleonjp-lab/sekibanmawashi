@@ -18,6 +18,8 @@ PR #24 head0dfa0e6274ac4fdb2278658b0db35920ff9597c3の[第2回run38308896954](ht
 
 6.1Sol Maxが固定2状態の完成RGBA再使用を実装し、6.1Sol Extra Highが元の最終画素/原寸の保持、GPU所有/失効、現在モデルと実構築geometryの分離をレビューします。親担当はV01の全方向矩形と属性の観測往復を減らし、初問の全12矩形をnative boundingBoxと0.01px以内で照合。cold3D描画の形状・素材・ACES/SRGB/MSAA・DPR、全90問/12方向、302実回転/5問/180秒、全5境界10枝、Q03全20回、trace/videoは不変です。THREE13を追加した各68件・計136件とverifyの最新head成功を必須とし、実結果・未確認・独立レビューは今回の記録とPR/Checksへ集約します。
 
+第3回[run38317568603](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38317568603)、head72137e2ccea2a2df357d4774176fd10c97acdb36は静的成功、両browser67初回成功/1失敗と同retry失敗、flaky/skip0、verify失敗でした。全THREE01–13/全RGBA byte一致/旧20中断/GPU解放/Q03全20回とT04/F05は成功。唯一のV01は初問のnative/DOM矩形差0.874pxを0.01px比較が検出し、全90問完走ではありません。親担当が従来native boundingBoxの全12読み取りを並列化し、属性/slot/styleだけ実DOMで一括観測、初問は逐次nativeとの全12×4値0.01px比較を保持します。ゲームsource/THREE testは同じfreeze SHAを維持し、各68件・verifyを次headで再実行します。独立レビュー・実結果・未確認は今回の記録とPR/Checksへ集約し、失敗を合格へ上書きしません。
+
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
 

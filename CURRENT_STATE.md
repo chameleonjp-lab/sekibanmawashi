@@ -20,6 +20,8 @@ PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準�
 
 次の修正では元の3D描画で完成したRGBAを固定2状態だけ再使用し、サイズ/素材/context変更では現在の盤面を再描画します。cold時の形状・材質・ACES/SRGB/MSAA・DPRは維持し、THREE13で全RGBA byte一致とGPU定常を追加検査。V01の全12方向と属性は実DOMから一括観測し、初問で従来native boundingBoxとの0.01px以内の一致を確認します。全90問/12方向、302実回転/5問/180秒、Q03全20回、trace/videoを保持し、従来67件＋THREE13の各68件・計136件を同Draft PRの最新headで正式再検査します。各headの独立レビューと実結果はPR/Checks・今回の記録に残し、旧headの成功を流用しません。
 
+head `72137e2ccea2a2df357d4774176fd10c97acdb36` の[第3回run38317568603](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38317568603)は静的成功、両browserとも67初回成功/1失敗（同retry失敗、flaky/skip0）、verify失敗です。全THREE01–13、全画素一致、GPU解放、Q03全20回、302実回転＋5問は成功しました。唯一のV01失敗は初問でDOM矩形とnative SVG stroke箱が0.874px異なり、新しい0.01px比較が検出したものです。製品の描画は変えず、全90問の12方向で従来のnative boundingBoxを並列取得する形に修正します。初問は並列/従来逐次の全12×4値を0.01px以内で照合。時間・画素・寸法基準を緩めず、同Draftの次headで各68件とverifyを再確認します。
+
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 
 ## 2026-10-01 クリア時の連打による拡大の修正

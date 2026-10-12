@@ -175,3 +175,15 @@ V01では同じ実DOMから全12方向の矩形と盤面属性をまとめて観
 source SHA256 `e03bfe20be2a0825e54d4f56e52c90a4bf06eec2f4cec4207b89a7059ded46f1`、THREE test `c276fb3e2890460dbe5b5676f7d61aeefa354c1a56a4c6af998d4d8256ea7907`、R3 test `2982f2004185d4dd35f39dd1980f03a6e158032ac5a5daccfc48689ec003c93b` をfreezeしました。最新の実deferred cold pathを使う1080状態CPU照合を実装/親/独立担当が再実行し、旧436912のsourceとbaselineのSHA一致、geometry/material/order/triangles/光路一致、同じfloat32行列差を確認。rendererとframebuffer copyはmockで、native画素一致の証明ではありません。
 
 親担当・独立担当の型/lint41/diff checkと、親担当の単体74/P01–P09・10万抽選/ライセンス/通常・Pages build/artifactが成功、検査一覧136件です。JavaScript gzip173404 bytes（250KB目標以内）、155520判定のp95約0.051606ms/最大約2.702384msはLinux合成測定です。問題JSON生109681 bytesの既存未達と既存開発依存の監査警告は未解消。正式CI最終結果は最新headのPR/Checksと保存用記録へ追記し、結果記載だけの追pushで進行中の全件検査を取り消しません。
+
+## 第3回正式CI：全画素と長操作は成功、native矩形観測を修正
+
+head `72137e2ccea2a2df357d4774176fd10c97acdb36` / tree `5406f20927225fb4c34bff240de686e5922cb90d` の[run38317568603](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38317568603)は静的成功、Chromium67初回成功/1失敗（30.6分）、WebKit67初回成功/1失敗（34.2分）、同retry失敗、flaky/skip0、verify失敗でした。CI検査用commit `cc0d99b083647d9f53b6c2f9a595d7eca21d1c18` のtreeも一致しています。全THREE01–13、全5境界、Q03全20回/100問、T04/F05は両browserで初回成功し、描画負荷の修正後に従来180秒の長操作条件が通りました。最新headの全体合格ではありません。
+
+唯一の失敗はV01初問で、新しいnative/DOM比較のmarker4 xが両browser・両attemptとも0.874053955078125px異なり、0.01px条件が検出しました。全90問はこのheadでは完走していません。plain getBoundingClientRectのSVG fill箱を、stroke込みのnative箱と同値だとした親担当の観測方法が誤りです。独立担当がpinned Playwright1.63のChromium DOM.getBoxModel border quad/WebKit DOM.getContentQuadsと、pinned Chromium153.0.8010.12のClientQuads/ObjectBoundingBox（strokeを含まない）・inspectorのDecoratedBoundingBox経路を確認しました。画素やゲーム規則の不具合ではありませんが、失敗履歴を削除せず修正します。
+
+全90問の全12方向で元のmarker.boundingBoxをPromise.allにより並列取得し、元のslot集合・nonnull/正寸法・四辺±2px、SVG正方形±1pxのassertionを保持します。slot/style/接続状態と他の盤面属性は実DOMの一括観測のまま。初問の全12矩形は元どおり逐次nativeでも採り、並列/逐次のx/y/width/height全値0.01px以内を追加確認してJSON添付します。getBBox/getScreenCTMなど別のgeometry proxyへ置き換えず、90問/12方向/画像/180秒/全136検査を維持します。修正後runtimeは次headの正式CIで再検査し、前headのTHREE成功も自動的には流用しません。
+
+第3回のT04/F05はChromium52.489秒（302回転step15.355秒）、WebKit106.646秒で初回成功。Q03全20回は552.039秒/575.781秒でした。THREE13の添付は両browserで19 native frame・10比較、copy前後と比較全て0 byte差、default framebuffer/API error0を確認。固定hardのcold72/13instancedCalls/125instances/170284triangles、hit1/0/0/2です。GPUはloading104buffers/6textures/8programs/3framebuffers、ready104/8/9/3、external restore104/8/8/0という厳密なphase別期待値で成功しています。解像度はChromium362/384px、WebKit724/768pxで、DPRを落としていません。これはCI内readPixelsの比較結果を確認したもので、raw全画素配列をartifactから再取得・独立browserで再撮影したという意味ではありません。
+
+親担当は修正R3 SHA256 `2871bec34faae0189099a64c45625c0ca2014d7fe2fa24d71d758aa5d2c653ca` をfreezeし、型/lint41/diff/単体74/P01–P09・10万抽選/ライセンス/一覧136件/通常・Pages build/artifactを再確認しました。製品sourceとTHREE testのfreeze SHAは前headと同一。独立担当も型/lint41/diffと最終4ファイルを確認し、修正必須の指摘なし。両browserの全GPU/Q03添付とTHREE13比較結果、代表実画像を独立確認済みですが、最新headのV01全90問と全体greenは正式再実行まで未確認です。実結果はPR/Checksへ集約します。iPhoneの物理実機、VoiceOver、実機音、公開URLの転送量は引き続き未確認です。
