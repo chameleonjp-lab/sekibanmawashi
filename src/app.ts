@@ -9,7 +9,7 @@ import { GAME_TITLE, LAB_URL } from "./core/index.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
 import { validatePuzzle } from "./core/validation.ts";
 import { createDefaultSettings, setAudioEnabled, type UserSettings } from "./core/settings.ts";
-import { createBoardSvg } from "./board.ts";
+import { BoardView } from "./three-board.ts";
 import poolManifest from "../content/pool-v2.json";
 import ticketManifest from "../content/tickets-v2.json";
 import { preparePoolArtifacts } from "./run.ts";
@@ -255,6 +255,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   shell.setAttribute("data-puzzle-id", puzzle.id);
   const sound = new SoundController({ enabled: settings.audioEnabled });
   const listenerController = new AbortController();
+  const boardView = new BoardView(boardHost);
 
   const getInputState = () => ({
     phase,
@@ -288,13 +289,13 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
       button.setAttribute("aria-pressed", String(ring === selectedRing));
       button.disabled = !accepting;
     }
-    boardHost.replaceChildren(createBoardSvg(puzzle, session.state, {
+    boardView.update(puzzle, session.state, {
       selectedRing,
       disabled: !accepting,
       onSelectRing: (ring) => {
         controller.boardSelection(ring);
       },
-    }));
+    });
   };
 
   const selectRing = (ring: number): void => {
@@ -410,6 +411,7 @@ export function renderPuzzle(root: HTMLElement, puzzle: Puzzle): void {
   teardownByRoot.set(root, () => {
     listenerController.abort();
     sound.dispose();
+    boardView.dispose();
   });
   const dialogKeyHandler = (event: KeyboardEvent): void => {
     if (!activeModal) return;
