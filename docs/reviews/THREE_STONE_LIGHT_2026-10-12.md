@@ -143,3 +143,35 @@ THREE07の既存GPU検査にnative draw APIの計器を加え、72 draw/170284 t
 新THREE12は同SVG再使用、切断された古い入力、同問reset世代、次問からの古い入力の拒否と現在の入力可能を確認します。独立レビューで、先頭random easyの中央輪12回転はeasy-v2-20の6回目で解ける実例を発見しました。最短解の条件を安全輪の根拠にせず、実engineで12状態すべて未完成の輪を選び、実buttonでその輪を選択してから採取する形へ修正済みです。reset時の既定中央輪1/同puzzle/0手は製品どおりです。検査時間の延長や製品規則の変更で直したものではありません。
 
 6.1Sol Extra Highが最終2ファイル、fixture、1080 CPU照合を独立確認し、修正必須の指摘なし。独立の型/lint41/diff check、親担当の型/lint/単体74/P01–P09・10万抽選/ライセンス/通常buildが成功。従来66ケースは全て残し、THREE12だけ追加して検査一覧134件を確認しました。ローカルのnative両browser実行は前述の環境制約で未確認です。修正headの各正式CI最終結果はPR本文とChecks、保存用検査記録を参照し、成功・失敗・未実施を区別します。
+
+## 正式CI第2回の最終結果と再修正
+
+head `0dfa0e6274ac4fdb2278658b0db35920ff9597c3` / tree `de654ff7fcd444f7364008d4c6107b475fc4aaae` の[run38308896954](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38308896954)は静的成功、Chromium65初回成功/2失敗（46.3分）、WebKit66初回成功/1失敗（49.5分）、同失敗のretryも失敗、flaky/skip0、verify失敗でした。CI検査用commit `0ad057013e377e92d6e33eef57f97d633becb88a` のtreeは提出headと同じです。これはmainへのマージではありません。
+
+両browserで全THREE01–12、F02、全5境界10枝、Q03全20回/100問が成功。別担当が全結果JSONと全GPU/Q03添付をdecodeして再検査し、native実frameの72calls/13instancedCalls/125instances/170284triangles、3×12回転後の同量を確認しました。GPUは100buffers/6textures/8programs/3framebuffersで定常、20回の終了時はlive context/GPU0、native作成数1/listener3です。Q03の全20定常記録はDOM73/timeouts0/interval1/listeners24/activeAudio0/resources29（baseline28、従来許容内）で、Chromium690.340秒/WebKit784.717秒でした。代表画像の盤面・12方向・操作列も確認していますが、物理iPhoneではありません。
+
+| 残った180秒ケース | Chromium | WebKit |
+|---|---|---|
+| V01全90問 | 初回/再試行とも期限超過、全90問合格ではない | 全90問155.596秒で初回成功 |
+| T04/F05の実302回転step | 初回172.124秒 / 再試行141.887秒 | 初回156.077秒 / 再試行161.028秒 |
+| T04/F05全体 | その後の5問完走/結果観測で期限超過 | その後の5問完走中に期限超過 |
+
+Chromium再試行の失敗画像には5問の結果、総340手、参考扱いも表示されていますが、期限内に全検査が完了した合格ではありません。draw回数の削減は確認できても、実操作時間の改善を証明したことにはならないため再修正します。時間上限、実302button click、全5問、全90問/12方向、trace/video、viewport/DPR、Q03は緩めません。
+
+## 最終RGBAの固定2状態再使用と観測の一括化
+
+元の3D sceneを変更せず、cold frameは従来どおりdefault framebufferへACES/SRGB/MSAA/透明alphaを含めて描画します。同じturnの完成したencoded RGBAを2枚だけのFramebufferTextureへcopyし、同姿勢のhitはnearest/no mipmap/NoColorSpaceのraw shader・NoBlendingでその画素を戻します。tone mapping/色変換/alpha premultiplicationを二重適用せず、rawのsamplerはhighp、hit再表示時だけDITHERを一時offにして元のstateへ戻します。THREE07/13の固定hard fixtureのcoldは72calls/170284triangles/125instancesを保ち、hitの1call/2trianglesは完成画像のfullscreen quadで、3D形状の削減ではありません。他問題のcold draw数まで72で固定する意味ではありません。
+
+GPUの完成frameとCPUの描画modelをそれぞれ2状態までに固定し、既存のSVG12状態cacheは保持します。初coldでraw program/quadと両textureを準備します。サイズ/DPR変更では同じ2texture objectのstorageをdisposeして再確保し、素材ready・問題・context失効でもcacheを無効化。表示したdesired poseと最後に実構築したgeometryを分け、A(cold)→B(cold)→A(hit)→失効で古いBを描き直す誤りを防ぎます。中断/破棄時は追加GPUもdisposeし、既存の単一context所有/rollbackは維持します。
+
+THREE13は従来120秒の既定枠で追加し、native readPixelsを元のdefault framebufferのrender turnで採取します。copy前後とcold/hitの全RGBA byteを厳密0差で比較し、透明/半透明/不透明画素の存在も確認。素材到着、A/B hit後のresizeと別のcold A、元サイズへ戻る場合、選択輪、native loss/restore後の同canvas/同画素/GPU固定も検査します。Three自身のconstructor phaseの既存3framebuffersと、同rendererのexternal restore後のunused framebuffer0を区別し、新しいoffscreen render targetがないことを数量とdefault framebufferで確認します。
+
+V01では同じ実DOMから全12方向の矩形と盤面属性をまとめて観測し、全90navigation/集合集計/従来assertion/10問おきの画像/180秒を保持します。初問の全12方向は従来のnative boundingBoxも採り、x/y/width/height各0.01px以内の一致とJSON添付を追加しました。SVG読み上げ層のopacity0を『非表示』として拒否せず、切断・display/visibility・寸法は確認します。他ケースの既定network-idle待機は変えません。
+
+修正後のローカルnative browser実行は環境制約のため未確認です。全byte一致・GPU実測・実180秒の改善は正式CIで判定し、CPU比較やdraw削減から成功を推定しません。従来67件を全て保持＋THREE13の各68件・計136件とverifyを、同Draft PRの最新headで再検証します。マージ・本番公開・物理iPhone受入は実施しません。
+
+6.1Sol Extra Highの独立レビューで、raw samplerのprecision、THREE13のconstructor内3framebuffersと同rendererのexternal restore後0framebuffers、意図的loading時の旧shader variantがrestore後に残らないことに関する期待値を修正しました。復帰後はframebuffers0/programsがloading phaseと同数、他の資源はready phaseと完全一致し、後続hitはその復帰baselineと厳密一致を検査します。default framebufferからの全byte比較条件や旧20回のGPU検査を緩めていません。最終source/testとR3観測に修正必須の指摘なし。
+
+source SHA256 `e03bfe20be2a0825e54d4f56e52c90a4bf06eec2f4cec4207b89a7059ded46f1`、THREE test `c276fb3e2890460dbe5b5676f7d61aeefa354c1a56a4c6af998d4d8256ea7907`、R3 test `2982f2004185d4dd35f39dd1980f03a6e158032ac5a5daccfc48689ec003c93b` をfreezeしました。最新の実deferred cold pathを使う1080状態CPU照合を実装/親/独立担当が再実行し、旧436912のsourceとbaselineのSHA一致、geometry/material/order/triangles/光路一致、同じfloat32行列差を確認。rendererとframebuffer copyはmockで、native画素一致の証明ではありません。
+
+親担当・独立担当の型/lint41/diff checkと、親担当の単体74/P01–P09・10万抽選/ライセンス/通常・Pages build/artifactが成功、検査一覧136件です。JavaScript gzip173404 bytes（250KB目標以内）、155520判定のp95約0.051606ms/最大約2.702384msはLinux合成測定です。問題JSON生109681 bytesの既存未達と既存開発依存の監査警告は未解消。正式CI最終結果は最新headのPR/Checksと保存用記録へ追記し、結果記載だけの追pushで進行中の全件検査を取り消しません。

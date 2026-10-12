@@ -16,6 +16,10 @@ PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準�
 
 残件対応では不透明な同形装飾だけをInstancedMeshでまとめ、同じ盤面のSVGを最大12状態で再使用します。新しい入力層は更新ごとの世代付きcallbackを保持し、切断済み/別問題の入力を拒否。形状・光のshader・素材・DPR・302実回転/5問/180秒は変えません。1080代表状態のCPU比較は同形状/三角形数/材質/描画順/光路を確認し、平均drawの見積りは143.37→58.58。これはnative GPU実測ではありません。独立レビューの必須指摘は解消し、型/lint/単体74/問題庫/ライセンス/buildを再確認。従来66件＋THREE12の各67件・計134件を同Draft PRの最新headで再実行し、実結果はPR/Checksへ記録します。
 
+同PRのhead `0dfa0e6274ac4fdb2278658b0db35920ff9597c3` / tree `de654ff7fcd444f7364008d4c6107b475fc4aaae` に対する[run 38308896954](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38308896954)は、静的成功、Chromium65成功/2失敗、WebKit66成功/1失敗、同失敗の再試行も失敗、flaky/skip0、verify失敗でした。全THREE01–12とQ03全20回/100問は両browserで成功。native実frameは72 draw/170284 triangles/125 instancesで、GPU定常と20終了時の解放も独立確認しました。ただし描画回数の減少だけでは180秒の操作検査を達成できず、ChromiumのV01全90問と両browserのT04/F05が残りました。
+
+次の修正では元の3D描画で完成したRGBAを固定2状態だけ再使用し、サイズ/素材/context変更では現在の盤面を再描画します。cold時の形状・材質・ACES/SRGB/MSAA・DPRは維持し、THREE13で全RGBA byte一致とGPU定常を追加検査。V01の全12方向と属性は実DOMから一括観測し、初問で従来native boundingBoxとの0.01px以内の一致を確認します。全90問/12方向、302実回転/5問/180秒、Q03全20回、trace/videoを保持し、従来67件＋THREE13の各68件・計136件を同Draft PRの最新headで正式再検査します。各headの独立レビューと実結果はPR/Checks・今回の記録に残し、旧headの成功を流用しません。
+
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 
 ## 2026-10-01 クリア時の連打による拡大の修正

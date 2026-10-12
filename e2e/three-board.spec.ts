@@ -50,6 +50,11 @@ async function sampleCanvas(page: Page, positions: Point[]): Promise<Pixel[]> {
 
 type GpuSnapshot = { contexts: number; contextsCreated: number; contextListeners: number; buffers: number; textures: number; programs: number; framebuffers: number };
 type DrawSnapshot = { calls: number; instancedCalls: number; instances: number; triangles: number };
+type PixelFrameInfo = {
+  serial: number; kind: "cold" | "hit"; pose: string; texture: string; width: number; height: number;
+  copyMismatch: number; apiError: number; defaultFramebuffer: boolean; zeroAlpha: number; partialAlpha: number; opaqueAlpha: number;
+};
+type PixelFrame = PixelFrameInfo & { pixels: Uint8Array };
 
 /** Count actual browser-owned GPU objects, including detached live contexts. */
 async function installGpuProbe(page: Page): Promise<void> {
@@ -180,6 +185,100 @@ async function drawSnapshot(page: Page): Promise<DrawSnapshot> {
     if (!snapshot) throw new Error("GPU draw probe was not installed");
     return snapshot();
   });
+}
+
+/** Read final default-framebuffer bytes in the render turn, not after its discard. */
+async function installRawPixelProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const frames: PixelFrame[] = [];
+    (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames = frames;
+    const pixels = (context: WebGL2RenderingContext): Uint8Array => {
+      const result = new Uint8Array(context.drawingBufferWidth * context.drawingBufferHeight * 4);
+      context.readPixels(0, 0, context.drawingBufferWidth, context.drawingBufferHeight, context.RGBA, context.UNSIGNED_BYTE, result);
+      return result;
+    };
+    const record = (context: WebGL2RenderingContext, kind: "cold" | "hit", rgba: Uint8Array, copyMismatch = 0): void => {
+      if (!(context.canvas instanceof HTMLCanvasElement)) return;
+      const host = context.canvas.parentElement;
+      const svg = host?.querySelector("svg.stone-board");
+      if (!host || !svg) throw new Error("Native frame is detached from its semantic board");
+      const rotations = Array.from(svg.querySelectorAll(".board-ring[data-rotation]")).map((ring) => ring.getAttribute("data-rotation"));
+      const selected = svg.querySelector("[data-ring-hit][aria-pressed='true']")?.getAttribute("data-ring-hit");
+      const puzzle = document.querySelector("[data-puzzle-id]")?.getAttribute("data-puzzle-id") ?? new URL(location.href).searchParams.get("puzzleId");
+      let zeroAlpha = 0, partialAlpha = 0, opaqueAlpha = 0;
+      for (let index = 3; index < rgba.length; index += 4) {
+        if (rgba[index] === 0) zeroAlpha += 1;
+        else if (rgba[index] === 255) opaqueAlpha += 1;
+        else partialAlpha += 1;
+      }
+      frames.push({ serial: frames.length + 1, kind, pose: `${puzzle}:${rotations.join(",")}:${selected}`,
+        texture: host.dataset.boardTexture ?? "", width: context.drawingBufferWidth, height: context.drawingBufferHeight,
+        copyMismatch, apiError: context.getError(), defaultFramebuffer: context.getParameter(context.READ_FRAMEBUFFER_BINDING) === null,
+        zeroAlpha, partialAlpha, opaqueAlpha, pixels: rgba });
+    };
+    const copy = WebGL2RenderingContext.prototype.copyTexSubImage2D;
+    WebGL2RenderingContext.prototype.copyTexSubImage2D = function (this: WebGL2RenderingContext, ...arguments_: Parameters<typeof copy>): void {
+      const before = pixels(this);
+      Reflect.apply(copy, this, arguments_);
+      const after = pixels(this);
+      let mismatch = 0;
+      for (let index = 0; index < before.length; index += 1) if (before[index] !== after[index]) mismatch += 1;
+      record(this, "cold", before, mismatch);
+    };
+    const rawPrograms = new WeakMap<WebGLProgram, boolean>();
+    const draw = WebGL2RenderingContext.prototype.drawElements;
+    WebGL2RenderingContext.prototype.drawElements = function (this: WebGL2RenderingContext, ...arguments_: Parameters<typeof draw>): void {
+      Reflect.apply(draw, this, arguments_);
+      if (arguments_[0] !== this.TRIANGLES || arguments_[1] !== 6) return;
+      const program = this.getParameter(this.CURRENT_PROGRAM) as WebGLProgram | null;
+      if (!program) return;
+      let raw = rawPrograms.get(program);
+      if (raw === undefined) {
+        raw = this.getUniformLocation(program, "uFrame") !== null;
+        rawPrograms.set(program, raw);
+      }
+      if (raw) record(this, "hit", pixels(this));
+    };
+  });
+}
+
+async function pixelPose(page: Page): Promise<string> {
+  return page.locator("svg.stone-board").evaluate((svg) => {
+    const puzzle = document.querySelector("[data-puzzle-id]")?.getAttribute("data-puzzle-id") ?? new URL(location.href).searchParams.get("puzzleId");
+    const rotations = Array.from(svg.querySelectorAll(".board-ring[data-rotation]")).map((ring) => ring.getAttribute("data-rotation"));
+    const selected = svg.querySelector("[data-ring-hit][aria-pressed='true']")?.getAttribute("data-ring-hit");
+    return `${puzzle}:${rotations.join(",")}:${selected}`;
+  });
+}
+
+async function pixelFrame(page: Page, filter: { pose: string; kind: "cold" | "hit"; texture: string; after?: number; width?: number }): Promise<PixelFrameInfo> {
+  const find = () => page.evaluate((query) => {
+    const frames = (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames ?? [];
+    const frame = frames.slice().reverse().find((candidate) => candidate.pose === query.pose && candidate.kind === query.kind
+      && candidate.texture === query.texture && candidate.serial > (query.after ?? 0) && (query.width === undefined || candidate.width === query.width));
+    if (!frame) return null;
+    const { pixels: _pixels, ...info } = frame;
+    return info;
+  }, filter);
+  await expect.poll(find).not.toBeNull();
+  const frame = await find();
+  if (!frame) throw new Error("The required native frame was not captured");
+  expect(frame.copyMismatch, "copying a frame must not alter its final canvas bytes").toBe(0);
+  expect(frame.apiError, "raw capture/draw must not conceal a WebGL API error").toBe(0);
+  expect(frame.defaultFramebuffer, "original canvas AA and color encoding remain the source").toBe(true);
+  return frame;
+}
+
+async function pixelDifference(page: Page, first: PixelFrameInfo, second: PixelFrameInfo): Promise<number> {
+  return page.evaluate(([left, right]) => {
+    const frames = (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames;
+    const a = frames?.find((frame) => frame.serial === left)?.pixels;
+    const b = frames?.find((frame) => frame.serial === right)?.pixels;
+    if (!a || !b || a.length !== b.length) throw new Error("Native RGBA frames must have identical dimensions");
+    let different = 0;
+    for (let index = 0; index < a.length; index += 1) if (a[index] !== b[index]) different += 1;
+    return different;
+  }, [first.serial, second.serial]);
 }
 
 async function beginPractice(page: Page): Promise<void> {
@@ -651,5 +750,135 @@ test.describe("Three stone and light acceptance", () => {
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
     expect(errors).toEqual([]);
+  });
+
+  test("THREE13: two raw final-frame slots preserve every RGBA byte and invalidate without stale geometry", async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 402, height: 874 });
+    await installGpuProbe(page);
+    await installRawPixelProbe(page);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    const puzzle = puzzles.find((candidate) => candidate.difficulty === "hard")!;
+    for (const delta of [0, 1, 2]) {
+      const state: BoardState = { rotations: [...puzzle.initialState.rotations] };
+      state.rotations[1] = (state.rotations[1]! + delta) % 12;
+      expect(evaluate(puzzle, state).solved, "the three comparison poses must not finish the inspection puzzle").toBe(false);
+    }
+    let releaseImage: (() => void) | undefined;
+    const imageGate = new Promise<void>((resolve) => { releaseImage = resolve; });
+    await page.route("**/textures/stone-slate-v1.webp", async (route) => {
+      const response = await route.fetch();
+      await imageGate;
+      await route.fulfill({ response });
+    });
+    await page.goto(`/?puzzleId=${encodeURIComponent(puzzle.id)}`, { waitUntil: "domcontentloaded" });
+    const host = page.locator("[data-board-host]");
+    await expect(host).toHaveAttribute("data-board-renderer", "three");
+    await expect(host).toHaveAttribute("data-board-texture", "loading");
+    const originalCanvas = await page.locator("canvas.stone-board-canvas").elementHandle();
+    expect(originalCanvas).not.toBeNull();
+    const poseA = await pixelPose(page);
+    const loadingA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "loading" });
+    expect(loadingA.zeroAlpha, "the original transparent exterior is retained").toBeGreaterThan(0);
+    expect(loadingA.partialAlpha, "original antialiasing and translucent light edges are retained").toBeGreaterThan(0);
+    expect(loadingA.opaqueAlpha, "the complete opaque stone remains rendered").toBeGreaterThan(0);
+    const loadingGpu = await gpuSnapshot(page);
+    const comparisons: { name: string; first: number; second: number; differentBytes: number }[] = [];
+    const equal = async (name: string, first: PixelFrameInfo, second: PixelFrameInfo): Promise<void> => {
+      const differentBytes = await pixelDifference(page, first, second);
+      comparisons.push({ name, first: first.serial, second: second.serial, differentBytes });
+      expect(differentBytes, `${name}: every encoded R, G, B and alpha byte must match, including transparent pixels`).toBe(0);
+    };
+    const move = async (direction: "right" | "left", kind: "cold" | "hit", texture: string, after: number): Promise<PixelFrameInfo> => {
+      await page.locator(`[data-action='rotate-${direction}']`).click();
+      return pixelFrame(page, { pose: await pixelPose(page), kind, texture, after });
+    };
+    const loadingB = await move("right", "cold", "loading", loadingA.serial);
+    const loadingHitA = await move("left", "hit", "loading", loadingB.serial);
+    await equal("loading A cold versus raw hit", loadingA, loadingHitA);
+    const hitDraw = await drawSnapshot(page);
+    expect(hitDraw).toEqual({ calls: 1, instancedCalls: 0, instances: 0, triangles: 2 });
+    expect(await gpuSnapshot(page), "both cache textures, raw quad buffers and its program were allocated in the first cold frame").toEqual(loadingGpu);
+
+    // A is displayed by its cache while real scene geometry is still B. Late
+    // texture readiness must invalidate and build desired A, not repaint B.
+    releaseImage?.();
+    await expect(host).toHaveAttribute("data-board-texture", "ready");
+    const readyA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: loadingHitA.serial });
+    expect(await pixelDifference(page, loadingA, readyA), "the arriving stone texture cannot leave cached loading pixels on screen").toBeGreaterThan(0);
+    const readyGpu = await gpuSnapshot(page);
+    const coldDraw = await drawSnapshot(page);
+    expect(coldDraw.calls, "cold frames still submit the complete original instanced scene").toBe(72);
+    expect(coldDraw.triangles).toBe(170_284);
+    expect(coldDraw.instances).toBe(125);
+    expect(readyGpu.contexts).toBe(1);
+    expect(readyGpu.contextsCreated).toBe(1);
+    expect(readyGpu.framebuffers, "only the renderer's three original internal framebuffers remain, with no render-target cache").toBe(3);
+    expect(readyGpu.framebuffers).toBe(loadingGpu.framebuffers);
+    expect(readyGpu.programs, "the pinned renderer retains both loading and mapped stone shader variants before loss").toBeGreaterThan(loadingGpu.programs);
+    const readyB = await move("right", "cold", "ready", readyA.serial);
+    const readyHitA = await move("left", "hit", "ready", readyB.serial);
+    await equal("ready A cold versus raw hit", readyA, readyHitA);
+    const readyHitB = await move("right", "hit", "ready", readyHitA.serial);
+    await equal("ready B cold versus raw hit", readyB, readyHitB);
+    const beforeResizeA = await move("left", "hit", "ready", readyHitB.serial);
+    await equal("repeated ready A raw hit", readyA, beforeResizeA);
+    expect(await gpuSnapshot(page)).toEqual(readyGpu);
+
+    // Again A is displayed but B remains built. Compare resized A with a
+    // separately forced cold A at the same dimensions, after evicting A via C.
+    await page.setViewportSize({ width: 430, height: 932 });
+    await expect.poll(() => page.locator("canvas.stone-board-canvas").evaluate((node) => (node as HTMLCanvasElement).width)).not.toBe(readyA.width);
+    const resizedWidth = await page.locator("canvas.stone-board-canvas").evaluate((node) => (node as HTMLCanvasElement).width);
+    const resizedA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: beforeResizeA.serial, width: resizedWidth });
+    const resizedB = await move("right", "cold", "ready", resizedA.serial);
+    const resizedC = await move("right", "cold", "ready", resizedB.serial);
+    const resizedHitB = await move("left", "hit", "ready", resizedC.serial);
+    await equal("resized B cold versus raw hit", resizedB, resizedHitB);
+    const resizedReferenceA = await move("left", "cold", "ready", resizedHitB.serial);
+    await equal("A hit then resize versus independent current A cold", resizedA, resizedReferenceA);
+    expect(await gpuSnapshot(page), "resize replaces storage but retains the two-slot GPU bound").toEqual(readyGpu);
+    await page.setViewportSize({ width: 402, height: 874 });
+    const originalSizeA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: resizedReferenceA.serial, width: readyA.width });
+    await equal("resize back versus original ready A", readyA, originalSizeA);
+
+    await page.locator("[data-action='select-ring'][data-ring='0']").click();
+    const selectedInner = await pixelFrame(page, { pose: await pixelPose(page), kind: "cold", texture: "ready", after: originalSizeA.serial });
+    expect(await pixelDifference(page, originalSizeA, selectedInner), "selection rims are part of the pose, not stale cached decoration").toBeGreaterThan(0);
+    await page.locator("[data-action='select-ring'][data-ring='1']").click();
+    const selectedMiddle = await pixelFrame(page, { pose: poseA, kind: "hit", texture: "ready", after: selectedInner.serial });
+    await equal("selection back versus original A", readyA, selectedMiddle);
+
+    const canLose = await originalCanvas?.evaluate((node) => {
+      const extension = (node as HTMLCanvasElement).getContext("webgl2")?.getExtension("WEBGL_lose_context");
+      if (!extension) return false;
+      (node as HTMLCanvasElement & { __testContextLoss?: WEBGL_lose_context }).__testContextLoss = extension;
+      extension.loseContext();
+      return true;
+    });
+    expect(canLose, "the native loss/restore must invalidate GPU-only cache contents").toBe(true);
+    await expect(host).toHaveAttribute("data-board-renderer", "svg");
+    await originalCanvas?.evaluate((node) => (node as HTMLCanvasElement & { __testContextLoss?: WEBGL_lose_context }).__testContextLoss?.restoreContext());
+    await expect(host).toHaveAttribute("data-board-renderer", "three");
+    const restoredA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: selectedMiddle.serial });
+    await equal("context restoration versus original ready A", readyA, restoredA);
+    expect(await originalCanvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas"))).toBe(true);
+    const restoredGpu = await gpuSnapshot(page);
+    // Renderer restoration rebuilds used buffers/textures/programs, but not its
+    // three unused constructor-only FBOs or obsolete mapless loading programs.
+    expect(restoredGpu, "restoration has the exact used-resource baseline, without obsolete loading shader variants").toEqual({
+      ...readyGpu, framebuffers: 0, programs: loadingGpu.programs,
+    });
+    const restoredB = await move("right", "cold", "ready", restoredA.serial);
+    const restoredHitA = await move("left", "hit", "ready", restoredB.serial);
+    await equal("restored A cold versus raw hit", restoredA, restoredHitA);
+    expect(await drawSnapshot(page)).toEqual(hitDraw);
+    expect(await gpuSnapshot(page)).toEqual(restoredGpu);
+    const frames = await page.evaluate(() => ((window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames ?? [])
+      .map(({ pixels: _pixels, ...info }) => info));
+    expect(frames.every((frame) => frame.copyMismatch === 0 && frame.apiError === 0 && frame.defaultFramebuffer)).toBe(true);
+    expect(errors).toEqual([]);
+    await testInfo.attach("native-raw-frame-byte-equality", { body: JSON.stringify({ puzzleId: puzzle.id, coldDraw, hitDraw, loadingGpu, readyGpu, restoredGpu, comparisons, frames }, null, 2), contentType: "application/json" });
   });
 });

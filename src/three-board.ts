@@ -8,6 +8,7 @@ import {
   DirectionalLight,
   DynamicDrawUsage,
   Float32BufferAttribute,
+  FramebufferTexture,
   Group,
   HemisphereLight,
   InstancedMesh,
@@ -15,10 +16,12 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
+  NoBlending,
   NoColorSpace,
   Object3D,
   OrthographicCamera,
   PlaneGeometry,
+  RawShaderMaterial,
   Scene,
   ShaderMaterial,
   Sphere,
@@ -49,6 +52,7 @@ import { SLOT_COUNT, type BoardState, type Puzzle } from "./core/types.ts";
 const STONE_TEXTURE_URL = `${import.meta.env.BASE_URL}textures/stone-slate-v1.webp`;
 const MAX_BEAM_SEGMENTS = 24;
 const MAX_SVG_STATES = SLOT_COUNT;
+const FRAME_CACHE_SIZE = 2;
 const RING_TOP = 6;
 const SLOT_STEP = Math.PI * 2 / SLOT_COUNT;
 let stoneImage: HTMLImageElement | null = null;
@@ -168,6 +172,32 @@ function reusableBoardSurface(): BoardSurface | null {
 
 function scenePoint(point: BoardPoint): Vector2 {
   return new Vector2(point.x - BOARD_CENTER.x, BOARD_CENTER.y - point.y);
+}
+
+/** Own immutable pose data; neither an input state nor a returned model aliases it. */
+function immutableRenderModel(puzzle: Puzzle, state: BoardState): BoardRenderModel {
+  const model = createBoardRenderModel(puzzle, state);
+  for (const part of model.parts) Object.freeze(part);
+  for (const segment of model.beams) {
+    // Central segment endpoints otherwise reference the shared BOARD_CENTER.
+    segment.start = { ...segment.start };
+    segment.end = { ...segment.end };
+    Object.freeze(segment.start);
+    Object.freeze(segment.end);
+    Object.freeze(segment);
+  }
+  for (const beam of model.light.beams) {
+    Object.freeze(beam.inwardPath);
+    Object.freeze(beam.outwardPath);
+    Object.freeze(beam);
+  }
+  Object.freeze(model.parts);
+  Object.freeze(model.beams);
+  Object.freeze(model.targets);
+  Object.freeze(model.light.beams);
+  Object.freeze(model.light.litSlots);
+  Object.freeze(model.light);
+  return Object.freeze(model);
 }
 
 /** Rounded cross-section gives stone rims real normals, side walls and depth. */
@@ -327,6 +357,8 @@ type Decoration = "emitterBody" | "emitterRim" | "emittingBead" | "unlitBead"
   | "receiverBody" | "litReceiverRim" | "unlitReceiverRim" | "litReceiverInnerRim" | "unlitReceiverInnerRim"
   | "idleDot" | "brightPin" | "lightBar" | "darkBar" | "blockerBorder" | "stopBar";
 
+type FrameSnapshot = { key: string | null; texture: FramebufferTexture; used: number };
+
 class StoneScene {
   readonly renderer: WebGLRenderer;
   readonly canvas: HTMLCanvasElement;
@@ -339,6 +371,19 @@ class StoneScene {
   private readonly instanceTransform = new Object3D();
   private readonly decorations: Record<Decoration, InstancedMesh>;
   private renderedModel: BoardRenderModel | null = null;
+  private desiredModel: BoardRenderModel | null = null;
+  private desiredState: BoardState | null = null;
+  private desiredRing = 1;
+  private desiredPoseKey = "";
+  private readonly rawFrameScene = new Scene();
+  private readonly frameSnapshots: FrameSnapshot[] = Array.from({ length: FRAME_CACHE_SIZE }, () => ({
+    key: null, texture: new FramebufferTexture(1, 1), used: 0,
+  }));
+  private readonly frameGeometry: PlaneGeometry;
+  private readonly frameMaterial: RawShaderMaterial;
+  private frameSequence = 0;
+  private displayedPoseKey = "";
+  frameMode: "cold" | "hit" = "cold";
   private readonly ringMeshes: Mesh[] = [];
   private readonly selectionRims: Group[] = [];
   private readonly changing = new Group();
@@ -489,6 +534,30 @@ class StoneScene {
         stopBar: this.batch(this.unitPlane, this.lightMark, MAX_BEAM_SEGMENTS, 35),
       };
       this.scene.add(this.changing);
+      for (const snapshot of this.frameSnapshots) {
+        snapshot.texture.colorSpace = NoColorSpace;
+        snapshot.texture.flipY = false;
+        this.textures.add(snapshot.texture);
+      }
+      this.frameGeometry = this.geometry(new PlaneGeometry(2, 2));
+      this.frameGeometry.setDrawRange(0, 0);
+      this.frameMaterial = this.material(new RawShaderMaterial({
+        uniforms: { uFrame: { value: this.frameSnapshots[0].texture } },
+        vertexShader: "precision highp float; attribute vec3 position; attribute vec2 uv; varying vec2 vFrameUv; void main() { vFrameUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",
+        // The canvas already contains encoded, premultiplied final RGBA. Do not
+        // tone-map, color-convert, blend or premultiply these bytes a second time.
+        fragmentShader: "precision highp float; uniform highp sampler2D uFrame; varying vec2 vFrameUv; void main() { gl_FragColor = texture2D(uFrame, vFrameUv); }",
+        toneMapped: false,
+        blending: NoBlending,
+        depthTest: false,
+        depthWrite: false,
+      }));
+      const prewarm = this.mesh(this.frameGeometry, this.frameMaterial);
+      prewarm.frustumCulled = false;
+      this.scene.add(prewarm);
+      const rawQuad = this.mesh(this.frameGeometry, this.frameMaterial);
+      rawQuad.frustumCulled = false;
+      this.rawFrameScene.add(rawQuad);
     } catch (error) {
       try { this.dispose(); } finally { throw error; }
     }
@@ -593,6 +662,7 @@ class StoneScene {
           material.roughness = 1;
           material.needsUpdate = true;
         }
+        this.invalidateSnapshots();
         onReady();
       } catch {
         onFailure();
@@ -633,7 +703,15 @@ class StoneScene {
     }
   }
 
-  update(model: BoardRenderModel, state: BoardState, selectedRing: number): void {
+  update(model: BoardRenderModel, state: BoardState, selectedRing: number, poseKey: string): void {
+    this.desiredModel = model;
+    this.desiredState = { rotations: [...state.rotations] };
+    this.desiredRing = selectedRing;
+    this.desiredPoseKey = poseKey;
+  }
+
+  /** A cache hit leaves the last built geometry alone; only a cold render builds. */
+  private buildScene(model: BoardRenderModel, state: BoardState, selectedRing: number): void {
     for (const [ring, mesh] of this.ringMeshes.entries()) {
       mesh.rotation.z = -state.rotations[ring] * SLOT_STEP;
       this.selectionRims[ring].visible = selectedRing === ring;
@@ -728,18 +806,72 @@ class StoneScene {
     this.camera.top = halfHeight;
     this.camera.bottom = -halfHeight;
     this.camera.updateProjectionMatrix();
+    const size = this.renderer.getDrawingBufferSize(new Vector2());
+    for (const snapshot of this.frameSnapshots) {
+      // WebGL2 texture storage is immutable. Reallocate the same two owned
+      // texture objects on size/DPR changes rather than retaining old storage.
+      snapshot.texture.dispose();
+      snapshot.texture.image = { width: size.x, height: size.y };
+      snapshot.texture.needsUpdate = true;
+    }
+    this.invalidateSnapshots();
+  }
+
+  invalidateSnapshots(): void {
+    for (const snapshot of this.frameSnapshots) snapshot.key = null;
+    this.displayedPoseKey = "";
   }
 
   render(): void {
+    if (!this.desiredModel || !this.desiredState) return;
+    // The compositor already owns an identical pose. Resize, texture readiness
+    // and context changes invalidate it, so only redundant paints are omitted.
+    if (this.displayedPoseKey === this.desiredPoseKey) return;
+    // Allocate both slots on the first cold frame. The zero-range prewarm mesh
+    // likewise registers the raw shader/quad without drawing a single polygon.
+    for (const snapshot of this.frameSnapshots) this.renderer.initTexture(snapshot.texture);
+    const hit = this.frameSnapshots.find((snapshot) => snapshot.key === this.desiredPoseKey);
+    if (hit) {
+      hit.used = ++this.frameSequence;
+      this.frameMaterial.uniforms.uFrame.value = hit.texture;
+      this.frameGeometry.setDrawRange(0, 6);
+      const context = this.renderer.getContext();
+      const dither = context.isEnabled(context.DITHER);
+      this.renderer.state.disable(context.DITHER);
+      try { this.renderer.render(this.rawFrameScene, this.camera); }
+      finally {
+        if (dither) this.renderer.state.enable(context.DITHER);
+        this.frameGeometry.setDrawRange(0, 0);
+      }
+      this.frameMode = "hit";
+      this.displayedPoseKey = this.desiredPoseKey;
+      return;
+    }
+    // Invalidation after A(cold), B(cold), A(hit) must rebuild desired A, not
+    // accidentally mark its display model as already-built geometry B.
+    this.buildScene(this.desiredModel, this.desiredState, this.desiredRing);
     this.renderer.render(this.scene, this.camera);
+    const slot = this.frameSnapshots.find((snapshot) => snapshot.key === null)
+      ?? this.frameSnapshots.reduce((oldest, snapshot) => snapshot.used < oldest.used ? snapshot : oldest);
+    // Capture the completed original canvas in this same turn, before a
+    // preserveDrawingBuffer:false compositor can discard its drawing buffer.
+    this.renderer.copyFramebufferToTexture(slot.texture);
+    slot.key = this.desiredPoseKey;
+    slot.used = ++this.frameSequence;
+    this.frameMode = "cold";
+    this.displayedPoseKey = this.desiredPoseKey;
   }
 
   dispose(): void {
     this.disposed = true;
     try {
       this.scene.clear();
+      this.rawFrameScene.clear();
       this.changing.clear();
       this.renderedModel = null;
+      this.desiredModel = null;
+      this.desiredState = null;
+      this.invalidateSnapshots();
       for (const batch of this.batches) batch.dispose();
       for (const geometry of this.geometries) geometry.dispose();
       for (const material of this.materials) material.dispose();
@@ -767,11 +899,13 @@ export class BoardView {
       this.host.dataset.boardRenderer = "svg";
       this.host.dataset.boardContext = "lost";
       this.cancelDraw();
+      this.scene?.invalidateSnapshots();
     },
     ready: () => {
       if (!this.surface || !this.canRender()) return;
       this.contextLost = false;
       this.host.dataset.boardContext = "ready";
+      this.scene?.invalidateSnapshots();
       this.ensureScene();
       this.updateScene();
       this.requestDraw();
@@ -780,6 +914,7 @@ export class BoardView {
   private scene: StoneScene | null = null;
   private svg: SVGSVGElement | null = null;
   private readonly svgStates = new Map<string, SVGSVGElement>();
+  private readonly modelStates = new Map<string, BoardRenderModel>();
   private model: BoardRenderModel | null = null;
   private puzzle: Puzzle | null = null;
   private state: BoardState | null = null;
@@ -812,9 +947,18 @@ export class BoardView {
 
   update(puzzle: Puzzle, state: BoardState, options: BoardSvgOptions): BoardRenderModel {
     if (this.disposed) throw new Error("Cannot update a disposed board view");
-    if (puzzle !== this.puzzle) this.svgStates.clear();
+    if (puzzle !== this.puzzle) { this.svgStates.clear(); this.modelStates.clear(); }
     const changed = puzzle !== this.puzzle || !this.state || state.rotations.some((rotation, ring) => rotation !== this.state?.rotations[ring]);
-    if (changed || !this.model) this.model = createBoardRenderModel(puzzle, state);
+    if (changed || !this.model) {
+      const modelKey = state.rotations.join(",");
+      this.model = this.modelStates.get(modelKey) ?? immutableRenderModel(puzzle, state);
+      this.modelStates.delete(modelKey);
+      this.modelStates.set(modelKey, this.model);
+      if (this.modelStates.size > FRAME_CACHE_SIZE) {
+        const oldest = this.modelStates.keys().next().value;
+        if (oldest !== undefined) this.modelStates.delete(oldest);
+      }
+    }
     this.puzzle = puzzle;
     // Own the rotation snapshot so callers cannot change our comparison key.
     this.state = { rotations: [...state.rotations] };
@@ -866,6 +1010,10 @@ export class BoardView {
     return !this.disposed && !document.hidden && !this.pageHidden && !this.forcedColors.matches;
   }
 
+  private poseKey(): string {
+    return `${this.puzzle?.id}:${this.puzzle?.contentChecksum}:${this.state?.rotations.join(",")}:${this.options?.selectedRing}`;
+  }
+
   private ensureScene(): void {
     if (this.scene || !this.canRender() || this.unavailable || this.imageFailed || !this.model || !this.state || !this.options) return;
     try {
@@ -884,7 +1032,7 @@ export class BoardView {
       this.contextLost = false;
       const scene = new StoneScene(canvas, context);
       this.scene = scene;
-      scene.update(this.model, this.state, this.options.selectedRing);
+      scene.update(this.model, this.state, this.options.selectedRing, this.poseKey());
       this.host.dataset.boardTexture = "loading";
       this.host.dataset.boardContext = "ready";
       scene.loadTexture(() => {
@@ -906,7 +1054,7 @@ export class BoardView {
   private updateScene(): void {
     if (!this.scene || !this.model || !this.state || !this.options) return;
     try {
-      this.scene.update(this.model, this.state, this.options.selectedRing);
+      this.scene.update(this.model, this.state, this.options.selectedRing, this.poseKey());
     } catch {
       this.unavailable = true;
       this.releaseScene();
@@ -924,6 +1072,7 @@ export class BoardView {
       try {
         scene.resize(box.width, box.height);
         scene.render();
+        this.host.dataset.boardCache = scene.frameMode;
         this.host.dataset.boardRenderer = "three";
       } catch {
         this.unavailable = true;
@@ -974,6 +1123,7 @@ export class BoardView {
     this.options = null;
     this.svg = null;
     this.svgStates.clear();
+    this.modelStates.clear();
     this.host.replaceChildren();
   }
 }

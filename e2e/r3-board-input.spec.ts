@@ -5,6 +5,8 @@ import { evaluate } from "../src/core/engine.ts";
 import type { LightResult, Puzzle as CorePuzzle } from "../src/core/types.ts";
 
 type Viewport = { name: string; width: number; height: number };
+type FrameBox = { x: number; y: number; width: number; height: number };
+type DirectionFrameEvidence = { frame: FrameBox; markers: { slot: number | null; box: FrameBox | null }[]; nativeBoxes: (FrameBox | null)[] };
 type Puzzle = {
   id: string;
   targets: number[];
@@ -121,24 +123,34 @@ async function directionMarkers(page: Page): Promise<Locator> {
   throw new Error("Board must expose twelve rendered direction markers");
 }
 
-async function assertDirectionFrame(page: Page): Promise<void> {
+async function assertDirectionFrame(page: Page, compareNative = false): Promise<DirectionFrameEvidence> {
   const svg = board(page).locator("svg.stone-board").first();
   const frame = await svg.boundingBox();
   if (!frame || frame.width <= 0 || frame.height <= 0 || Math.abs(frame.width - frame.height) > 1) {
     throw new Error("Board SVG has no square rendered bounding box");
   }
   const markers = await directionMarkers(page);
-  const slots = await markers.evaluateAll((elements) =>
+  // Observe all twelve real marker boxes in one browser round trip. The
+  // fixtures do not move during this read; every original slot/bounds
+  // assertion remains, without twelve traced protocol calls per puzzle.
+  const snapshots = await markers.evaluateAll((elements) =>
     elements.map((element) => {
       const value = element.getAttribute("data-direction-slot") ?? element.getAttribute("data-receiver-slot") ?? element.getAttribute("data-slot");
-      return value === null ? null : Number(value);
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      const visible = element.isConnected && style.display !== "none"
+        && style.visibility !== "hidden" && style.visibility !== "collapse"
+        && rect.width > 0 && rect.height > 0;
+      return {
+        slot: value === null ? null : Number(value),
+        box: visible ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : null,
+      };
     }),
   );
-  expect(new Set(slots.filter((slot): slot is number => slot !== null))).toEqual(
+  expect(new Set(snapshots.map((snapshot) => snapshot.slot).filter((slot): slot is number => slot !== null))).toEqual(
     new Set(Array.from({ length: 12 }, (_, slot) => slot)),
   );
-  for (const marker of await markers.all()) {
-    const box = await marker.boundingBox();
+  for (const { box } of snapshots) {
     expect(box, "direction marker should be rendered").not.toBeNull();
     if (!box) continue;
     expect(box.width).toBeGreaterThan(0);
@@ -148,6 +160,24 @@ async function assertDirectionFrame(page: Page): Promise<void> {
     expect(box.x + box.width).toBeLessThanOrEqual(frame.x + frame.width + 2);
     expect(box.y + box.height).toBeLessThanOrEqual(frame.y + frame.height + 2);
   }
+  const nativeBoxes: (FrameBox | null)[] = [];
+  if (compareNative) {
+    // Prove the batching proxy against the unchanged native API once per
+    // browser, rather than paying for 90 x 12 separate protocol observations.
+    for (const [index, marker] of (await markers.all()).entries()) {
+      const native = await marker.boundingBox();
+      const observed = snapshots[index]?.box;
+      expect(native).not.toBeNull();
+      expect(observed).not.toBeNull();
+      if (native && observed) {
+        for (const key of ["x", "y", "width", "height"] as const) {
+          expect(Math.abs(native[key] - observed[key]), `native/batched marker ${index} ${key}`).toBeLessThanOrEqual(0.01);
+        }
+      }
+      nativeBoxes.push(native);
+    }
+  }
+  return { frame, markers: snapshots, nativeBoxes };
 }
 
 async function assertBoardInViewport(page: Page, viewport: Viewport): Promise<void> {
@@ -222,8 +252,12 @@ test.describe("R3 board rendering", () => {
       await openGame(page, puzzle.id, "domcontentloaded");
       await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
       await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
-      await assertDirectionFrame(page);
-      expect(await page.locator("[data-puzzle-id]").getAttribute("data-puzzle-id")).toBe(puzzle.id);
+      const directionEvidence = await assertDirectionFrame(page, index === 0);
+      if (index === 0) {
+        await testInfo.attach("direction-native-batch-equivalence", {
+          body: JSON.stringify(directionEvidence, null, 2), contentType: "application/json",
+        });
+      }
 
       const expectedEmitters = puzzle.rings.reduce(
         (count, ring) => count + ring.parts.filter((part) => part.kind === "emitter").length,
@@ -233,15 +267,17 @@ test.describe("R3 board rendering", () => {
         (count, ring) => count + ring.parts.filter((part) => part.kind === "blocker").length,
         0,
       );
-      await expect(board(page).locator("[data-blocker-cell]")).toHaveCount(expectedBlockers);
-      await expect(board(page).locator(".blocker-mark")).toHaveCount(0);
-      await expect(board(page).locator(".ring-texture")).toHaveCount(3);
-      const beams = board(page).locator("[data-beam], [data-beam-index]");
       const expectedLight = evaluate(puzzle as CorePuzzle, (puzzle as CorePuzzle).initialState);
       const expectedRenderSegments = expectedSegments(expectedLight);
-      await expect(beams).toHaveCount(expectedRenderSegments.length);
-      const beamData = await beams.evaluateAll((elements) =>
-        elements.map((element) => ({
+      // These are observations only: the real page/renderer readiness and all
+      // ninety navigations remain. Read one immutable inspection board rather
+      // than making separate traced calls for each count and attribute.
+      const observed = await board(page).evaluate((root) => ({
+        puzzleIds: Array.from(document.querySelectorAll("[data-puzzle-id]")).map((element) => element.getAttribute("data-puzzle-id")),
+        blockers: root.querySelectorAll("[data-blocker-cell]").length,
+        blockerMarks: root.querySelectorAll(".blocker-mark").length,
+        ringTextures: root.querySelectorAll(".ring-texture").length,
+        beams: Array.from(root.querySelectorAll("[data-beam], [data-beam-index]")).map((element) => ({
           phase: element.getAttribute("data-phase"),
           sourceSlot: Number(element.getAttribute("data-source-slot")),
           endSlot: Number(element.getAttribute("data-end-slot") ?? element.getAttribute("data-destination-slot")),
@@ -251,7 +287,14 @@ test.describe("R3 board rendering", () => {
           x2: Number(element.getAttribute("x2")),
           y2: Number(element.getAttribute("y2")),
         })),
-      );
+      }));
+      expect(observed.puzzleIds).toHaveLength(1);
+      expect(observed.puzzleIds[0]).toBe(puzzle.id);
+      expect(observed.blockers).toBe(expectedBlockers);
+      expect(observed.blockerMarks).toBe(0);
+      expect(observed.ringTextures).toBe(3);
+      const beamData = observed.beams;
+      expect(beamData).toHaveLength(expectedRenderSegments.length);
       expect(new Set(beamData.map((beam) => beam.beamIndex))).toEqual(new Set(Array.from({ length: expectedEmitters }, (_, beamIndex) => beamIndex)));
       for (const [segmentIndex, beam] of beamData.entries()) {
         const expectedSegment = expectedRenderSegments[segmentIndex];
