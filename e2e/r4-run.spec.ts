@@ -31,6 +31,39 @@ const puzzles = JSON.parse(
   readFileSync(resolve(process.cwd(), "content/puzzles-v2.json"), "utf8"),
 ) as Puzzle[];
 const puzzleById = new Map(puzzles.map((puzzle) => [puzzle.id, puzzle]));
+const analysisById = new Map<string, ReturnType<typeof analyzePuzzle>>();
+
+/** Fixed repository fixtures are immutable; never cache the browser's state. */
+function fixtureAnalysis(puzzle: Puzzle): ReturnType<typeof analyzePuzzle> {
+  let analysis = analysisById.get(puzzle.id);
+  if (!analysis) {
+    analysis = analyzePuzzle(puzzle);
+    analysisById.set(puzzle.id, analysis);
+  }
+  return analysis;
+}
+
+type PauseSample = {
+  at: number;
+  phase: string | null;
+  puzzleId: string | null;
+  connected: boolean;
+  visible: boolean;
+  top: number | null;
+  left: number;
+  right: number;
+  confettiVisible: boolean;
+  resultVisible: boolean;
+};
+
+type FinalPauseObservation = {
+  before: PauseSample;
+  entry: PauseSample | null;
+  oneSecond: PauseSample | null;
+  scheduledAt: number | null;
+  scheduledDelay: number | null;
+  resultAt: number | null;
+};
 
 const TEST_CLOCK_INSTALL = () => {
   const state = {
@@ -224,16 +257,21 @@ async function solveVisibleQuestion(page: Page): Promise<void> {
   const id = await readPuzzleId(page);
   const puzzle = puzzleById.get(id);
   if (!puzzle) throw new Error(`No fixture for puzzle ${id}`);
-  const analysis = analyzePuzzle(puzzle);
+  const analysis = fixtureAnalysis(puzzle);
   expect(analysis.truncated, `offline oracle must fully inspect ${id}`).toBe(false);
   expect(analysis.shortestMoves, `public puzzle ${id} must be solvable`).not.toBeNull();
 
+  let selectedRing = await game(page).getAttribute("data-selected-ring");
   for (const move of analysis.representativeSolution) {
-    const ring = page.locator(
-      `[data-action='select-ring'][data-ring='${move.ring}'], [data-action='ring-select'][data-ring='${move.ring}'], [data-ring-button='${move.ring}']`,
-    ).first();
-    await expect(ring).toBeVisible();
-    await ring.click();
+    if (selectedRing !== String(move.ring)) {
+      const ring = page.locator(
+        `[data-action='select-ring'][data-ring='${move.ring}'], [data-action='ring-select'][data-ring='${move.ring}'], [data-ring-button='${move.ring}']`,
+      ).first();
+      await expect(ring).toBeVisible();
+      await ring.click();
+      selectedRing = await game(page).getAttribute("data-selected-ring");
+      expect(selectedRing).toBe(String(move.ring));
+    }
     await rotateButton(page, move.type).click();
   }
 
@@ -251,15 +289,20 @@ async function prepareImmediatelyBeforeSuccess(page: Page): Promise<void> {
   const id = await readPuzzleId(page);
   const puzzle = puzzleById.get(id);
   if (!puzzle) throw new Error(`No fixture for puzzle ${id}`);
-  const analysis = analyzePuzzle(puzzle);
+  const analysis = fixtureAnalysis(puzzle);
   expect(analysis.truncated).toBe(false);
   expect(analysis.representativeSolution.length).toBeGreaterThan(0);
   let state = puzzle.initialState;
   const prefix = analysis.representativeSolution.slice(0, -1);
+  let selectedRing = await game(page).getAttribute("data-selected-ring");
   for (const move of prefix) {
     state = applyRotation(state, move.type, move.ring);
     expect(evaluate(puzzle, state).solved).toBe(false);
-    await page.locator(`[data-action='select-ring'][data-ring='${move.ring}']`).click();
+    if (selectedRing !== String(move.ring)) {
+      await page.locator(`[data-action='select-ring'][data-ring='${move.ring}']`).click();
+      selectedRing = await game(page).getAttribute("data-selected-ring");
+      expect(selectedRing).toBe(String(move.ring));
+    }
     await rotateButton(page, move.type).click();
   }
   await expect(game(page)).toHaveAttribute("data-phase", "playing");
@@ -457,7 +500,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     const puzzleId = await readPuzzleId(page);
     const puzzle = puzzleById.get(puzzleId);
     if (!puzzle) throw new Error(`No fixture for puzzle ${puzzleId}`);
-    const finalMove = analyzePuzzle(puzzle).representativeSolution.at(-1);
+    const finalMove = fixtureAnalysis(puzzle).representativeSolution.at(-1);
     if (!finalMove) throw new Error(`No solution move for ${puzzleId}`);
     await page.locator(`[data-action='select-ring'][data-ring='${finalMove.ring}']`).click();
     const button = rotateButton(page, finalMove.type);
@@ -473,7 +516,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     // on the same coordinates after that button becomes disabled.
     await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
     await expect(game(page)).toHaveAttribute("data-phase", "intermission");
-    const completedMoves = analyzePuzzle(puzzle).representativeSolution.length;
+    const completedMoves = fixtureAnalysis(puzzle).representativeSolution.length;
     await expect(button).toBeDisabled();
     for (let index = 0; index < 4; index += 1) {
       await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
@@ -522,20 +565,97 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await solveVisibleQuestion(page);
       await waitForPlaying(page);
     }
+    await prepareImmediatelyBeforeSuccess(page);
     const finalPuzzleId = await readPuzzleId(page);
-    const boardTop = async (): Promise<number> => page.locator("[data-testid='game-screen'] .board-panel").evaluate((element) =>
-      element.getBoundingClientRect().top + window.scrollY,
-    );
-    const before = await boardTop();
-    await solveVisibleQuestion(page);
-    await expect(phaseLocator(page, "intermission")).toBeVisible();
-    await expect(result(page)).toBeHidden();
-    await expect(page.locator("[data-confetti-side='left']")).toHaveCount(14);
-    await expect(page.locator("[data-confetti-side='right']")).toHaveCount(14);
-    await page.waitForTimeout(1_000);
-    expect(await readPuzzleId(page)).toBe(finalPuzzleId);
-    expect(Math.abs(await boardTop() - before)).toBeLessThanOrEqual(1);
+    const puzzle = puzzleById.get(finalPuzzleId);
+    if (!puzzle) throw new Error(`No fixture for puzzle ${finalPuzzleId}`);
+    const finalMove = fixtureAnalysis(puzzle).representativeSolution.at(-1);
+    if (!finalMove) throw new Error(`No solution move for ${finalPuzzleId}`);
+    await page.locator(`[data-action='select-ring'][data-ring='${finalMove.ring}']`).click();
+
+    // Arm inside the browser before the actual final click. Round trips after
+    // success must not consume the 1.5-second window or measure a detached rect.
+    await page.evaluate(() => {
+      const board = document.querySelector<HTMLElement>("[data-testid='game-screen'] .board-panel");
+      if (!board) throw new Error("A connected final board is required");
+      const visible = (element: Element | null): boolean => Boolean(element?.isConnected
+        && element.getClientRects().length && getComputedStyle(element).visibility !== "hidden");
+      const sample = (): PauseSample => {
+        const shell = document.querySelector<HTMLElement>("[data-testid='game-screen']");
+        const connected = board.isConnected && shell?.querySelector(".board-panel") === board;
+        return {
+          // Date.now/performance.now are deliberately fake in this spec.
+          at: new Date().getTime(),
+          phase: shell?.dataset.phase ?? null,
+          puzzleId: shell?.dataset.puzzleId ?? null,
+          connected,
+          visible: connected && visible(board),
+          top: connected ? board.getBoundingClientRect().top + window.scrollY : null,
+          left: shell?.querySelectorAll("[data-confetti-side='left']").length ?? 0,
+          right: shell?.querySelectorAll("[data-confetti-side='right']").length ?? 0,
+          confettiVisible: visible(shell?.querySelector("[data-confetti]") ?? null),
+          resultVisible: visible(document.querySelector("[data-testid='result-screen']")),
+        };
+      };
+      const observation: FinalPauseObservation = {
+        before: sample(), entry: null, oneSecond: null,
+        scheduledAt: null, scheduledDelay: null, resultAt: null,
+      };
+      (window as Window & { __r4FinalPause?: FinalPauseObservation }).__r4FinalPause = observation;
+      const originalSetTimeout = window.setTimeout;
+      const setBrowserTimeout = originalSetTimeout.bind(window) as unknown as
+        (handler: TimerHandler, timeout?: number, ...args: unknown[]) => number;
+      window.setTimeout = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+        if (timeout === 1_500 && document.querySelector<HTMLElement>("[data-testid='game-screen']")?.dataset.phase === "intermission") {
+          observation.scheduledAt = new Date().getTime();
+          observation.scheduledDelay = timeout;
+        }
+        return setBrowserTimeout(handler, timeout, ...args);
+      }) as unknown as typeof window.setTimeout;
+      const observer = new MutationObserver(() => {
+        const current = sample();
+        if (!observation.entry && current.phase === "intermission") {
+          observation.entry = current;
+          setBrowserTimeout(() => { observation.oneSecond = sample(); }, 1_000);
+        }
+        if (current.resultVisible) {
+          observation.resultAt = current.at;
+          observer.disconnect();
+          window.setTimeout = originalSetTimeout;
+        }
+      });
+      observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+    });
+    await rotateButton(page, finalMove.type).click();
     await expect(result(page)).toBeVisible();
+    const observation = await page.evaluate(() =>
+      (window as Window & { __r4FinalPause?: FinalPauseObservation }).__r4FinalPause,
+    );
+    expect(observation).toBeDefined();
+    if (!observation) throw new Error("Missing final-pause observation");
+    expect(observation.before.connected).toBe(true);
+    expect(observation.before.visible).toBe(true);
+    expect(observation.before.top).not.toBeNull();
+    expect(observation.scheduledDelay).toBe(1_500);
+    expect(observation.scheduledAt).not.toBeNull();
+    expect(observation.resultAt).not.toBeNull();
+    for (const snapshot of [observation.entry, observation.oneSecond]) {
+      expect(snapshot).not.toBeNull();
+      if (!snapshot) throw new Error("Missing connected success-pause sample");
+      expect(snapshot.phase).toBe("intermission");
+      expect(snapshot.puzzleId).toBe(finalPuzzleId);
+      expect(snapshot.connected).toBe(true);
+      expect(snapshot.visible).toBe(true);
+      expect(snapshot.resultVisible).toBe(false);
+      expect(snapshot.confettiVisible).toBe(true);
+      expect(snapshot.left).toBe(14);
+      expect(snapshot.right).toBe(14);
+      expect(snapshot.top).not.toBeNull();
+      expect(Math.abs((snapshot.top ?? Number.NaN) - (observation.before.top ?? Number.NaN))).toBeLessThanOrEqual(1);
+    }
+    expect((observation.oneSecond?.at ?? 0) - (observation.entry?.at ?? Number.POSITIVE_INFINITY)).toBeGreaterThanOrEqual(1_000);
+    expect(observation.resultAt).toBeGreaterThan(observation.oneSecond?.at ?? Number.POSITIVE_INFINITY);
+    expect((observation.resultAt ?? 0) - (observation.scheduledAt ?? Number.POSITIVE_INFINITY)).toBeGreaterThanOrEqual(1_500);
   });
 
   test("F02: the preparation status fits at 200% text on narrow portrait and landscape screens", async ({ page }) => {
@@ -657,7 +777,7 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     const puzzleId = await readPuzzleId(page);
     const puzzle = puzzleById.get(puzzleId);
     if (!puzzle) throw new Error(`No fixture for puzzle ${puzzleId}`);
-    const finalMove = analyzePuzzle(puzzle).representativeSolution.at(-1);
+    const finalMove = fixtureAnalysis(puzzle).representativeSolution.at(-1);
     if (!finalMove) throw new Error(`No solution move for ${puzzleId}`);
     const solvedAt = Date.now();
     await page.locator(`[data-action='select-ring'][data-ring='${finalMove.ring}']`).click();
@@ -690,22 +810,22 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await expect(game(page).locator("[data-confetti]")).toBeHidden();
   });
 
-  test("F03/F04: every question boundary cancels stale work before and after success", async ({ page }) => {
-    test.setTimeout(300_000);
-    const abortAndWait = async (): Promise<void> => {
-      await page.getByRole("button", { name: "中断" }).first().click();
-      await expect(visibleDialog(page)).toBeVisible();
-      await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
-      await expect(home(page)).toBeVisible();
-      await page.waitForTimeout(1_700);
-      await expect(game(page)).toHaveCount(0);
-    };
-    const solveThrough = async (targetIndex: number): Promise<void> => {
-      for (let index = 0; index < targetIndex; index += 1) await solveVisibleQuestion(page);
-      await waitForPlaying(page);
-    };
+  for (let targetIndex = 0; targetIndex < 5; targetIndex += 1) {
+    test(`F03/F04: question ${targetIndex + 1} boundary cancels stale work before and after success`, async ({ page }) => {
+      test.setTimeout(300_000);
+      const abortAndWait = async (): Promise<void> => {
+        await page.getByRole("button", { name: "中断" }).first().click();
+        await expect(visibleDialog(page)).toBeVisible();
+        await visibleDialog(page).getByRole("button", { name: "中断する" }).click();
+        await expect(home(page)).toBeVisible();
+        await page.waitForTimeout(1_700);
+        await expect(game(page)).toHaveCount(0);
+      };
+      const solveThrough = async (questionIndex: number): Promise<void> => {
+        for (let index = 0; index < questionIndex; index += 1) await solveVisibleQuestion(page);
+        await waitForPlaying(page);
+      };
 
-    for (let targetIndex = 0; targetIndex < 5; targetIndex += 1) {
       // Cancel immediately before the target question succeeds.
       await gotoHome(page);
       await begin(page, "challenge");
@@ -723,8 +843,8 @@ test.describe("R4 run, timer, and storage acceptance", () => {
       await solveVisibleQuestion(page);
       await expect(phaseLocator(page, "intermission")).toBeVisible();
       await abortAndWait();
-    }
-  });
+    });
+  }
 
   test("F05: reload reports an unfinished run, keeps its assignment, and practice resets only the current puzzle", async ({ page }) => {
     await installIntervalProbe(page);
@@ -896,15 +1016,20 @@ test.describe("R4 run, timer, and storage acceptance", () => {
     await page.locator(`[data-action='select-ring'][data-ring='${safeMove.ring}']`).click();
     // Each pair returns to the original unsolved board, so no accidental
     // intermediate solution can terminate the question before the cap.
-    for (let pair = 0; pair < 150; pair += 1) {
+    await test.step("302 actual button rotations, returning to the unsolved initial board", async () => {
+      for (let pair = 0; pair < 150; pair += 1) {
+        await rotateButton(page, safeMove.type).click();
+        await rotateButton(page, inverse).click();
+      }
       await rotateButton(page, safeMove.type).click();
       await rotateButton(page, inverse).click();
+      await expect(page.locator("[data-field='move-count']")).toHaveAttribute("data-moves", "302");
+    });
+    for (let index = 0; index < 5; index += 1) {
+      await test.step(`finish question ${index + 1} with actual legal rotations`, async () => {
+        await solveVisibleQuestion(page);
+      });
     }
-    await rotateButton(page, safeMove.type).click();
-    await rotateButton(page, inverse).click();
-    await expect(page.locator("[data-field='move-count']")).toHaveAttribute("data-moves", "302");
-    await solveVisibleQuestion(page);
-    for (let index = 1; index < 5; index += 1) await solveVisibleQuestion(page);
     await expect(result(page)).toBeVisible();
     await expect(page.locator("[data-result-notice]")).toContainText(/参考|上限|時計/);
     await expect(page.locator("[data-result-question]")).toHaveCount(5);

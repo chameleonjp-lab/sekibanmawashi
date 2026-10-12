@@ -8,6 +8,8 @@ PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準�
 
 最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージと今回の本番公開は行っていません。iPhoneの物理実機は未確認です。
 
+初回正式CI [38287922273](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38287922273)は静的検査とChromium60件が成功、WebKit56件成功/4件失敗、`verify`失敗でした。native WebGL contextの累積を1個の再使用へ修正し、結果遷移と競合する成功盤面の観測、5境界の検査集約、冗長な同輪選択も見直しています。成功後1500ms・1px・全10中断シナリオ・302回の実回転・Q03全20回は維持します。独立レビューと型/lint/単体は成功、修正後の正式CIはPRの最新headで再確認します。
+
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 
 ## 2026-10-01 クリア時の連打による拡大の修正
