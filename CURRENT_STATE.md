@@ -1,6 +1,14 @@
 # 現在の状態
 
-更新日: 2026-10-01 JST / 対象: `chameleonjp-lab/sekibanmawashi`
+更新日: 2026-10-13 JST / 対象: `chameleonjp-lab/sekibanmawashi`
+
+## 2026-10-12 石板と光をthree.jsで改善
+
+PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準に、`feat/three-stone-light-20261012` で生成した石の素材画像と三次元描画を追加しました。石の粒、輪の厚みと縁、光の芯・広がり・石への照り返しを描きます。光の終点と点灯状態は従来の判定を使い、黒い30度区画、3本の輪、12方向、操作、成功演出の1.5秒を維持します。
+
+最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージと今回の本番公開は行っていません。iPhoneの物理実機は未確認です。
+
+以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 
 ## 2026-10-01 クリア時の連打による拡大の修正
 

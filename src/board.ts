@@ -10,7 +10,7 @@ import {
 } from "./core/types.ts";
 
 /**
- * The board is deliberately kept in one SVG coordinate system.  Keeping the
+ * Both board renderers share this coordinate system. Keeping the
  * receiver margin in the same viewBox as the rings prevents the outer glyphs
  * from being clipped when the board is resized by CSS.
  */
@@ -321,8 +321,16 @@ export function createBoardSvg(
   state: BoardState,
   options: BoardSvgOptions,
 ): SVGSVGElement {
+  return createBoardSvgFromModel(state, createBoardRenderModel(puzzle, state), options);
+}
+
+/** SVG input/accessibility and fallback use the exact model drawn by WebGL. */
+export function createBoardSvgFromModel(
+  state: BoardState,
+  model: BoardRenderModel,
+  options: BoardSvgOptions,
+): SVGSVGElement {
   assertRing(options.selectedRing);
-  const model = createBoardRenderModel(puzzle, state);
   const svg = svgElement("svg");
   setAttributes(svg, {
     viewBox: `${BOARD_VIEWBOX.minX} ${BOARD_VIEWBOX.minY} ${BOARD_VIEWBOX.width} ${BOARD_VIEWBOX.height}`,

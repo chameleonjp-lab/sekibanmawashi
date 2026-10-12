@@ -33,7 +33,11 @@
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/node": "24.8.0",
+    "@types/three": "0.180.0",
     "typescript": "5.9.2",
     "vite": "7.3.6"
+  },
+  "dependencies": {
+    "three": "0.180.0"
   }
 }

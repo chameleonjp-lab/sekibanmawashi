@@ -6,7 +6,7 @@ import {
 } from "./core/engine.ts";
 import { GAME_TITLE } from "./core/index.ts";
 import type { CoreSession, MoveType, Puzzle } from "./core/types.ts";
-import { createBoardSvg } from "./board.ts";
+import { BoardView } from "./three-board.ts";
 import {
   InputController,
   isActivationKey,
@@ -506,6 +506,7 @@ export function renderRun(
   const settingsSnapshot = loadSave({ prepared });
   let helpSeen = settingsSnapshot.helpSeen;
   const sound = new SoundController({ enabled: settingsSnapshot.audioEnabled });
+  let boardView: BoardView | null = null;
 
   const listeners = new AbortController();
   const clearScheduled = (): void => {
@@ -526,6 +527,8 @@ export function renderRun(
     clearScheduled();
     listeners.abort();
     sound.dispose();
+    boardView?.dispose();
+    boardView = null;
   };
   teardownByRoot.set(root, dispose);
 
@@ -603,19 +606,22 @@ export function renderRun(
   const refreshBoard = (): void => {
     if (!currentPuzzle || !session) return;
     if (phase === "countdown") {
+      boardView?.dispose();
+      boardView = null;
       boardHost.replaceChildren();
       return;
     }
     const renderedQuestion = questionIndex;
     const renderedGeneration = generation;
-    boardHost.replaceChildren(createBoardSvg(currentPuzzle, session.state, {
+    boardView ??= new BoardView(boardHost);
+    boardView.update(currentPuzzle, session.state, {
       selectedRing,
       disabled: !isInputOpen(),
       onSelectRing: (ring) => {
         if (disposed || renderedQuestion !== questionIndex || renderedGeneration !== generation) return;
         controller.boardSelection(ring);
       },
-    }));
+    });
   };
 
   const refresh = (): void => {

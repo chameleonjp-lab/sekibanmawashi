@@ -1,0 +1,20 @@
+{
+  "asset": "stone-slate-v1.webp",
+  "createdAt": "2026-10-12",
+  "source": "ChatGPT image generation (built-in image_gen)",
+  "type": "generated stone base-color texture",
+  "prompt": "Use case: photorealistic-natural\nAsset type: seamless square stone base-color texture for a Three.js puzzle game's rotating stone tablet.\nPrimary request: create a truly photographic, tactile aged stone surface with dense fine pores, tiny mineral grains, subtly worn shallow hairline fissures and restrained horizontal mineral layering. Cool-to-neutral medium grey slate-limestone, a small amount of warm grey variation. It must read as real matte stone at close range.\nComposition/framing: flat top-down orthographic macro view, the stone material fills the entire square from edge to edge, no borders, no perspective. Seamless repeating texture with comparable detail and tone along every edge, no obvious large unique shapes or repeated bands.\nLighting/mood: uniform diffuse neutral illumination, no directional cast shadows, no dramatic lighting, no baked highlights. Runtime lights will supply the actual shadows and glow.\nMaterials/textures: authentic micro-granular rough grey stone, gently weathered, credible variation but enough visual calm for golden-white beams to be clearly readable. Medium value, never black or chalk white. Fine irregularities and gentle broad colour variation across the whole tile.\nConstraints: one square texture only, no objects, no rings, no symbols, no lettering, no metal, no shiny marble, no moss, no glow, no cracks shaped like artificial lines, no gradients around the edges, no watermark. This is a production game texture, not a scene or a stone disk.",
+  "production": {
+    "width": 1024,
+    "height": 1024,
+    "format": "WebP",
+    "quality": 82,
+    "bytes": 394436,
+    "sha256": "b29c04a4f86eb1895e4996ad49655bdb9fcf1679c730614be5167e2c08eb59c6"
+  },
+  "limitations": [
+    "A photographic-style generated surface, not a scan or a measured material.",
+    "Any relief inferred from image luminance is an artistic approximation, not measured geometry."
+  ],
+  "sourceSha256": "063658f575dc67a51e15abb5d61d9824640fe593e72feef215b6fa90db4605bb"
+}
