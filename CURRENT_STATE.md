@@ -12,6 +12,10 @@ PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準�
 
 最新main（treeは初回PR最終headと同一）を基準とする`fix/three-webkit-lifecycle-20261012`で、native WebGL context再使用、結果遷移と競合する観測、5境界の検査集約、冗長な同輪選択を修正しました。90問の検査も固定network-idle待ちから実際のthree/素材ready待ちへ変更。成功後1500ms・1px・全10中断シナリオ・302回の実回転・全90問/12方向・Q03全20回を維持します。独立レビューと型/lint/単体は成功。元PRはマージ済みのため、後続Draft PRの最新headで正式CIを再確認します。今回の修正をmainへ直接pushせず、Codexによるマージ/本番公開は行いません。
 
+後続[Draft PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)のhead `436912c8e3135f39da8f7eff24fce1d311e324b1`に対する[run 38300415279](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38300415279)は、静的/Chromium66件が初回成功、WebKit65件成功/1件失敗（同じ1件の再試行も失敗、flaky/skip0）、verify失敗でした。WebKitでも全90問、全5境界、THREE01–11、Q03全20回/100問は成功。残るT04/F05は両試行で実302回転を終えた後、5問完走の途中で180秒を超えました。traceで全302操作のactionability失敗/再試行がないことを独立確認し、描画とDOM再構築の累積負荷を軽減します。検査条件・時間枠を緩めず、修正後の両browser全件とverify成功まで全体合格にはしません。
+
+残件対応では不透明な同形装飾だけをInstancedMeshでまとめ、同じ盤面のSVGを最大12状態で再使用します。新しい入力層は更新ごとの世代付きcallbackを保持し、切断済み/別問題の入力を拒否。形状・光のshader・素材・DPR・302実回転/5問/180秒は変えません。1080代表状態のCPU比較は同形状/三角形数/材質/描画順/光路を確認し、平均drawの見積りは143.37→58.58。これはnative GPU実測ではありません。独立レビューの必須指摘は解消し、型/lint/単体74/問題庫/ライセンス/buildを再確認。従来66件＋THREE12の各67件・計134件を同Draft PRの最新headで再実行し、実結果はPR/Checksへ記録します。
+
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 
 ## 2026-10-01 クリア時の連打による拡大の修正

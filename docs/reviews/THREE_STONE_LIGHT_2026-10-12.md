@@ -103,3 +103,43 @@ CIのnpm ciには既存の開発用`source-map-js@1.2.1`（Vite→PostCSS）に�
 V01は全90問をCIの検査用アプリURLから開き、全ての従来の光路/寸法/遮断/12方向の集合集計、10問おきの画像、180秒を保持します。各navigationの固定500ms network-idle待ちをやめ、このケースだけdomcontentloadedと実際のthree表示・素材readyを待つよう変更しました。他のopenGame呼出は従来どおりnetworkidleを使います。正式CIでこのreadinessと操作時間を再確認します。
 
 閉じた元PRを再開・マージ取消し・mainへ直接pushせず、最新mainから`fix/three-webkit-lifecycle-20261012`を作り、7ファイルの修正を後続Draft PRで提出します。送信済み素材/画像を再生成せず、元のゲーム規則を変更しません。後続PRのリンク・head・各正式CIの結果はPR本文とChecks、保存用検査記録へ集約します。Codexによるマージ・本番公開は行いません。
+
+## 後続Draft PRの正式CI第1回と残る長操作ケース
+
+[PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)のhead `436912c8e3135f39da8f7eff24fce1d311e324b1` / tree `156be22918d577f0fb47481b060eecb793c5a1c9` に対する[run38300415279](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38300415279)は、静的検査成功、Chromium66件すべて初回成功（35.1分）、WebKit65件成功/1件失敗（同件retryも失敗、50.3分）、verify失敗でした。flaky/skipは両browserとも0。CI検査用merge commit88ed32bb6fdb7ac952ad7d9717fb81c6a3f42761のtreeは提出headと一致しています。これはmainへのマージではありません。
+
+独立担当はChromiumの全件JSON、描画画像、GPU/DOM/audio資源記録を確認しました。V01全90問137.298秒、302実回転と5問完走146.086秒は従来180秒以内。Q03全20回/100問は599.759秒で、終了時のactive audio/oscillator0、DOM/listener/timer資源は定常範囲です。THREE07ではnative作成数1、全20回終了後live context/GPU0、THREE11でも初期化途中のrollback後にlive/GPU0。THREE10は成功ですがinline GPU JSONの添付はなく、存在しない記録を確認済みとはしません。画像の確認対象は1問の盤面で、5問完了画面や物理iPhoneではありません。
+
+WebKitでもV01全90問/12方向、F02実時間1500ms/1px、全5境界10枝、THREE01–11、Q03全20回/100問（13.5分）は初回成功。native枠の累積警告と成功盤面の観測競合は再発していません。残件はT04/F05だけで、両試行ともMoveCount302まで検査が進んだ後、5問完走の途中で180秒の総予算を超えました。
+
+| T04/F05の実記録 | 初回 | 再試行 |
+|---|---:|---:|
+| 302回転のstep | 152.856秒 | 161.020秒 |
+| 302件click APIの合計 | 137.234秒 | 143.517秒 |
+| 1回のclick API平均 | 454.416ms | 475.221ms |
+| その後に完了した検査step | 第1–3問step（第4問stepの回転API中に期限） | 第1–3問step（次問のplaying待機中に期限） |
+
+独立trace解析で、初回の302操作にはvisible/enabled/stableのactionability再試行・隠蔽・無効化がありませんでした。入力停止や永久に不安定なボタンではなく、各操作のDOM/描画/traceを伴う処理時間が累積しています。描画固有のGPU負荷だけへ帰属することは推論で、native profileによる断定ではありません。実行環境はLinux Desktop Safari設定、1280×720、DPR2、trace/videoありで、物理iPhoneではありません。
+
+時間上限、302実button click、全5問と参考結果、trace/video、viewport/DPR、形状・素材・光路品質を維持して、6.1Sol Maxが描画・DOM再構築の軽減を実装し、6.1Sol Extra Highが別担当レビューを行います。最終headで従来全66件に新しいTHREE12を加えた各67件・計134件とverifyを再実行し、前headのChromium成功だけを最新headへ流用しません。各headの実行結果はPR本文/Checksと保存用検査記録へ記録し、全体成功まではDraftを維持します。
+
+## 長操作の負荷軽減と別担当レビュー
+
+6.1Sol Maxが`src/three-board.ts`と`e2e/three-board.spec.ts`を対応しました。Basic/Standardの不透明装飾だけを固定容量InstancedMeshにまとめ、同じgeometry/material/行列/描画順（停止線35）を保ちます。石、光の芯、halo、照り返しのcustom shaderは変更せず、輪の192分割・三角形数・素材・照明・DPRも維持。空のbatchも初回からrendererへ登録し、後からの点灯でGPU buffer/programが増えないようにし、破棄時はinstance bufferもdisposeします。
+
+操作/読み上げ/描画不能時のSVGは、問題ごとに回転・選択輪・disabledで識別する最大12状態のLRUで再使用します。問題切替とview破棄でclear。入力hitだけは更新ごとに新しくし、更新時の世代付きoptionsを捕捉して、disposed/disabled・切断済みhit・現在とは別SVG/問題からの遅いイベントを拒否します。現在の問題へ古いcallbackを付け替える方式にはしていません。
+
+実際の新旧StoneSceneとreal threeのgeometry/matrixを使った補助CPU比較を、実装担当・親担当・独立担当がそれぞれ実行しました。rendererはmockで、native GPU測定ではありません。元sourceはhead436912の全文とSHAが一致。90問×3輪×4角度の1080代表状態で頂点/normal/UV/index、材質/描画順、primitive数/三角形数、照り返しの光路uniformが一致し、行列差の最大3.6625e-6はinstanceのfloat32化による範囲です。全90問×1728状態の実画像一致を確認したという意味ではありません。
+
+| CPUコードからの可視draw見積り | 修正前 | 修正後 |
+|---|---:|---:|
+| 1080状態の平均 | 143.37 | 58.58 |
+| 最小–最大 | 104–190 | 43–78 |
+| THREE07の初期fixture | 184 | 72 |
+| 同fixture三角形数 | 170284 | 170284 |
+
+THREE07の既存GPU検査にnative draw APIの計器を加え、72 draw/170284 triangles/125 instancesの実frameと36回転後の再一致を検査します。GPU資源数の定常・全20中断再開・native作成数1・idle0・console error0もそのまま保持。これは正式CIまでnative実測成功として扱いません。
+
+新THREE12は同SVG再使用、切断された古い入力、同問reset世代、次問からの古い入力の拒否と現在の入力可能を確認します。独立レビューで、先頭random easyの中央輪12回転はeasy-v2-20の6回目で解ける実例を発見しました。最短解の条件を安全輪の根拠にせず、実engineで12状態すべて未完成の輪を選び、実buttonでその輪を選択してから採取する形へ修正済みです。reset時の既定中央輪1/同puzzle/0手は製品どおりです。検査時間の延長や製品規則の変更で直したものではありません。
+
+6.1Sol Extra Highが最終2ファイル、fixture、1080 CPU照合を独立確認し、修正必須の指摘なし。独立の型/lint41/diff check、親担当の型/lint/単体74/P01–P09・10万抽選/ライセンス/通常buildが成功。従来66ケースは全て残し、THREE12だけ追加して検査一覧134件を確認しました。ローカルのnative両browser実行は前述の環境制約で未確認です。修正headの各正式CI最終結果はPR本文とChecks、保存用検査記録を参照し、成功・失敗・未実施を区別します。

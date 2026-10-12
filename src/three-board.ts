@@ -6,18 +6,22 @@ import {
   CircleGeometry,
   Color,
   DirectionalLight,
+  DynamicDrawUsage,
   Float32BufferAttribute,
   Group,
   HemisphereLight,
+  InstancedMesh,
   Material,
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
   NoColorSpace,
+  Object3D,
   OrthographicCamera,
   PlaneGeometry,
   Scene,
   ShaderMaterial,
+  Sphere,
   SphereGeometry,
   SRGBColorSpace,
   Texture,
@@ -44,6 +48,7 @@ import { SLOT_COUNT, type BoardState, type Puzzle } from "./core/types.ts";
 
 const STONE_TEXTURE_URL = `${import.meta.env.BASE_URL}textures/stone-slate-v1.webp`;
 const MAX_BEAM_SEGMENTS = 24;
+const MAX_SVG_STATES = SLOT_COUNT;
 const RING_TOP = 6;
 const SLOT_STEP = Math.PI * 2 / SLOT_COUNT;
 let stoneImage: HTMLImageElement | null = null;
@@ -318,6 +323,10 @@ function createRenderer(canvas: HTMLCanvasElement, context: WebGL2RenderingConte
   }
 }
 
+type Decoration = "emitterBody" | "emitterRim" | "emittingBead" | "unlitBead"
+  | "receiverBody" | "litReceiverRim" | "unlitReceiverRim" | "litReceiverInnerRim" | "unlitReceiverInnerRim"
+  | "idleDot" | "brightPin" | "lightBar" | "darkBar" | "blockerBorder" | "stopBar";
+
 class StoneScene {
   readonly renderer: WebGLRenderer;
   readonly canvas: HTMLCanvasElement;
@@ -326,6 +335,10 @@ class StoneScene {
   private readonly geometries = new Set<BufferGeometry>();
   private readonly materials = new Set<Material>();
   private readonly textures = new Set<Texture>();
+  private readonly batches = new Set<InstancedMesh>();
+  private readonly instanceTransform = new Object3D();
+  private readonly decorations: Record<Decoration, InstancedMesh>;
+  private renderedModel: BoardRenderModel | null = null;
   private readonly ringMeshes: Mesh[] = [];
   private readonly selectionRims: Group[] = [];
   private readonly changing = new Group();
@@ -434,11 +447,13 @@ class StoneScene {
         this.scene.add(rims);
       }
 
+      const collarMarks = this.batch(this.unitPlane, this.darkMetal, SLOT_COUNT);
       for (let slot = 0; slot < SLOT_COUNT; slot += 1) {
         const from = scenePoint(polarPoint(119, slot));
         const to = scenePoint(polarPoint(125, slot));
-        this.scene.add(this.bar(from, to, slot % 3 === 0 ? 0.7 : 0.45, this.darkMetal, -0.7));
+        this.instanceBar(collarMarks, from, to, slot % 3 === 0 ? 0.7 : 0.45, -0.7);
       }
+      collarMarks.instanceMatrix.needsUpdate = true;
       const centerBody = this.mesh(this.geometry(roundedAnnulus(7, 12, 3, 1, 1.7)), this.darkMetal);
       this.scene.add(centerBody);
       const centerInset = this.mesh(this.geometry(new CircleGeometry(7, 48)), this.unlitCore);
@@ -454,6 +469,25 @@ class StoneScene {
       this.receiverRim = this.geometry(new TorusGeometry(7.25, 0.55, 8, 64));
       this.receiverInnerRim = this.geometry(new TorusGeometry(4.2, 0.3, 8, 48));
       this.idleReceiver = this.geometry(new CircleGeometry(1.85, 24));
+      // Only built-in opaque Basic/Standard materials are instanced. The custom
+      // stone, beam and halo shaders retain their exact original world paths.
+      this.decorations = {
+        emitterBody: this.batch(this.emitterBody, this.darkMetal, 12),
+        emitterRim: this.batch(this.emitterRim, this.brass, 12),
+        emittingBead: this.batch(this.emitterBead, this.sourceCore, 12),
+        unlitBead: this.batch(this.emitterBead, this.unlitCore, 12),
+        receiverBody: this.batch(this.receiverBody, this.darkMetal, 12),
+        litReceiverRim: this.batch(this.receiverRim, this.lightMark, 12),
+        unlitReceiverRim: this.batch(this.receiverRim, this.brass, 12),
+        litReceiverInnerRim: this.batch(this.receiverInnerRim, this.lightMark, 12),
+        unlitReceiverInnerRim: this.batch(this.receiverInnerRim, this.darkMark, 12),
+        idleDot: this.batch(this.idleReceiver, this.brass, 12),
+        brightPin: this.batch(this.idleReceiver, this.whiteCore, 24),
+        lightBar: this.batch(this.unitPlane, this.lightMark, 120),
+        darkBar: this.batch(this.unitPlane, this.darkMark, 24),
+        blockerBorder: this.batch(this.unitPlane, this.darkMetal, 24),
+        stopBar: this.batch(this.unitPlane, this.lightMark, MAX_BEAM_SEGMENTS, 35),
+      };
       this.scene.add(this.changing);
     } catch (error) {
       try { this.dispose(); } finally { throw error; }
@@ -472,6 +506,36 @@ class StoneScene {
 
   private mesh(geometry: BufferGeometry, material: Material): Mesh {
     return new Mesh(geometry, material);
+  }
+
+  private batch(geometry: BufferGeometry, material: MeshBasicMaterial | MeshStandardMaterial, capacity: number, renderOrder = 0): InstancedMesh {
+    const mesh = new InstancedMesh(geometry, material, capacity);
+    mesh.count = 0;
+    mesh.renderOrder = renderOrder;
+    mesh.instanceMatrix.setUsage(DynamicDrawUsage);
+    // A fixed board envelope avoids recomputing an instanced bound after each
+    // rotation. Even empty batches stay registered on the first render, so all
+    // instance buffers/programs are allocated once, not on later target lights.
+    mesh.frustumCulled = false;
+    mesh.boundingSphere = new Sphere(undefined, BOARD_VIEWBOX.width);
+    this.batches.add(mesh);
+    this.scene.add(mesh);
+    return mesh;
+  }
+
+  private instance(mesh: InstancedMesh, x: number, y: number, height: number, angle = 0, width = 1, depth = width, thickness = 1): void {
+    if (mesh.count >= mesh.instanceMatrix.count) throw new RangeError("Stone decoration capacity exceeded");
+    this.instanceTransform.position.set(x, y, height);
+    this.instanceTransform.rotation.set(0, 0, angle);
+    this.instanceTransform.scale.set(width, depth, thickness);
+    this.instanceTransform.updateMatrix();
+    mesh.setMatrixAt(mesh.count, this.instanceTransform.matrix);
+    mesh.count += 1;
+  }
+
+  private instanceBar(mesh: InstancedMesh, from: Vector2, to: Vector2, width: number, height: number): void {
+    this.instance(mesh, (from.x + to.x) / 2, (from.y + to.y) / 2, height,
+      Math.atan2(to.y - from.y, to.x - from.x), from.distanceTo(to), width);
   }
 
   /** Reflected light is bounded to the same start/end segments as the beam. */
@@ -565,18 +629,20 @@ class StoneScene {
     if (segment.blockedRing !== null) {
       this.changing.add(this.halo(to, 13, this.stopHalo, 34));
       const perpendicular = new Vector2(to.y - from.y, from.x - to.x).normalize().multiplyScalar(3.8);
-      const stop = this.bar(to.clone().sub(perpendicular), to.clone().add(perpendicular), 0.9, this.lightMark, 8.2);
-      stop.renderOrder = 35;
-      this.changing.add(stop);
+      this.instanceBar(this.decorations.stopBar, to.clone().sub(perpendicular), to.clone().add(perpendicular), 0.9, 8.2);
     }
   }
 
   update(model: BoardRenderModel, state: BoardState, selectedRing: number): void {
-    this.changing.clear();
     for (const [ring, mesh] of this.ringMeshes.entries()) {
       mesh.rotation.z = -state.rotations[ring] * SLOT_STEP;
       this.selectionRims[ring].visible = selectedRing === ring;
     }
+    // Selection/input gating changes do not change parts, routes or goals.
+    if (model === this.renderedModel) return;
+    this.renderedModel = model;
+    this.changing.clear();
+    for (const batch of Object.values(this.decorations)) batch.count = 0;
     this.beamUniforms.uStoneBeamCount.value = Math.min(model.beams.length, MAX_BEAM_SEGMENTS);
     for (const [index, segment] of model.beams.entries()) {
       if (index >= MAX_BEAM_SEGMENTS) break;
@@ -593,29 +659,22 @@ class StoneScene {
         for (const boundary of [angle - SLOT_STEP / 2, angle + SLOT_STEP / 2]) {
           const from = new Vector2(Math.cos(boundary) * (inner + 1.6), Math.sin(boundary) * (inner + 1.6));
           const to = new Vector2(Math.cos(boundary) * (outer - 1.6), Math.sin(boundary) * (outer - 1.6));
-          this.changing.add(this.bar(from, to, 0.4, this.darkMetal, RING_TOP + 0.12));
+          this.instanceBar(this.decorations.blockerBorder, from, to, 0.4, RING_TOP + 0.12);
         }
         continue;
       }
       const point = scenePoint(polarPoint(ringMidRadius(part.ring), part.slot));
-      const body = this.mesh(this.emitterBody, this.darkMetal);
-      body.position.set(point.x, point.y, 0);
-      const rim = this.mesh(this.emitterRim, this.brass);
-      rim.position.set(point.x, point.y, 7.65);
-      const bead = this.mesh(this.emitterBead, part.emitting ? this.sourceCore : this.unlitCore);
-      bead.position.set(point.x, point.y, 7.7);
-      this.changing.add(body, rim, bead);
+      this.instance(this.decorations.emitterBody, point.x, point.y, 0);
+      this.instance(this.decorations.emitterRim, point.x, point.y, 7.65);
+      this.instance(part.emitting ? this.decorations.emittingBead : this.decorations.unlitBead, point.x, point.y, 7.7);
       if (part.emitting) {
         this.changing.add(this.halo(point, 23, this.sourceHalo, 40));
         for (let spoke = 0; spoke < 8; spoke += 1) {
           const spokeAngle = spoke * Math.PI / 4;
           const direction = new Vector2(Math.cos(spokeAngle), Math.sin(spokeAngle));
-          const ray = this.bar(point.clone().addScaledVector(direction, 3.8), point.clone().addScaledVector(direction, 7), 0.7, this.lightMark, 8.4);
-          this.changing.add(ray);
+          this.instanceBar(this.decorations.lightBar, point.clone().addScaledVector(direction, 3.8), point.clone().addScaledVector(direction, 7), 0.7, 8.4);
         }
-        const pin = this.mesh(this.idleReceiver, this.whiteCore);
-        pin.position.set(point.x, point.y, 10.35);
-        this.changing.add(pin);
+        this.instance(this.decorations.brightPin, point.x, point.y, 10.35);
       }
     }
     for (const segment of model.beams) this.beam(segment);
@@ -624,31 +683,29 @@ class StoneScene {
     for (let slot = 0; slot < SLOT_COUNT; slot += 1) {
       const point = scenePoint(polarPoint(RECEIVER_RADIUS, slot));
       if (!targets.has(slot)) {
-        const dot = this.mesh(this.idleReceiver, this.brass);
-        dot.position.set(point.x, point.y, 0.5);
-        this.changing.add(dot);
+        this.instance(this.decorations.idleDot, point.x, point.y, 0.5);
         continue;
       }
       const isLit = lit.has(slot);
-      const body = this.mesh(this.receiverBody, this.darkMetal);
-      body.position.set(point.x, point.y, 0);
-      const rim = this.mesh(this.receiverRim, isLit ? this.lightMark : this.brass);
-      rim.position.set(point.x, point.y, 1.55);
-      const innerRim = this.mesh(this.receiverInnerRim, isLit ? this.lightMark : this.darkMark);
-      innerRim.position.set(point.x, point.y, 1.45);
-      this.changing.add(body, rim, innerRim);
+      this.instance(this.decorations.receiverBody, point.x, point.y, 0);
+      this.instance(isLit ? this.decorations.litReceiverRim : this.decorations.unlitReceiverRim, point.x, point.y, 1.55);
+      this.instance(isLit ? this.decorations.litReceiverInnerRim : this.decorations.unlitReceiverInnerRim, point.x, point.y, 1.45);
       // Cross versus plus remains readable without color perception.
       for (const markAngle of isLit ? [0, Math.PI / 2] : [Math.PI / 4, -Math.PI / 4]) {
         const direction = new Vector2(Math.cos(markAngle), Math.sin(markAngle)).multiplyScalar(isLit ? 4.8 : 3.5);
-        this.changing.add(this.bar(point.clone().sub(direction), point.clone().add(direction), isLit ? 1.05 : 0.8, isLit ? this.lightMark : this.darkMark, 1.6));
+        this.instanceBar(isLit ? this.decorations.lightBar : this.decorations.darkBar,
+          point.clone().sub(direction), point.clone().add(direction), isLit ? 1.05 : 0.8, 1.6);
       }
       if (isLit) {
         this.changing.add(this.halo(point, 26, this.reachedHalo, 45));
-        const pin = this.mesh(this.idleReceiver, this.whiteCore);
-        pin.scale.setScalar(0.72);
-        pin.position.set(point.x, point.y, 1.7);
-        this.changing.add(pin);
+        this.instance(this.decorations.brightPin, point.x, point.y, 1.7, 0, 0.72, 0.72, 0.72);
       }
+    }
+    for (const batch of Object.values(this.decorations)) {
+      if (batch.count === 0) continue;
+      batch.instanceMatrix.clearUpdateRanges();
+      batch.instanceMatrix.addUpdateRange(0, batch.count * 16);
+      batch.instanceMatrix.needsUpdate = true;
     }
   }
 
@@ -682,6 +739,8 @@ class StoneScene {
     try {
       this.scene.clear();
       this.changing.clear();
+      this.renderedModel = null;
+      for (const batch of this.batches) batch.dispose();
       for (const geometry of this.geometries) geometry.dispose();
       for (const material of this.materials) material.dispose();
       for (const texture of this.textures) texture.dispose();
@@ -689,6 +748,7 @@ class StoneScene {
       this.geometries.clear();
       this.materials.clear();
       this.textures.clear();
+      this.batches.clear();
       this.renderer.dispose();
     }
   }
@@ -718,6 +778,8 @@ export class BoardView {
     },
   };
   private scene: StoneScene | null = null;
+  private svg: SVGSVGElement | null = null;
+  private readonly svgStates = new Map<string, SVGSVGElement>();
   private model: BoardRenderModel | null = null;
   private puzzle: Puzzle | null = null;
   private state: BoardState | null = null;
@@ -750,15 +812,50 @@ export class BoardView {
 
   update(puzzle: Puzzle, state: BoardState, options: BoardSvgOptions): BoardRenderModel {
     if (this.disposed) throw new Error("Cannot update a disposed board view");
+    if (puzzle !== this.puzzle) this.svgStates.clear();
     const changed = puzzle !== this.puzzle || !this.state || state.rotations.some((rotation, ring) => rotation !== this.state?.rotations[ring]);
     if (changed || !this.model) this.model = createBoardRenderModel(puzzle, state);
     this.puzzle = puzzle;
     // Own the rotation snapshot so callers cannot change our comparison key.
     this.state = { rotations: [...state.rotations] };
     this.options = options;
-    const svg = createBoardSvgFromModel(this.state, this.model, options);
-    this.host.querySelector("svg.stone-board")?.remove();
-    this.host.append(svg);
+    const svgKey = `${this.state.rotations.join(",")}:${options.selectedRing}:${Boolean(options.disabled)}`;
+    let svg = this.svgStates.get(svgKey);
+    if (!svg) {
+      // Retain exact fallback/reading geometry, including grain and all goals.
+      // Only the small input layer is rebound for each accepted update below.
+      svg = createBoardSvgFromModel(this.state, this.model, { selectedRing: options.selectedRing, disabled: Boolean(options.disabled) });
+    }
+    this.svgStates.delete(svgKey);
+    this.svgStates.set(svgKey, svg);
+    if (this.svgStates.size > MAX_SVG_STATES) {
+      const oldest = this.svgStates.keys().next().value;
+      if (oldest !== undefined) this.svgStates.delete(oldest);
+    }
+    const oldHits = svg.querySelector<SVGGElement>(".board-ring-hits");
+    if (!oldHits) throw new Error("Board input layer is missing");
+    const hits = oldHits.cloneNode(true) as SVGGElement;
+    for (const hit of Array.from(hits.querySelectorAll<SVGPathElement>("[data-ring-hit]"))) {
+      const ring = Number(hit.dataset.ringHit);
+      const select = (): void => {
+        // Capture this update's callbacks (and their run/question generation),
+        // not a future update's options. Replaced/inactive cached hits are inert.
+        if (this.disposed || options.disabled || !hit.isConnected || this.svg !== svg || this.puzzle !== puzzle) return;
+        options.onSelectRing?.(ring);
+      };
+      if (!options.disabled && options.onSelectRing) {
+        hit.addEventListener("click", select);
+        hit.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); }
+        });
+      }
+    }
+    oldHits.replaceWith(hits);
+    if (this.svg !== svg) {
+      this.svg?.remove();
+      this.host.append(svg);
+      this.svg = svg;
+    }
     this.ensureScene();
     this.updateScene();
     this.requestDraw();
@@ -875,6 +972,8 @@ export class BoardView {
     this.puzzle = null;
     this.state = null;
     this.options = null;
+    this.svg = null;
+    this.svgStates.clear();
     this.host.replaceChildren();
   }
 }

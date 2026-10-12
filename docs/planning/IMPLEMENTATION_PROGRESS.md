@@ -12,6 +12,8 @@
 
 初回CI中の2026-10-13 03:00:33 JSTに所有者がPR #23をmain `7b067b2898e6e98fec9f775ad384fe93988fe975`へマージしていたことを後続対応中に確認しました。Codexはマージ/公開していません。main run38288027604も静的成功/両browser失敗/verify失敗。修正の旧branch head b667db80eed83ca0bdccd0382d57e8113c3a3a70はマージ済みPRに対するCIを起動しないため、最新mainを基準とするfix/three-webkit-lifecycle-20261012から新Draft PRへ提出します。mainのChromiumではV01の全90問集約も180秒を超えたため、全90問と12方向の集合集計/180秒を維持し、各問題で固定network-idleを待つ代わりに実three/素材readyを確認します。以下の節は以前の段階の履歴です。
 
+後続[Draft PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)、head436912c8e3135f39da8f7eff24fce1d311e324b1の[run38300415279](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38300415279)は静的/Chromium66初回成功、WebKit65成功/1失敗と同件retry失敗、verify失敗（flaky/skip0）。WebKitの残件T04/F05も実302回転は両試行で完了し、その後の5問完走中に180秒超過。独立trace解析は302操作のactionability失敗/再試行0を確認。6.1Sol Maxが不透明装飾のInstancedMesh化と最大12状態のSVG再使用を実装し、6.1Sol Extra Highが独立レビュー。新検査の途中成功fixtureを実engineによる安全輪検証へ修正し、最終差分に必須指摘なし。1080代表状態の同形状/材質/光路をCPUで照合し、型/lint/単体74/問題庫/ライセンス/buildを再確認。条件を維持した従来66＋THREE12の両browser全67件・計134件とverifyの最新head成功は必須で、前headのChromium成功だけを引き継いで全体合格にしません。
+
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
 

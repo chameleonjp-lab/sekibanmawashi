@@ -1,7 +1,8 @@
 import { expect, test, type ElementHandle, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { evaluate } from "../src/core/engine.ts";
-import type { Puzzle } from "../src/core/types.ts";
+import type { BoardState, Puzzle } from "../src/core/types.ts";
+import { analyzePuzzle } from "../src/puzzles/solver.ts";
 
 const puzzles = JSON.parse(readFileSync("content/puzzles-v2.json", "utf8")) as Puzzle[];
 const radii = [43, 73, 103] as const;
@@ -48,6 +49,7 @@ async function sampleCanvas(page: Page, positions: Point[]): Promise<Pixel[]> {
 }
 
 type GpuSnapshot = { contexts: number; contextsCreated: number; contextListeners: number; buffers: number; textures: number; programs: number; framebuffers: number };
+type DrawSnapshot = { calls: number; instancedCalls: number; instances: number; triangles: number };
 
 /** Count actual browser-owned GPU objects, including detached live contexts. */
 async function installGpuProbe(page: Page): Promise<void> {
@@ -55,6 +57,7 @@ async function installGpuProbe(page: Page): Promise<void> {
     type ContextListener = { type: string; listener: EventListenerOrEventListenerObject; capture: boolean };
     type GpuRecord = { listeners: ContextListener[]; buffers: Set<unknown>; textures: Set<unknown>; programs: Set<unknown>; framebuffers: Set<unknown> };
     const records = new Map<WebGL2RenderingContext, GpuRecord>();
+    const draws = new Map<WebGL2RenderingContext, DrawSnapshot>();
     const canvasRecords = new Map<HTMLCanvasElement, GpuRecord>();
     const add = HTMLCanvasElement.prototype.addEventListener;
     const remove = HTMLCanvasElement.prototype.removeEventListener;
@@ -79,6 +82,7 @@ async function installGpuProbe(page: Page): Promise<void> {
       if (!record) {
         record = { listeners: [], buffers: new Set(), textures: new Set(), programs: new Set(), framebuffers: new Set() };
         records.set(context, record);
+        draws.set(context, { calls: 0, instancedCalls: 0, instances: 0, triangles: 0 });
         if (context.canvas instanceof HTMLCanvasElement) canvasRecords.set(context.canvas, record);
         const owned = record;
         context.canvas.addEventListener("webglcontextlost", () => {
@@ -96,6 +100,32 @@ async function installGpuProbe(page: Page): Promise<void> {
       return context;
     } as typeof HTMLCanvasElement.prototype.getContext;
     const prototype = WebGL2RenderingContext.prototype as unknown as Record<string, unknown>;
+    const clear = prototype.clear;
+    if (typeof clear !== "function") throw new Error("GPU draw probe is unavailable");
+    prototype.clear = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
+      const draw = draws.get(this);
+      if (draw) { draw.calls = 0; draw.instancedCalls = 0; draw.instances = 0; draw.triangles = 0; }
+      return Reflect.apply(clear, this, arguments_);
+    };
+    for (const [method, countIndex, instanceIndex] of [
+      ["drawArrays", 2, -1], ["drawElements", 1, -1],
+      ["drawArraysInstanced", 2, 3], ["drawElementsInstanced", 1, 4],
+    ] as const) {
+      const drawNative = prototype[method];
+      if (typeof drawNative !== "function") throw new Error("GPU draw method is unavailable");
+      prototype[method] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
+        const result: unknown = Reflect.apply(drawNative, this, arguments_);
+        const draw = draws.get(this);
+        const count = Number(arguments_[countIndex]);
+        const instances = instanceIndex < 0 ? 1 : Number(arguments_[instanceIndex]);
+        if (draw && count > 0 && instances > 0) {
+          draw.calls += 1;
+          if (instanceIndex >= 0) { draw.instancedCalls += 1; draw.instances += instances; }
+          if (arguments_[0] === this.TRIANGLES) draw.triangles += count / 3 * instances;
+        }
+        return result;
+      };
+    }
     for (const [create, remove, kind] of [
       ["createBuffer", "deleteBuffer", "buffers"],
       ["createTexture", "deleteTexture", "textures"],
@@ -125,6 +155,14 @@ async function installGpuProbe(page: Page): Promise<void> {
       }
       return total;
     };
+    (window as Window & { __threeDrawSnapshot?: () => DrawSnapshot }).__threeDrawSnapshot = () => {
+      const total: DrawSnapshot = { calls: 0, instancedCalls: 0, instances: 0, triangles: 0 };
+      for (const [context, draw] of draws) {
+        if (context.isContextLost()) continue;
+        for (const key of ["calls", "instancedCalls", "instances", "triangles"] as const) total[key] += draw[key];
+      }
+      return total;
+    };
   });
 }
 
@@ -132,6 +170,14 @@ async function gpuSnapshot(page: Page): Promise<GpuSnapshot> {
   return page.evaluate(() => {
     const snapshot = (window as Window & { __threeGpuSnapshot?: () => GpuSnapshot }).__threeGpuSnapshot;
     if (!snapshot) throw new Error("GPU probe was not installed");
+    return snapshot();
+  });
+}
+
+async function drawSnapshot(page: Page): Promise<DrawSnapshot> {
+  return page.evaluate(() => {
+    const snapshot = (window as Window & { __threeDrawSnapshot?: () => DrawSnapshot }).__threeDrawSnapshot;
+    if (!snapshot) throw new Error("GPU draw probe was not installed");
     return snapshot();
   });
 }
@@ -357,12 +403,22 @@ test.describe("Three stone and light acceptance", () => {
     expect(baseline.contextsCreated).toBe(1);
     expect(baseline.buffers).toBeGreaterThan(0);
     expect(baseline.textures).toBeGreaterThan(0);
+    const baselineDraw = await drawSnapshot(page);
+    expect(baselineDraw.calls, "the real native frame remains nonblank").toBeGreaterThan(0);
+    expect(baselineDraw.calls, "the fixed hard fixture batches 184 original draw calls into 72").toBe(72);
+    expect(baselineDraw.triangles, "every original polygon in the fixed hard fixture is retained").toBe(170_284);
+    expect(baselineDraw.instancedCalls).toBeGreaterThan(0);
+    expect(baselineDraw.instances).toBe(125);
     const cycles: GpuSnapshot[] = [];
+    const cycleDraws: DrawSnapshot[] = [];
     for (let cycle = 0; cycle < 3; cycle += 1) {
       for (let index = 0; index < 12; index += 1) await page.locator("[data-action='rotate-right']").click();
       const snapshot = await gpuSnapshot(page);
       expect(snapshot).toEqual(baseline);
       cycles.push(snapshot);
+      const draw = await drawSnapshot(page);
+      expect(draw).toEqual(baselineDraw);
+      cycleDraws.push(draw);
     }
     await page.goto("/", { waitUntil: "networkidle" });
     await page.locator("[data-action='audio']").uncheck();
@@ -389,7 +445,7 @@ test.describe("Three stone and light acceptance", () => {
       released.push(await gpuSnapshot(page));
     }
     expect(errors, "native quota and context API errors must remain visible to acceptance").toEqual([]);
-    await testInfo.attach("gpu-resource-lifecycle", { body: JSON.stringify({ baseline, cycles, released }, null, 2), contentType: "application/json" });
+    await testInfo.attach("gpu-resource-lifecycle", { body: JSON.stringify({ baseline, baselineDraw, cycles, cycleDraws, released }, null, 2), contentType: "application/json" });
   });
 
   test("THREE08: a texture arriving after abort cannot revive the old canvas or resources", async ({ page }) => {
@@ -533,5 +589,67 @@ test.describe("Three stone and light acceptance", () => {
     }
     expect(errors).toEqual([]);
     await testInfo.attach("gpu-construction-rollback", { body: JSON.stringify(evidence, null, 2), contentType: "application/json" });
+  });
+
+  test("THREE12: repeated SVG states are reused but inactive, reset and prior-question hits cannot control the current board", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/", { waitUntil: "networkidle" });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    const firstId = await page.locator("[data-testid='game-screen']").getAttribute("data-puzzle-id");
+    const firstPuzzle = puzzles.find((candidate) => candidate.id === firstId);
+    if (!firstPuzzle) throw new Error("The active adopted puzzle is unavailable");
+    // A longer one-ring solution can exist even when every shortest solution
+    // uses two rings. Prove this full twelve-state cycle cannot solve first.
+    const safeRing = [0, 1, 2].find((ring) => Array.from({ length: 12 }, (_, delta) => {
+      const state: BoardState = { rotations: [...firstPuzzle.initialState.rotations] };
+      state.rotations[ring] = (state.rotations[ring]! + delta) % 12;
+      return !evaluate(firstPuzzle, state).solved;
+    }).every(Boolean));
+    if (safeRing === undefined) throw new Error("The adopted first puzzle has no unsolved twelve-state ring cycle");
+    await page.locator(`[data-action='select-ring'][data-ring='${safeRing}']`).click();
+    const initialSvg = await page.locator("svg.stone-board").elementHandle();
+    const initialHit = await page.locator(`[data-ring-hit='${(safeRing + 1) % 3}']`).elementHandle();
+    expect(initialSvg).not.toBeNull();
+    expect(initialHit).not.toBeNull();
+    await page.locator("[data-action='rotate-right']").click();
+    expect(await initialSvg?.evaluate((node) => node.isConnected)).toBe(false);
+    await initialHit?.evaluate((node) => {
+      node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      node.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    });
+    await expect(page.locator(`[data-ring-hit='${safeRing}']`)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("[data-moves]")).toHaveText("1");
+    for (let turn = 1; turn < 12; turn += 1) await page.locator("[data-action='rotate-right']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("12");
+    expect(await initialSvg?.evaluate((node) => node === document.querySelector("svg.stone-board")), "the twelve-state cycle reuses its exact semantic/fallback SVG").toBe(true);
+    expect(await initialHit?.evaluate((node) => node.isConnected)).toBe(false);
+    await initialHit?.evaluate((node) => node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    await expect(page.locator(`[data-ring-hit='${safeRing}']`)).toHaveAttribute("aria-pressed", "true");
+    const beforeResetHit = await page.locator("[data-ring-hit='0']").elementHandle();
+    await page.locator("[data-action='reset-question']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("0");
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-puzzle-id", firstId!);
+    await beforeResetHit?.evaluate((node) => node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    await expect(page.locator("[data-ring-hit='1']")).toHaveAttribute("aria-pressed", "true");
+    await page.locator("[data-ring-hit='0']").dispatchEvent("click");
+    await expect(page.locator("[data-ring-hit='0']")).toHaveAttribute("aria-pressed", "true");
+    const priorQuestionHit = await page.locator("[data-ring-hit='0']").elementHandle();
+    for (const move of analyzePuzzle(firstPuzzle).representativeSolution) {
+      await page.locator(`[data-action='select-ring'][data-ring='${move.ring}']`).click();
+      await page.locator(`[data-action='rotate-${move.type === "r" ? "right" : "left"}']`).click();
+    }
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-question-index", "1");
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-phase", "playing");
+    await priorQuestionHit?.evaluate((node) => {
+      node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      node.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+    });
+    await expect(page.locator("[data-ring-hit='1']")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("[data-moves]")).toHaveText("0");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+    expect(errors).toEqual([]);
   });
 });
