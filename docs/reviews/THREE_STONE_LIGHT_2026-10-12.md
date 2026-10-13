@@ -1,5 +1,7 @@
 # 石板と光をthree.jsで改善した記録
 
+最新の結論：PR #24のhead `d86767ffabb9bc82842a166930218a9dbb1d28b8` は[run38321401729](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38321401729)で全136件初回成功・静的/verify成功となり、2026-10-13 09:11:02 JSTに所有者がマージしました。main treeは同一です。以下の各headの失敗・修正は履歴として保持します。mainの別CI、依存警告、公開中の版と新しい後続作業は[2026-10-13後続記録](FOLLOWUP_2026-10-13.md)を参照してください。物理iPhone受入とthree.js表示の本番公開は未実施です。
+
 日付: 2026-10-12 JST。基準main: `2deac6db6bfe3a33f18012eef64cabd4e9e4a096`（PR #22マージ後）。作業branch: `feat/three-stone-light-20261012`。提出はDraft PR、マージ・本番公開はユーザーが別に判断します。
 
 最新の後続修正は、所有者がPR #23をマージしたmain `7b067b2898e6e98fec9f775ad384fe93988fe975` を基準とする`fix/three-webkit-lifecycle-20261012`です。元PRとmainの正式CI失敗、同contextの再使用、検査条件を保った観測/待機の修正、新Draft PRについては末尾に記録します。以下の初回提出時の検査と方針は、その時点の履歴として保持します。

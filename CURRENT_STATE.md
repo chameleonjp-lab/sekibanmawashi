@@ -2,7 +2,19 @@
 
 更新日: 2026-10-13 JST / 対象: `chameleonjp-lab/sekibanmawashi`
 
-## 2026-10-12 石板と光をthree.jsで改善
+## 2026-10-13 後続対応の現在地
+
+PR #24は2026-10-13 09:11:02 JSTに所有者がマージ済みです。後続開始時のmainは `2ca735347b3831beb6cc0d2215570d608105ec53`、treeは `e9eb26122ec8c8fa0e585e1ae9fb49e720da4cf9` で、検証済みPR head `d86767ffabb9bc82842a166930218a9dbb1d28b8`と同じ内容です。[PRのCI 38321401729](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38321401729)は静的検査・両ブラウザー各68件（計136件）・必須verifyが成功しました。失敗・再試行・flaky・skip・global errorは0です。
+
+mainの[CI 38325977693](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38325977693)は後続開始時点で静的検査が成功、両ブラウザーは実行中でした。PRの成功をmainの別CIの成功に読み替えません。確定した結果と今回の依存更新の検査は[後続対応の記録](docs/reviews/FOLLOWUP_2026-10-13.md)とPRのChecksへ分けて記録します。
+
+公開中の版は `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` です。[10月3日のPages run 37105778520](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/37105778520)が成功し、10月13日の実HTTP取得でも`version.json`のsourceSha/requestedShaの両方が一致しました。公開URLのホームもHTTP 200です。three.jsによる石板・光の改善はmainに入りましたが、公開ページにはまだ反映されていません。
+
+今回の後続は、開発用依存の警告の調査・最小更新、古い状態記録の整理、必要な検査、別担当のレビュー、新しいDraft PRです。source-map-jsを1.2.1→1.2.2へ最小更新し、ローカルの依存監査は1件から0件になりました。ゲームの判定・問題・表示・操作・時計・保存・音・検査条件は変更しません。問題JSONの生サイズ10KB目標は未達、今回のLinux合成測定では最大判定時間が5ms目標を超過、公開URLの初回総転送量は未測定です。詳細と測定条件は後続記録へ残します。iPhone実機、VoiceOver、ロック復帰、実機音・FPSは未確認です。過去のR6公開に限ったQ05免除を最新版へ拡張しません。
+
+以下は過去の変更・検査・公開の経過です。現在の状態はこの節と後続記録を優先してください。
+
+## 2026-10-12 石板と光をthree.jsで改善した経過
 
 PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準に、`feat/three-stone-light-20261012` で生成した石の素材画像と三次元描画を追加しました。石の粒、輪の厚みと縁、光の芯・広がり・石への照り返しを描きます。光の終点と点灯状態は従来の判定を使い、黒い30度区画、3本の輪、12方向、操作、成功演出の1.5秒を維持します。
 
@@ -30,7 +42,7 @@ PR #21マージ後のmain `f69ac19cd51035fafeb019fbd70fc2289d58bcc6` を基準�
 
 ローカルの関連ブラウザー検査9件、単体検査74件、型検査、lint、問題庫、ライセンス、build、Pages artifact検査が成功しました。別担当の独立レビューにも必要修正はありません。環境・失敗からの再確認・実機未確認は[検査記録](docs/reviews/CLEAR_TAP_ZOOM_2026-10-01.md)を参照してください。提出先はmainのDraft PRで、最終headのCI結果はPRのChecksで確認します。この修正のマージ・本番公開は未実施です。
 
-## 最新公開状況（2026-09-29）
+## 公開履歴（2026-09-29）
 
 [PR #18](https://github.com/chameleonjp-lab/sekibanmawashi/pull/18)はmainへマージ済みです。merge commitは `41e18e2f05ca39b874e874105b76ce0895adb2dc` です。同じcommitのmain push [CI run 36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)で、静的検査、Chromium、WebKit、必須 `verify` がすべて成功しました。
 
@@ -38,7 +50,7 @@ PR #21マージ後のmain `f69ac19cd51035fafeb019fbd70fc2289d58bcc6` を基準�
 
 実URLを開き、ホーム画面と練習用の盤面を確認しました。石板、黒い遮光区画、更新後の日本語表示、ゲーム画面に音設定が出ないことを目視確認しています。実機iPhoneでのQ05は未実施で、今回のR6公開に限る免除は[PR #14の記録](https://github.com/chameleonjp-lab/sekibanmawashi/pull/14#issuecomment-5861153503)に基づきます。実機受入済みとは扱いません。
 
-## 結論
+## 2026-09-29時点のまとめ
 
 最新の実装基準は[対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)です。PR #17の画面改善とPR #18の共有画像更新はmainへ入り、R6最新版を `41e18e2f05ca39b874e874105b76ce0895adb2dc` で公開しました。main CI run 36534850625とPages run 36541668581が成功し、公開URLでホームと練習画面を確認しました。
 
@@ -65,7 +77,7 @@ R2で新90問・900組、難度条件、重複排除、再生成、独立計算�
 
 R4で5問進行・時計・保存・結果・共有を追加し、[PR #9](https://github.com/chameleonjp-lab/sekibanmawashi/pull/9)へマージしました。通常URLはホーム、`?puzzleId=` はR3の1問確認用として分けます。正式アプリ全体の実機受入は未完了で、自動検査と人による試遊・実機受入を同じ扱いにはしません。
 
-## 次に残る確認
+## 2026-09-29公開後に残した確認
 
 R6の公開操作は完了しています。今後Q05を実施する場合は、iPhone 17 Proの物理Safari、VoiceOver、画面ロック復帰、実機音を個別に確認し、今回の限定免除とは分けて記録します。ランキング・Supabase・実験場のサーバー側変更は対象外のままです。
 

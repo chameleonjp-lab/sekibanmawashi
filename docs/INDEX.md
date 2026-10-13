@@ -1,6 +1,6 @@
 # 資料一覧
 
-最新は**文書版2.0、常時発光・回転のみ**です。正式名「セキバンマワシ」と実プレイ画面ベースの共有画像はPR #13で設定する変更を作成済み（未マージ）です。ゲーム全体の実機受入と公開は未完了です。
+最新は**計画の文書版2.1と2026-10-12追加指定、常時発光・回転のみ**です。正式名「セキバンマワシ」と共有画像は設定済みで、石板・光のthree.js表示はPR #23/#24でmainへマージ済みです。公開中の版は10月3日のSHAで、three.js表示は未公開です。iPhone実機受入は未完了です。
 
 ## 現在使う資料
 
@@ -11,6 +11,8 @@
 | [対応実装計画書](planning/IMPLEMENTATION_PLAN.md) | 指摘対応、固定条件、初期検証案、検査、公開の境界 |
 | [PRロードマップ](planning/PR_ROADMAP.md) | R0〜R6と次へ進む条件 |
 | [進捗表](planning/IMPLEMENTATION_PROGRESS.md) | 実装・検査・受入の状況 |
+| [2026-10-13後続対応](reviews/FOLLOWUP_2026-10-13.md) | 最新main、依存警告、性能の残件、公開中の版と担当・検査 |
+| [石板・光のthree.js改善](reviews/THREE_STONE_LIGHT_2026-10-12.md) | 描画、生成素材、PR #23/#24の検査・失敗・修正履歴 |
 | [GitHub Pages公開手順](PAGES_PUBLICATION.md) | 手動公開・ゲート・配信後検査 |
 | [公開名・共有画像の追補検証](reviews/R6_PUBLICATION_ASSETS.md) | 正式名、main CI実画面ベース共有PNG、metadataと公開前検査 |
 | [2026-09-21の決定](history/DECISION_2026-09-21.md) | 発光切替廃止と今回の依頼範囲 |

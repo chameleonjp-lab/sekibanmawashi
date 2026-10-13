@@ -1,14 +1,18 @@
 # sekibanmawashi
 
-石の環を回し、発光紋から外周の必要な受光紋へ光を届けるブラウザ向けパズルです。カメレオンJPの実験場のゲームとして扱うため、正式版の整備を進めます。
+石板の3本の輪を回して、外側の目標すべてに光を届けるブラウザー向けパズルです。カメレオンJPの実験場のゲームです。
 
-**最新の計画は文書版2.0です。発光紋は常時発光とし、回転だけで解きます。R1の判定、R2の90問・900組、R3の盤面・入力、R4の5問進行・時計・端末保存・結果と共有に続き、R5の音・共通設定・復旧・公開準備を[PR #10](https://github.com/chameleonjp-lab/sekibanmawashi/pull/10)で実装しました。PR #10は2026-09-27 01:49:54 JSTにユーザーによりmainへマージ済みです。検証済みソースのCI結果と未確認項目は[R5検査記録](docs/reviews/R5_VERIFICATION.md)で管理します。実機受入・公開は保留です。**
+**最新の計画は文書版2.1と2026-10-12の追加指定です。石板と光のthree.js描画・生成した石素材はPR #23/#24でmainへマージ済みです。公開中の版とmainは異なります。最新の後続作業・検査・未確認は[後続対応の記録](docs/reviews/FOLLOWUP_2026-10-13.md)と[現在の状態](CURRENT_STATE.md)を確認してください。**
 
 ## 現在の状態
 
-`src/`と`content/`が正式版です。通常のURLでは名前入力のホームが開き、チャレンジまたは練習で5問を解けます。記録は端末内で扱い、保存に失敗しても結果と共有を利用できます。R5の検証ソース `1cf19149de75b1f970185ec903b6eed7c5896fad` / tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6` の[CI](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36252821838)は、単体72件とChromium/WebKitのbrowser 90件（89 expected + 1 flaky。初回失敗後に再試行成功、最終失敗/skip 0）を実行して成功しました。再試行1件の原因は未確定です。PR #10のR5基準mainは `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`、今回の記録更新PRの基準mainはPR #10マージ後の `69ba9e1f34afa9bd5cbdf6950e77e6750132f648`（tree `451b800a2ab1b536680cc49fb667faa0ca87a1c6`、2026-09-27 01:49:54 JSTにマージ）です。PRはマージ済みですが、R6へ進むための実機受入・公開指示は未完了で、公開していません。記録更新後の最終head結果はPR Checksを参照してください。
+`src/`と`content/`が正式版です。通常のURLでは名前入力のホームが開き、チャレンジまたは練習で5問を解けます。記録は端末内で扱い、保存に失敗しても結果と共有を利用できます。光は常時発光し、操作は輪の選択と左右の回転です。
 
-`prototype/`には旧規則の比較用試作があります。旧90問と画面が存在することと、正式版の受入が完了していることは別です。ランキング連携は今回の対象外です。本番公開と実験場側の変更は、受入と公開指示の後に行います。
+2026-10-13の後続開始時のmainは `2ca735347b3831beb6cc0d2215570d608105ec53` です。[PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)の[CI 38321401729](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38321401729)はChromium/WebKit各68件、計136件すべて初回成功で、静的検査と必須verifyも成功しました。mainの別CIの実結果は後続記録とChecksに分けて残します。
+
+公開URLは https://chameleonjp-lab.github.io/sekibanmawashi/ です。2026-10-13に公開ページの`version.json`を取得し、公開中のSHAが `2deac6db6bfe3a33f18012eef64cabd4e9e4a096`（10月3日の公開）であることを確認しました。three.jsによる改善は未公開です。iPhone実機受入も未完了で、過去のR6公開に限った免除を今回へ拡張しません。
+
+`prototype/`は旧規則の比較用です。ランキング連携は今回の対象外です。過去の各段階の検査結果は進捗表と各検査記録に保持します。本番公開は受入条件とユーザーの公開指示を確認して別に行います。
 
 ## 検査
 
@@ -37,7 +41,7 @@ npm run test:e2e
 
 - [現在の状態](CURRENT_STATE.md)で決定事項と未実装を確認します。
 - [現在のゲーム仕様](docs/spec/CURRENT_GAME_SPEC.md)で何を作るかを確認します。
-- [対応実装計画書 v2.0](docs/planning/IMPLEMENTATION_PLAN.md)で各指摘の対応と必須検査を確認します。
+- [対応実装計画書 文書版2.1](docs/planning/IMPLEMENTATION_PLAN.md)で各指摘の対応と必須検査を確認します。
 - [進捗表](docs/planning/IMPLEMENTATION_PROGRESS.md)と[資料一覧](docs/INDEX.md)で次の段階と参考資料を確認します。
 
 ## 変更後に固定する内容
@@ -46,4 +50,4 @@ npm run test:e2e
 
 発光紋と遮断石による遮断、光どうしは遮らないこと、余分な光を許可することは維持します。既存90問は新規則で再検査し、条件外の問題だけを調整・差し替えます。
 
-[旧計画v1.2](docs/archive/v1.2/IMPLEMENTATION_PLAN.md)は履歴です。旧6段階や発光切替の条件を現行実装へ混ぜません。正式な公開名、公開用画像、実験場への掲載方法は公開前に確認し、未決定値を推測して登録しません。
+[旧計画v1.2](docs/archive/v1.2/IMPLEMENTATION_PLAN.md)は履歴です。旧6段階や発光切替の条件を現行実装へ混ぜません。正式名と共有画像は設定済みです。実験場への掲載方式や未決定値を推測して変更しません。
