@@ -2,7 +2,17 @@
 
 R6の本番公開は2026-09-27にユーザーから許可されています。以下に記す過去の公開準備・失敗記録より、冒頭の最新結果を優先してください。
 
-## 2026-09-29 公開完了
+## 2026-10-13 公開中の版と次の公開の条件
+
+公開中のSHAは `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` です。[10月3日のPublish Pages run37105778520](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/37105778520)が成功し、10月13日に公開URLの`version.json`を実HTTP取得してsourceSha/requestedSha両方の一致とHTTP 200を確認しました。ホームHTMLもHTTP 200で、タイトルは「セキバンマワシ」です。これは配信版の確認で、公開ページの5問完走・実機受入を行ったという意味ではありません。
+
+PR #24マージ後のmainは `2ca735347b3831beb6cc0d2215570d608105ec53` で、石板・光・共有画像のthree.js改善を含みますが、未公開です。PR headの全136件成功と新main SHAのpush CIは区別します。依存警告と状態記録を整える[今回の後続PR](reviews/FOLLOWUP_2026-10-13.md)でも公開workflowは起動しません。
+
+次の公開は、ユーザーの最新版の公開指示とQ05の受入条件を確認した後、公開対象の同一main SHAの成功push CI・verifyを確認してから実行します。過去のR6公開に限るPR #14のQ05免除を自動的に拡張しません。公開後は版情報、資産、ホーム→開始→5問結果→再読込と実験場への往復を実URLで確認し、確認できた範囲を個別に記録します。
+
+以下は公開の履歴と共通の操作手順です。
+
+## 2026-09-29の公開履歴
 
 PR #18のmerge commit `41e18e2f05ca39b874e874105b76ce0895adb2dc` を、同じSHAのmain push CI [36534850625](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36534850625)成功後に公開しました。[Publish Pages run 36541668581](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/36541668581)のbuild、deploy、公開後HTTP検査はすべて成功しました。
 
