@@ -6,7 +6,21 @@
 
 PR #22マージ後のmain `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` を基準に、`feat/three-stone-light-20261012` で生成した石の素材画像と三次元描画を追加しました。石の粒、輪の厚みと縁、光の芯・広がり・石への照り返しを描きます。光の終点と点灯状態は従来の判定を使い、黒い30度区画、3本の輪、12方向、操作、成功演出の1.5秒を維持します。
 
-最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージと今回の本番公開は行っていません。iPhoneの物理実機は未確認です。
+最新の変更・確認画像・独立レビュー・検査と未確認は[今回の記録](docs/reviews/THREE_STONE_LIGHT_2026-10-12.md)へ集めます。[素材記録](docs/assets/STONE_TEXTURE_MANIFEST.md)には生成指示と画像の出所を保存しています。描画できない場合は従来の盤面へ戻り、操作を続けられます。2026-10-13、今回の25ファイルと送信先を提示した確認に対するユーザーの「後続対応開始」で送信を再開し、最初は[PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)をDraftで提出しました。その後の所有者によるマージと修正提出は次段落を参照してください。正式CIの各headの実際の結果はPR本文とChecksで確認します。iPhoneの物理実機は未確認です。
+
+初回正式CI [38287922273](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38287922273)は静的検査とChromium60件が成功、WebKit56件成功/4件失敗、`verify`失敗でした。その検査中の2026-10-13 03:00:33 JST、PR #23は所有者`chameleonjp-lab`によりmain `7b067b2898e6e98fec9f775ad384fe93988fe975`へマージされていました（Codexはマージしていません）。同mainの[run 38288027604](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38288027604)も両browser/verifyが失敗しています。
+
+最新main（treeは初回PR最終headと同一）を基準とする`fix/three-webkit-lifecycle-20261012`で、native WebGL context再使用、結果遷移と競合する観測、5境界の検査集約、冗長な同輪選択を修正しました。90問の検査も固定network-idle待ちから実際のthree/素材ready待ちへ変更。成功後1500ms・1px・全10中断シナリオ・302回の実回転・全90問/12方向・Q03全20回を維持します。独立レビューと型/lint/単体は成功。元PRはマージ済みのため、後続Draft PRの最新headで正式CIを再確認します。今回の修正をmainへ直接pushせず、Codexによるマージ/本番公開は行いません。
+
+後続[Draft PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)のhead `436912c8e3135f39da8f7eff24fce1d311e324b1`に対する[run 38300415279](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38300415279)は、静的/Chromium66件が初回成功、WebKit65件成功/1件失敗（同じ1件の再試行も失敗、flaky/skip0）、verify失敗でした。WebKitでも全90問、全5境界、THREE01–11、Q03全20回/100問は成功。残るT04/F05は両試行で実302回転を終えた後、5問完走の途中で180秒を超えました。traceで全302操作のactionability失敗/再試行がないことを独立確認し、描画とDOM再構築の累積負荷を軽減します。検査条件・時間枠を緩めず、修正後の両browser全件とverify成功まで全体合格にはしません。
+
+残件対応では不透明な同形装飾だけをInstancedMeshでまとめ、同じ盤面のSVGを最大12状態で再使用します。新しい入力層は更新ごとの世代付きcallbackを保持し、切断済み/別問題の入力を拒否。形状・光のshader・素材・DPR・302実回転/5問/180秒は変えません。1080代表状態のCPU比較は同形状/三角形数/材質/描画順/光路を確認し、平均drawの見積りは143.37→58.58。これはnative GPU実測ではありません。独立レビューの必須指摘は解消し、型/lint/単体74/問題庫/ライセンス/buildを再確認。従来66件＋THREE12の各67件・計134件を同Draft PRの最新headで再実行し、実結果はPR/Checksへ記録します。
+
+同PRのhead `0dfa0e6274ac4fdb2278658b0db35920ff9597c3` / tree `de654ff7fcd444f7364008d4c6107b475fc4aaae` に対する[run 38308896954](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38308896954)は、静的成功、Chromium65成功/2失敗、WebKit66成功/1失敗、同失敗の再試行も失敗、flaky/skip0、verify失敗でした。全THREE01–12とQ03全20回/100問は両browserで成功。native実frameは72 draw/170284 triangles/125 instancesで、GPU定常と20終了時の解放も独立確認しました。ただし描画回数の減少だけでは180秒の操作検査を達成できず、ChromiumのV01全90問と両browserのT04/F05が残りました。
+
+次の修正では元の3D描画で完成したRGBAを固定2状態だけ再使用し、サイズ/素材/context変更では現在の盤面を再描画します。cold時の形状・材質・ACES/SRGB/MSAA・DPRは維持し、THREE13で全RGBA byte一致とGPU定常を追加検査。V01の全12方向と属性は実DOMから一括観測し、初問で従来native boundingBoxとの0.01px以内の一致を確認します。全90問/12方向、302実回転/5問/180秒、Q03全20回、trace/videoを保持し、従来67件＋THREE13の各68件・計136件を同Draft PRの最新headで正式再検査します。各headの独立レビューと実結果はPR/Checks・今回の記録に残し、旧headの成功を流用しません。
+
+head `72137e2ccea2a2df357d4774176fd10c97acdb36` の[第3回run38317568603](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38317568603)は静的成功、両browserとも67初回成功/1失敗（同retry失敗、flaky/skip0）、verify失敗です。全THREE01–13、全画素一致、GPU解放、Q03全20回、302実回転＋5問は成功しました。唯一のV01失敗は初問でDOM矩形とnative SVG stroke箱が0.874px異なり、新しい0.01px比較が検出したものです。製品の描画は変えず、全90問の12方向で従来のnative boundingBoxを並列取得する形に修正します。初問は並列/従来逐次の全12×4値を0.01px以内で照合。時間・画素・寸法基準を緩めず、同Draftの次headで各68件とverifyを再確認します。
 
 以下の2026-10-01以前の節は、前回の変更と公開の履歴です。
 

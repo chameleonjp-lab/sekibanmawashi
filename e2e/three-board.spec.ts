@@ -1,7 +1,8 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type ElementHandle, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { evaluate } from "../src/core/engine.ts";
-import type { Puzzle } from "../src/core/types.ts";
+import type { BoardState, Puzzle } from "../src/core/types.ts";
+import { analyzePuzzle } from "../src/puzzles/solver.ts";
 
 const puzzles = JSON.parse(readFileSync("content/puzzles-v2.json", "utf8")) as Puzzle[];
 const radii = [43, 73, 103] as const;
@@ -47,14 +48,89 @@ async function sampleCanvas(page: Page, positions: Point[]): Promise<Pixel[]> {
   }, { bytes: Array.from(png), points: positions });
 }
 
-type GpuSnapshot = { contexts: number; buffers: number; textures: number; programs: number; framebuffers: number };
+type GpuSnapshot = { contexts: number; contextsCreated: number; contextListeners: number; buffers: number; textures: number; programs: number; framebuffers: number };
+type DrawSnapshot = { calls: number; instancedCalls: number; instances: number; triangles: number };
+type PixelFrameInfo = {
+  serial: number; kind: "cold" | "hit"; pose: string; texture: string; width: number; height: number;
+  copyMismatch: number; apiError: number; defaultFramebuffer: boolean; zeroAlpha: number; partialAlpha: number; opaqueAlpha: number;
+};
+type PixelFrame = PixelFrameInfo & { pixels: Uint8Array };
 
 /** Count actual browser-owned GPU objects, including detached live contexts. */
 async function installGpuProbe(page: Page): Promise<void> {
   await page.addInitScript(() => {
-    type GpuRecord = { buffers: Set<unknown>; textures: Set<unknown>; programs: Set<unknown>; framebuffers: Set<unknown> };
+    type ContextListener = { type: string; listener: EventListenerOrEventListenerObject; capture: boolean };
+    type GpuRecord = { listeners: ContextListener[]; buffers: Set<unknown>; textures: Set<unknown>; programs: Set<unknown>; framebuffers: Set<unknown> };
     const records = new Map<WebGL2RenderingContext, GpuRecord>();
+    const draws = new Map<WebGL2RenderingContext, DrawSnapshot>();
+    const canvasRecords = new Map<HTMLCanvasElement, GpuRecord>();
+    const add = HTMLCanvasElement.prototype.addEventListener;
+    const remove = HTMLCanvasElement.prototype.removeEventListener;
+    HTMLCanvasElement.prototype.addEventListener = function (this: HTMLCanvasElement, type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions) {
+      if (!listener) return;
+      add.call(this, type, listener, options);
+      const record = canvasRecords.get(this);
+      const capture = typeof options === "boolean" ? options : Boolean(options?.capture);
+      if (record && type.startsWith("webglcontext") && !record.listeners.some((entry) => entry.type === type && entry.listener === listener && entry.capture === capture)) {
+        record.listeners.push({ type, listener, capture });
+      }
+    } as typeof HTMLCanvasElement.prototype.addEventListener;
+    HTMLCanvasElement.prototype.removeEventListener = function (this: HTMLCanvasElement, type: string, listener: EventListenerOrEventListenerObject | null, options?: boolean | EventListenerOptions) {
+      if (!listener) return;
+      remove.call(this, type, listener, options);
+      const record = canvasRecords.get(this);
+      const capture = typeof options === "boolean" ? options : Boolean(options?.capture);
+      if (record) record.listeners = record.listeners.filter((entry) => entry.type !== type || entry.listener !== listener || entry.capture !== capture);
+    } as typeof HTMLCanvasElement.prototype.removeEventListener;
+    const recordFor = (context: WebGL2RenderingContext): GpuRecord => {
+      let record = records.get(context);
+      if (!record) {
+        record = { listeners: [], buffers: new Set(), textures: new Set(), programs: new Set(), framebuffers: new Set() };
+        records.set(context, record);
+        draws.set(context, { calls: 0, instancedCalls: 0, instances: 0, triangles: 0 });
+        if (context.canvas instanceof HTMLCanvasElement) canvasRecords.set(context.canvas, record);
+        const owned = record;
+        context.canvas.addEventListener("webglcontextlost", () => {
+          // Native loss destroys these objects, even without delete calls. The
+          // context handle itself deliberately stays in the lifetime count.
+          for (const kind of ["buffers", "textures", "programs", "framebuffers"] as const) owned[kind].clear();
+        });
+      }
+      return record;
+    };
+    const getContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, contextId: string, ...arguments_: unknown[]) {
+      const context = Reflect.apply(getContext, this, [contextId, ...arguments_]) as RenderingContext | null;
+      if (contextId === "webgl2" && context) recordFor(context as WebGL2RenderingContext);
+      return context;
+    } as typeof HTMLCanvasElement.prototype.getContext;
     const prototype = WebGL2RenderingContext.prototype as unknown as Record<string, unknown>;
+    const clear = prototype.clear;
+    if (typeof clear !== "function") throw new Error("GPU draw probe is unavailable");
+    prototype.clear = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
+      const draw = draws.get(this);
+      if (draw) { draw.calls = 0; draw.instancedCalls = 0; draw.instances = 0; draw.triangles = 0; }
+      return Reflect.apply(clear, this, arguments_);
+    };
+    for (const [method, countIndex, instanceIndex] of [
+      ["drawArrays", 2, -1], ["drawElements", 1, -1],
+      ["drawArraysInstanced", 2, 3], ["drawElementsInstanced", 1, 4],
+    ] as const) {
+      const drawNative = prototype[method];
+      if (typeof drawNative !== "function") throw new Error("GPU draw method is unavailable");
+      prototype[method] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
+        const result: unknown = Reflect.apply(drawNative, this, arguments_);
+        const draw = draws.get(this);
+        const count = Number(arguments_[countIndex]);
+        const instances = instanceIndex < 0 ? 1 : Number(arguments_[instanceIndex]);
+        if (draw && count > 0 && instances > 0) {
+          draw.calls += 1;
+          if (instanceIndex >= 0) { draw.instancedCalls += 1; draw.instances += instances; }
+          if (arguments_[0] === this.TRIANGLES) draw.triangles += count / 3 * instances;
+        }
+        return result;
+      };
+    }
     for (const [create, remove, kind] of [
       ["createBuffer", "deleteBuffer", "buffers"],
       ["createTexture", "deleteTexture", "textures"],
@@ -66,12 +142,7 @@ async function installGpuProbe(page: Page): Promise<void> {
       if (typeof factory !== "function" || typeof destroy !== "function") throw new Error("GPU probe method is unavailable");
       prototype[create] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
         const value: unknown = Reflect.apply(factory, this, arguments_);
-        let record = records.get(this);
-        if (!record) {
-          record = { buffers: new Set(), textures: new Set(), programs: new Set(), framebuffers: new Set() };
-          records.set(this, record);
-        }
-        if (value) record[kind].add(value);
+        if (value) recordFor(this)[kind].add(value);
         return value;
       };
       prototype[remove] = function (this: WebGL2RenderingContext, ...arguments_: unknown[]): unknown {
@@ -80,11 +151,20 @@ async function installGpuProbe(page: Page): Promise<void> {
       };
     }
     (window as Window & { __threeGpuSnapshot?: () => GpuSnapshot }).__threeGpuSnapshot = () => {
-      const total: GpuSnapshot = { contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 };
+      const total: GpuSnapshot = { contexts: 0, contextsCreated: records.size, contextListeners: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 };
       for (const [context, record] of records) {
+        total.contextListeners += record.listeners.length;
         if (context.isContextLost()) continue;
         total.contexts += 1;
         for (const kind of ["buffers", "textures", "programs", "framebuffers"] as const) total[kind] += record[kind].size;
+      }
+      return total;
+    };
+    (window as Window & { __threeDrawSnapshot?: () => DrawSnapshot }).__threeDrawSnapshot = () => {
+      const total: DrawSnapshot = { calls: 0, instancedCalls: 0, instances: 0, triangles: 0 };
+      for (const [context, draw] of draws) {
+        if (context.isContextLost()) continue;
+        for (const key of ["calls", "instancedCalls", "instances", "triangles"] as const) total[key] += draw[key];
       }
       return total;
     };
@@ -97,6 +177,108 @@ async function gpuSnapshot(page: Page): Promise<GpuSnapshot> {
     if (!snapshot) throw new Error("GPU probe was not installed");
     return snapshot();
   });
+}
+
+async function drawSnapshot(page: Page): Promise<DrawSnapshot> {
+  return page.evaluate(() => {
+    const snapshot = (window as Window & { __threeDrawSnapshot?: () => DrawSnapshot }).__threeDrawSnapshot;
+    if (!snapshot) throw new Error("GPU draw probe was not installed");
+    return snapshot();
+  });
+}
+
+/** Read final default-framebuffer bytes in the render turn, not after its discard. */
+async function installRawPixelProbe(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const frames: PixelFrame[] = [];
+    (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames = frames;
+    const pixels = (context: WebGL2RenderingContext): Uint8Array => {
+      const result = new Uint8Array(context.drawingBufferWidth * context.drawingBufferHeight * 4);
+      context.readPixels(0, 0, context.drawingBufferWidth, context.drawingBufferHeight, context.RGBA, context.UNSIGNED_BYTE, result);
+      return result;
+    };
+    const record = (context: WebGL2RenderingContext, kind: "cold" | "hit", rgba: Uint8Array, copyMismatch = 0): void => {
+      if (!(context.canvas instanceof HTMLCanvasElement)) return;
+      const host = context.canvas.parentElement;
+      const svg = host?.querySelector("svg.stone-board");
+      if (!host || !svg) throw new Error("Native frame is detached from its semantic board");
+      const rotations = Array.from(svg.querySelectorAll(".board-ring[data-rotation]")).map((ring) => ring.getAttribute("data-rotation"));
+      const selected = svg.querySelector("[data-ring-hit][aria-pressed='true']")?.getAttribute("data-ring-hit");
+      const puzzle = document.querySelector("[data-puzzle-id]")?.getAttribute("data-puzzle-id") ?? new URL(location.href).searchParams.get("puzzleId");
+      let zeroAlpha = 0, partialAlpha = 0, opaqueAlpha = 0;
+      for (let index = 3; index < rgba.length; index += 4) {
+        if (rgba[index] === 0) zeroAlpha += 1;
+        else if (rgba[index] === 255) opaqueAlpha += 1;
+        else partialAlpha += 1;
+      }
+      frames.push({ serial: frames.length + 1, kind, pose: `${puzzle}:${rotations.join(",")}:${selected}`,
+        texture: host.dataset.boardTexture ?? "", width: context.drawingBufferWidth, height: context.drawingBufferHeight,
+        copyMismatch, apiError: context.getError(), defaultFramebuffer: context.getParameter(context.READ_FRAMEBUFFER_BINDING) === null,
+        zeroAlpha, partialAlpha, opaqueAlpha, pixels: rgba });
+    };
+    const copy = WebGL2RenderingContext.prototype.copyTexSubImage2D;
+    WebGL2RenderingContext.prototype.copyTexSubImage2D = function (this: WebGL2RenderingContext, ...arguments_: Parameters<typeof copy>): void {
+      const before = pixels(this);
+      Reflect.apply(copy, this, arguments_);
+      const after = pixels(this);
+      let mismatch = 0;
+      for (let index = 0; index < before.length; index += 1) if (before[index] !== after[index]) mismatch += 1;
+      record(this, "cold", before, mismatch);
+    };
+    const rawPrograms = new WeakMap<WebGLProgram, boolean>();
+    const draw = WebGL2RenderingContext.prototype.drawElements;
+    WebGL2RenderingContext.prototype.drawElements = function (this: WebGL2RenderingContext, ...arguments_: Parameters<typeof draw>): void {
+      Reflect.apply(draw, this, arguments_);
+      if (arguments_[0] !== this.TRIANGLES || arguments_[1] !== 6) return;
+      const program = this.getParameter(this.CURRENT_PROGRAM) as WebGLProgram | null;
+      if (!program) return;
+      let raw = rawPrograms.get(program);
+      if (raw === undefined) {
+        raw = this.getUniformLocation(program, "uFrame") !== null;
+        rawPrograms.set(program, raw);
+      }
+      if (raw) record(this, "hit", pixels(this));
+    };
+  });
+}
+
+async function pixelPose(page: Page): Promise<string> {
+  return page.locator("svg.stone-board").evaluate((svg) => {
+    const puzzle = document.querySelector("[data-puzzle-id]")?.getAttribute("data-puzzle-id") ?? new URL(location.href).searchParams.get("puzzleId");
+    const rotations = Array.from(svg.querySelectorAll(".board-ring[data-rotation]")).map((ring) => ring.getAttribute("data-rotation"));
+    const selected = svg.querySelector("[data-ring-hit][aria-pressed='true']")?.getAttribute("data-ring-hit");
+    return `${puzzle}:${rotations.join(",")}:${selected}`;
+  });
+}
+
+async function pixelFrame(page: Page, filter: { pose: string; kind: "cold" | "hit"; texture: string; after?: number; width?: number }): Promise<PixelFrameInfo> {
+  const find = () => page.evaluate((query) => {
+    const frames = (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames ?? [];
+    const frame = frames.slice().reverse().find((candidate) => candidate.pose === query.pose && candidate.kind === query.kind
+      && candidate.texture === query.texture && candidate.serial > (query.after ?? 0) && (query.width === undefined || candidate.width === query.width));
+    if (!frame) return null;
+    const { pixels: _pixels, ...info } = frame;
+    return info;
+  }, filter);
+  await expect.poll(find).not.toBeNull();
+  const frame = await find();
+  if (!frame) throw new Error("The required native frame was not captured");
+  expect(frame.copyMismatch, "copying a frame must not alter its final canvas bytes").toBe(0);
+  expect(frame.apiError, "raw capture/draw must not conceal a WebGL API error").toBe(0);
+  expect(frame.defaultFramebuffer, "original canvas AA and color encoding remain the source").toBe(true);
+  return frame;
+}
+
+async function pixelDifference(page: Page, first: PixelFrameInfo, second: PixelFrameInfo): Promise<number> {
+  return page.evaluate(([left, right]) => {
+    const frames = (window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames;
+    const a = frames?.find((frame) => frame.serial === left)?.pixels;
+    const b = frames?.find((frame) => frame.serial === right)?.pixels;
+    if (!a || !b || a.length !== b.length) throw new Error("Native RGBA frames must have identical dimensions");
+    let different = 0;
+    for (let index = 0; index < a.length; index += 1) if (a[index] !== b[index]) different += 1;
+    return different;
+  }, [first.serial, second.serial]);
 }
 
 async function beginPractice(page: Page): Promise<void> {
@@ -307,34 +489,62 @@ test.describe("Three stone and light acceptance", () => {
     expect(errors).toEqual([]);
   });
 
-  test("THREE07: rotations keep bounded GPU objects and abort releases every live context", async ({ page }, testInfo) => {
-    test.setTimeout(120_000);
+  test("THREE07: rotations stay bounded and twenty abort/restarts reuse one native context with zero idle GPU", async ({ page }, testInfo) => {
+    test.setTimeout(240_000);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     await installGpuProbe(page);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await openBoard(page, puzzles.find((puzzle) => puzzle.difficulty === "hard")!);
     const baseline = await gpuSnapshot(page);
     expect(baseline.contexts).toBe(1);
+    expect(baseline.contextsCreated).toBe(1);
     expect(baseline.buffers).toBeGreaterThan(0);
     expect(baseline.textures).toBeGreaterThan(0);
+    const baselineDraw = await drawSnapshot(page);
+    expect(baselineDraw.calls, "the real native frame remains nonblank").toBeGreaterThan(0);
+    expect(baselineDraw.calls, "the fixed hard fixture batches 184 original draw calls into 72").toBe(72);
+    expect(baselineDraw.triangles, "every original polygon in the fixed hard fixture is retained").toBe(170_284);
+    expect(baselineDraw.instancedCalls).toBeGreaterThan(0);
+    expect(baselineDraw.instances).toBe(125);
     const cycles: GpuSnapshot[] = [];
+    const cycleDraws: DrawSnapshot[] = [];
     for (let cycle = 0; cycle < 3; cycle += 1) {
       for (let index = 0; index < 12; index += 1) await page.locator("[data-action='rotate-right']").click();
       const snapshot = await gpuSnapshot(page);
       expect(snapshot).toEqual(baseline);
       cycles.push(snapshot);
+      const draw = await drawSnapshot(page);
+      expect(draw).toEqual(baselineDraw);
+      cycleDraws.push(draw);
     }
     await page.goto("/", { waitUntil: "networkidle" });
     await page.locator("[data-action='audio']").uncheck();
+    // A navigation resets the document lifetime count. Hold the first native
+    // canvas across the following runs, so GC cannot hide context replacement.
+    let practiceCanvas: ElementHandle<SVGElement | HTMLElement> | null = null;
     const released: GpuSnapshot[] = [];
-    for (let run = 0; run < 3; run += 1) {
+    for (let run = 0; run < 20; run += 1) {
       await beginPractice(page);
       await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+      practiceCanvas ??= await page.locator("canvas.stone-board-canvas").elementHandle();
+      expect(await practiceCanvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas")), `run ${run + 1}: same native canvas`).toBe(true);
+      const active = await gpuSnapshot(page);
+      expect(active.contexts, `run ${run + 1}: restored three-dimensional view`).toBe(1);
+      expect(active.contextsCreated, `run ${run + 1}: lifetime contexts, including lost handles`).toBe(1);
+      expect(active.buffers).toBeGreaterThan(0);
+      expect(active.textures).toBeGreaterThan(0);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
       await abortPractice(page);
-      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
       await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
       released.push(await gpuSnapshot(page));
     }
-    await testInfo.attach("gpu-resource-lifecycle", { body: JSON.stringify({ baseline, cycles, released }, null, 2), contentType: "application/json" });
+    expect(errors, "native quota and context API errors must remain visible to acceptance").toEqual([]);
+    await testInfo.attach("gpu-resource-lifecycle", { body: JSON.stringify({ baseline, baselineDraw, cycles, cycleDraws, released }, null, 2), contentType: "application/json" });
   });
 
   test("THREE08: a texture arriving after abort cannot revive the old canvas or resources", async ({ page }) => {
@@ -355,7 +565,7 @@ test.describe("Three stone and light acceptance", () => {
     await expect.poll(() => started).toBe(true);
     await abortPractice(page);
     releaseImage?.();
-    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
     await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
     await page.waitForLoadState("networkidle");
     await expect(page.locator("[data-testid='home-screen']")).toBeVisible();
@@ -363,5 +573,312 @@ test.describe("Three stone and light acceptance", () => {
     await beginPractice(page);
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
     await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+  });
+
+  test("THREE10: a restore completing after abort stays idle and the next owner reuses the canvas", async ({ page }) => {
+    await installGpuProbe(page);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    await page.goto("/", { waitUntil: "networkidle" });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    const canvas = await page.locator("canvas.stone-board-canvas").elementHandle();
+    expect(canvas).not.toBeNull();
+    const canRestore = await canvas?.evaluate((node) => {
+      const canvasNode = node as HTMLCanvasElement;
+      const extension = canvasNode.getContext("webgl2")?.getExtension("WEBGL_lose_context");
+      if (!extension) return false;
+      const restore = extension.restoreContext;
+      (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted = false;
+      const restored = (): void => {
+        canvasNode.removeEventListener("webglcontextrestored", restored);
+        (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted = true;
+      };
+      canvasNode.addEventListener("webglcontextrestored", restored);
+      extension.restoreContext = function (this: WEBGL_lose_context): void {
+        extension.restoreContext = restore;
+        restore.call(this);
+        // The native restore is queued now, but the view is destroyed before
+        // its event arrives. This exercises the otherwise narrow lease race.
+        document.querySelector<HTMLButtonElement>("[data-action='abort']")?.click();
+        document.querySelector<HTMLButtonElement>("[data-action='confirm-abort']")?.click();
+      };
+      window.dispatchEvent(new Event("pagehide"));
+      window.dispatchEvent(new Event("pageshow"));
+      return true;
+    });
+    expect(canRestore, "the real native restore race must be exercised").toBe(true);
+    await expect.poll(() => page.evaluate(() => (window as Window & { __lateRestoreCompleted?: boolean }).__lateRestoreCompleted)).toBe(true);
+    await expect(page.locator("[data-testid='home-screen']")).toBeVisible();
+    await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+    expect(await canvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas"))).toBe(true);
+    await page.locator("[data-action='rotate-right']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("1");
+    await abortPractice(page);
+    await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+    expect(errors).toEqual([]);
+  });
+
+  test("THREE11: partial renderer and stone-scene construction roll back before reusing the native context", async ({ page }, testInfo) => {
+    await installGpuProbe(page);
+    await page.addInitScript(() => {
+      type Failure = { stage: "renderer" | "scene" | null; armed: boolean; fired: number };
+      const failure: Failure = { stage: null, armed: false, fired: 0 };
+      (window as Window & { __threeConstructionFailure?: Failure }).__threeConstructionFailure = failure;
+      const getParameter = WebGL2RenderingContext.prototype.getParameter;
+      WebGL2RenderingContext.prototype.getParameter = function (this: WebGL2RenderingContext, parameter: number): unknown {
+        if (failure.stage && !failure.armed) {
+          failure.armed = true;
+          if (failure.stage === "renderer") {
+            failure.fired += 1;
+            throw new Error("Injected renderer-construction failure");
+          }
+          // The first circle geometry follows a successfully constructed
+          // renderer and allocated scene materials. Fail inside that geometry.
+          const cosine = Math.cos;
+          Math.cos = () => {
+            Math.cos = cosine;
+            failure.fired += 1;
+            throw new Error("Injected stone-scene-construction failure");
+          };
+        }
+        return Reflect.apply(getParameter, this, [parameter]) as unknown;
+      };
+    });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    const evidence: { stage: string; rolledBack: GpuSnapshot; restored: GpuSnapshot; released: GpuSnapshot }[] = [];
+    for (const stage of ["renderer", "scene"] as const) {
+      await page.goto("/", { waitUntil: "networkidle" });
+      await page.evaluate((value) => {
+        const failure = (window as Window & { __threeConstructionFailure?: { stage: string | null; fired: number } }).__threeConstructionFailure;
+        if (!failure) throw new Error("Construction-failure probe was not installed");
+        failure.stage = value;
+      }, stage);
+      await beginPractice(page);
+      await expect.poll(() => page.evaluate(() => (window as Window & { __threeConstructionFailure?: { fired: number } }).__threeConstructionFailure?.fired)).toBe(1);
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "svg");
+      await expect(page.locator("svg.stone-board")).toBeVisible();
+      await expect(page.locator("canvas.stone-board-canvas")).toHaveCount(0);
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      const rolledBack = await gpuSnapshot(page);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
+      await abortPractice(page);
+      await beginPractice(page);
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+      await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+      const restored = await gpuSnapshot(page);
+      expect(restored.contexts).toBe(1);
+      expect(restored.contextsCreated).toBe(1);
+      expect(restored.contextListeners, `${stage}: no abandoned renderer listens to restore`).toBe(6);
+      expect(restored.buffers).toBeGreaterThan(0);
+      expect(restored.textures).toBeGreaterThan(0);
+      await page.locator("[data-action='rotate-right']").click();
+      await expect(page.locator("[data-moves]")).toHaveText("1");
+      await abortPractice(page);
+      await expect.poll(() => gpuSnapshot(page)).toEqual({ contexts: 0, contextsCreated: 1, contextListeners: 3, buffers: 0, textures: 0, programs: 0, framebuffers: 0 });
+      evidence.push({ stage, rolledBack, restored, released: await gpuSnapshot(page) });
+    }
+    expect(errors).toEqual([]);
+    await testInfo.attach("gpu-construction-rollback", { body: JSON.stringify(evidence, null, 2), contentType: "application/json" });
+  });
+
+  test("THREE12: repeated SVG states are reused but inactive, reset and prior-question hits cannot control the current board", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/", { waitUntil: "networkidle" });
+    await beginPractice(page);
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    const firstId = await page.locator("[data-testid='game-screen']").getAttribute("data-puzzle-id");
+    const firstPuzzle = puzzles.find((candidate) => candidate.id === firstId);
+    if (!firstPuzzle) throw new Error("The active adopted puzzle is unavailable");
+    // A longer one-ring solution can exist even when every shortest solution
+    // uses two rings. Prove this full twelve-state cycle cannot solve first.
+    const safeRing = [0, 1, 2].find((ring) => Array.from({ length: 12 }, (_, delta) => {
+      const state: BoardState = { rotations: [...firstPuzzle.initialState.rotations] };
+      state.rotations[ring] = (state.rotations[ring]! + delta) % 12;
+      return !evaluate(firstPuzzle, state).solved;
+    }).every(Boolean));
+    if (safeRing === undefined) throw new Error("The adopted first puzzle has no unsolved twelve-state ring cycle");
+    await page.locator(`[data-action='select-ring'][data-ring='${safeRing}']`).click();
+    const initialSvg = await page.locator("svg.stone-board").elementHandle();
+    const initialHit = await page.locator(`[data-ring-hit='${(safeRing + 1) % 3}']`).elementHandle();
+    expect(initialSvg).not.toBeNull();
+    expect(initialHit).not.toBeNull();
+    await page.locator("[data-action='rotate-right']").click();
+    expect(await initialSvg?.evaluate((node) => node.isConnected)).toBe(false);
+    await initialHit?.evaluate((node) => {
+      node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      node.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    });
+    await expect(page.locator(`[data-ring-hit='${safeRing}']`)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("[data-moves]")).toHaveText("1");
+    for (let turn = 1; turn < 12; turn += 1) await page.locator("[data-action='rotate-right']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("12");
+    expect(await initialSvg?.evaluate((node) => node === document.querySelector("svg.stone-board")), "the twelve-state cycle reuses its exact semantic/fallback SVG").toBe(true);
+    expect(await initialHit?.evaluate((node) => node.isConnected)).toBe(false);
+    await initialHit?.evaluate((node) => node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    await expect(page.locator(`[data-ring-hit='${safeRing}']`)).toHaveAttribute("aria-pressed", "true");
+    const beforeResetHit = await page.locator("[data-ring-hit='0']").elementHandle();
+    await page.locator("[data-action='reset-question']").click();
+    await expect(page.locator("[data-moves]")).toHaveText("0");
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-puzzle-id", firstId!);
+    await beforeResetHit?.evaluate((node) => node.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    await expect(page.locator("[data-ring-hit='1']")).toHaveAttribute("aria-pressed", "true");
+    await page.locator("[data-ring-hit='0']").dispatchEvent("click");
+    await expect(page.locator("[data-ring-hit='0']")).toHaveAttribute("aria-pressed", "true");
+    const priorQuestionHit = await page.locator("[data-ring-hit='0']").elementHandle();
+    for (const move of analyzePuzzle(firstPuzzle).representativeSolution) {
+      await page.locator(`[data-action='select-ring'][data-ring='${move.ring}']`).click();
+      await page.locator(`[data-action='rotate-${move.type === "r" ? "right" : "left"}']`).click();
+    }
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-question-index", "1");
+    await expect(page.locator("[data-testid='game-screen']")).toHaveAttribute("data-phase", "playing");
+    await priorQuestionHit?.evaluate((node) => {
+      node.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      node.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+    });
+    await expect(page.locator("[data-ring-hit='1']")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("[data-moves]")).toHaveText("0");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-renderer", "three");
+    await expect(page.locator("[data-board-host]")).toHaveAttribute("data-board-texture", "ready");
+    expect(errors).toEqual([]);
+  });
+
+  test("THREE13: two raw final-frame slots preserve every RGBA byte and invalidate without stale geometry", async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 402, height: 874 });
+    await installGpuProbe(page);
+    await installRawPixelProbe(page);
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    const puzzle = puzzles.find((candidate) => candidate.difficulty === "hard")!;
+    for (const delta of [0, 1, 2]) {
+      const state: BoardState = { rotations: [...puzzle.initialState.rotations] };
+      state.rotations[1] = (state.rotations[1]! + delta) % 12;
+      expect(evaluate(puzzle, state).solved, "the three comparison poses must not finish the inspection puzzle").toBe(false);
+    }
+    let releaseImage: (() => void) | undefined;
+    const imageGate = new Promise<void>((resolve) => { releaseImage = resolve; });
+    await page.route("**/textures/stone-slate-v1.webp", async (route) => {
+      const response = await route.fetch();
+      await imageGate;
+      await route.fulfill({ response });
+    });
+    await page.goto(`/?puzzleId=${encodeURIComponent(puzzle.id)}`, { waitUntil: "domcontentloaded" });
+    const host = page.locator("[data-board-host]");
+    await expect(host).toHaveAttribute("data-board-renderer", "three");
+    await expect(host).toHaveAttribute("data-board-texture", "loading");
+    const originalCanvas = await page.locator("canvas.stone-board-canvas").elementHandle();
+    expect(originalCanvas).not.toBeNull();
+    const poseA = await pixelPose(page);
+    const loadingA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "loading" });
+    expect(loadingA.zeroAlpha, "the original transparent exterior is retained").toBeGreaterThan(0);
+    expect(loadingA.partialAlpha, "original antialiasing and translucent light edges are retained").toBeGreaterThan(0);
+    expect(loadingA.opaqueAlpha, "the complete opaque stone remains rendered").toBeGreaterThan(0);
+    const loadingGpu = await gpuSnapshot(page);
+    const comparisons: { name: string; first: number; second: number; differentBytes: number }[] = [];
+    const equal = async (name: string, first: PixelFrameInfo, second: PixelFrameInfo): Promise<void> => {
+      const differentBytes = await pixelDifference(page, first, second);
+      comparisons.push({ name, first: first.serial, second: second.serial, differentBytes });
+      expect(differentBytes, `${name}: every encoded R, G, B and alpha byte must match, including transparent pixels`).toBe(0);
+    };
+    const move = async (direction: "right" | "left", kind: "cold" | "hit", texture: string, after: number): Promise<PixelFrameInfo> => {
+      await page.locator(`[data-action='rotate-${direction}']`).click();
+      return pixelFrame(page, { pose: await pixelPose(page), kind, texture, after });
+    };
+    const loadingB = await move("right", "cold", "loading", loadingA.serial);
+    const loadingHitA = await move("left", "hit", "loading", loadingB.serial);
+    await equal("loading A cold versus raw hit", loadingA, loadingHitA);
+    const hitDraw = await drawSnapshot(page);
+    expect(hitDraw).toEqual({ calls: 1, instancedCalls: 0, instances: 0, triangles: 2 });
+    expect(await gpuSnapshot(page), "both cache textures, raw quad buffers and its program were allocated in the first cold frame").toEqual(loadingGpu);
+
+    // A is displayed by its cache while real scene geometry is still B. Late
+    // texture readiness must invalidate and build desired A, not repaint B.
+    releaseImage?.();
+    await expect(host).toHaveAttribute("data-board-texture", "ready");
+    const readyA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: loadingHitA.serial });
+    expect(await pixelDifference(page, loadingA, readyA), "the arriving stone texture cannot leave cached loading pixels on screen").toBeGreaterThan(0);
+    const readyGpu = await gpuSnapshot(page);
+    const coldDraw = await drawSnapshot(page);
+    expect(coldDraw.calls, "cold frames still submit the complete original instanced scene").toBe(72);
+    expect(coldDraw.triangles).toBe(170_284);
+    expect(coldDraw.instances).toBe(125);
+    expect(readyGpu.contexts).toBe(1);
+    expect(readyGpu.contextsCreated).toBe(1);
+    expect(readyGpu.framebuffers, "only the renderer's three original internal framebuffers remain, with no render-target cache").toBe(3);
+    expect(readyGpu.framebuffers).toBe(loadingGpu.framebuffers);
+    expect(readyGpu.programs, "the pinned renderer retains both loading and mapped stone shader variants before loss").toBeGreaterThan(loadingGpu.programs);
+    const readyB = await move("right", "cold", "ready", readyA.serial);
+    const readyHitA = await move("left", "hit", "ready", readyB.serial);
+    await equal("ready A cold versus raw hit", readyA, readyHitA);
+    const readyHitB = await move("right", "hit", "ready", readyHitA.serial);
+    await equal("ready B cold versus raw hit", readyB, readyHitB);
+    const beforeResizeA = await move("left", "hit", "ready", readyHitB.serial);
+    await equal("repeated ready A raw hit", readyA, beforeResizeA);
+    expect(await gpuSnapshot(page)).toEqual(readyGpu);
+
+    // Again A is displayed but B remains built. Compare resized A with a
+    // separately forced cold A at the same dimensions, after evicting A via C.
+    await page.setViewportSize({ width: 430, height: 932 });
+    await expect.poll(() => page.locator("canvas.stone-board-canvas").evaluate((node) => (node as HTMLCanvasElement).width)).not.toBe(readyA.width);
+    const resizedWidth = await page.locator("canvas.stone-board-canvas").evaluate((node) => (node as HTMLCanvasElement).width);
+    const resizedA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: beforeResizeA.serial, width: resizedWidth });
+    const resizedB = await move("right", "cold", "ready", resizedA.serial);
+    const resizedC = await move("right", "cold", "ready", resizedB.serial);
+    const resizedHitB = await move("left", "hit", "ready", resizedC.serial);
+    await equal("resized B cold versus raw hit", resizedB, resizedHitB);
+    const resizedReferenceA = await move("left", "cold", "ready", resizedHitB.serial);
+    await equal("A hit then resize versus independent current A cold", resizedA, resizedReferenceA);
+    expect(await gpuSnapshot(page), "resize replaces storage but retains the two-slot GPU bound").toEqual(readyGpu);
+    await page.setViewportSize({ width: 402, height: 874 });
+    const originalSizeA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: resizedReferenceA.serial, width: readyA.width });
+    await equal("resize back versus original ready A", readyA, originalSizeA);
+
+    await page.locator("[data-action='select-ring'][data-ring='0']").click();
+    const selectedInner = await pixelFrame(page, { pose: await pixelPose(page), kind: "cold", texture: "ready", after: originalSizeA.serial });
+    expect(await pixelDifference(page, originalSizeA, selectedInner), "selection rims are part of the pose, not stale cached decoration").toBeGreaterThan(0);
+    await page.locator("[data-action='select-ring'][data-ring='1']").click();
+    const selectedMiddle = await pixelFrame(page, { pose: poseA, kind: "hit", texture: "ready", after: selectedInner.serial });
+    await equal("selection back versus original A", readyA, selectedMiddle);
+
+    const canLose = await originalCanvas?.evaluate((node) => {
+      const extension = (node as HTMLCanvasElement).getContext("webgl2")?.getExtension("WEBGL_lose_context");
+      if (!extension) return false;
+      (node as HTMLCanvasElement & { __testContextLoss?: WEBGL_lose_context }).__testContextLoss = extension;
+      extension.loseContext();
+      return true;
+    });
+    expect(canLose, "the native loss/restore must invalidate GPU-only cache contents").toBe(true);
+    await expect(host).toHaveAttribute("data-board-renderer", "svg");
+    await originalCanvas?.evaluate((node) => (node as HTMLCanvasElement & { __testContextLoss?: WEBGL_lose_context }).__testContextLoss?.restoreContext());
+    await expect(host).toHaveAttribute("data-board-renderer", "three");
+    const restoredA = await pixelFrame(page, { pose: poseA, kind: "cold", texture: "ready", after: selectedMiddle.serial });
+    await equal("context restoration versus original ready A", readyA, restoredA);
+    expect(await originalCanvas?.evaluate((node) => node === document.querySelector("canvas.stone-board-canvas"))).toBe(true);
+    const restoredGpu = await gpuSnapshot(page);
+    // Renderer restoration rebuilds used buffers/textures/programs, but not its
+    // three unused constructor-only FBOs or obsolete mapless loading programs.
+    expect(restoredGpu, "restoration has the exact used-resource baseline, without obsolete loading shader variants").toEqual({
+      ...readyGpu, framebuffers: 0, programs: loadingGpu.programs,
+    });
+    const restoredB = await move("right", "cold", "ready", restoredA.serial);
+    const restoredHitA = await move("left", "hit", "ready", restoredB.serial);
+    await equal("restored A cold versus raw hit", restoredA, restoredHitA);
+    expect(await drawSnapshot(page)).toEqual(hitDraw);
+    expect(await gpuSnapshot(page)).toEqual(restoredGpu);
+    const frames = await page.evaluate(() => ((window as Window & { __threePixelFrames?: PixelFrame[] }).__threePixelFrames ?? [])
+      .map(({ pixels: _pixels, ...info }) => info));
+    expect(frames.every((frame) => frame.copyMismatch === 0 && frame.apiError === 0 && frame.defaultFramebuffer)).toBe(true);
+    expect(errors).toEqual([]);
+    await testInfo.attach("native-raw-frame-byte-equality", { body: JSON.stringify({ puzzleId: puzzle.id, coldDraw, hitDraw, loadingGpu, readyGpu, restoredGpu, comparisons, frames }, null, 2), contentType: "application/json" });
   });
 });

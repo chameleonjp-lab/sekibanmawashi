@@ -6,7 +6,19 @@
 
 基準main `2deac6db6bfe3a33f18012eef64cabd4e9e4a096` から `feat/three-stone-light-20261012` で実装。6.1Sol Maxが描画と組込み、親担当が素材生成・実画素と資源の検査・文書・PR、6.1Sol Extra Highが独立レビューを担当します。生成した石画像、石の厚み・縁・陰影、光の芯と広がり、通り道に沿う照り返しを追加しました。判定、90問/900組、入力、時計、保存、音、成功演出の規則は変更しません。
 
-検査結果、失敗の原因と再確認、独立レビュー、実機未確認は[今回の記録](../reviews/THREE_STONE_LIGHT_2026-10-12.md)を参照します。2026-10-13、送信先と25ファイルを提示した確認に対するユーザーの「後続対応開始」で送信を再開し、[Draft PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)へ提出しました。正式CIの各headの実際の結果はPR本文とChecksを参照してください。マージ・本番公開は未実施です。以下の節は以前の段階の履歴です。
+検査結果、失敗の原因と再確認、独立レビュー、実機未確認は[今回の記録](../reviews/THREE_STONE_LIGHT_2026-10-12.md)を参照します。2026-10-13、送信先と25ファイルを提示した確認に対するユーザーの「後続対応開始」で送信を再開し、最初は[PR #23](https://github.com/chameleonjp-lab/sekibanmawashi/pull/23)をDraftで提出しました。その後の所有者によるマージと新修正Draft PRは以下に区別します。正式CIの各headの実際の結果はPR本文とChecksを参照してください。Codexはマージ・本番公開を行っていません。
+
+初回正式run 38287922273は静的/Chromium60件成功、WebKit56成功/4失敗、必須verify失敗。6.1Sol Maxがnative context再利用/解放/復帰とTHREE07の20再開・THREE10/11を実装し、親担当がF02の事前browser内観測・全5境界の独立ケース化・不変oracle cache/冗長同輪選択削減を対応。6.1Sol Extra Highが修正後を独立レビューし、必須指摘は解消済み。検査の省略/基準緩和なし（1500ms/1px/10枝/302実回転/5問/旧Q03全20回を保持）。型/lint/単体74・検査一覧132件成功、修正後正式CIでruntimeを再確認します。
+
+初回CI中の2026-10-13 03:00:33 JSTに所有者がPR #23をmain `7b067b2898e6e98fec9f775ad384fe93988fe975`へマージしていたことを後続対応中に確認しました。Codexはマージ/公開していません。main run38288027604も静的成功/両browser失敗/verify失敗。修正の旧branch head b667db80eed83ca0bdccd0382d57e8113c3a3a70はマージ済みPRに対するCIを起動しないため、最新mainを基準とするfix/three-webkit-lifecycle-20261012から新Draft PRへ提出します。mainのChromiumではV01の全90問集約も180秒を超えたため、全90問と12方向の集合集計/180秒を維持し、各問題で固定network-idleを待つ代わりに実three/素材readyを確認します。以下の節は以前の段階の履歴です。
+
+後続[Draft PR #24](https://github.com/chameleonjp-lab/sekibanmawashi/pull/24)、head436912c8e3135f39da8f7eff24fce1d311e324b1の[run38300415279](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38300415279)は静的/Chromium66初回成功、WebKit65成功/1失敗と同件retry失敗、verify失敗（flaky/skip0）。WebKitの残件T04/F05も実302回転は両試行で完了し、その後の5問完走中に180秒超過。独立trace解析は302操作のactionability失敗/再試行0を確認。6.1Sol Maxが不透明装飾のInstancedMesh化と最大12状態のSVG再使用を実装し、6.1Sol Extra Highが独立レビュー。新検査の途中成功fixtureを実engineによる安全輪検証へ修正し、最終差分に必須指摘なし。1080代表状態の同形状/材質/光路をCPUで照合し、型/lint/単体74/問題庫/ライセンス/buildを再確認。条件を維持した従来66＋THREE12の両browser全67件・計134件とverifyの最新head成功は必須で、前headのChromium成功だけを引き継いで全体合格にしません。
+
+PR #24 head0dfa0e6274ac4fdb2278658b0db35920ff9597c3の[第2回run38308896954](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38308896954)は静的成功、Chromium65成功/2失敗、WebKit66成功/1失敗、各失敗のretryも失敗、flaky/skip0、verify失敗です。両browserのTHREE01–12・native72 draw/170284 triangles/125 instances・20中断再開/GPU解放・Q03全20回/100問は成功し、独立担当がJSON/全資源添付/代表実画像を再確認しました。Q03はChromium690.340秒/WebKit784.717秒。残るChromium V01全90問と両browser T04/F05の180秒超過を全体合格と扱いません。
+
+6.1Sol Maxが固定2状態の完成RGBA再使用を実装し、6.1Sol Extra Highが元の最終画素/原寸の保持、GPU所有/失効、現在モデルと実構築geometryの分離をレビューします。親担当はV01の全方向矩形と属性の観測往復を減らし、初問の全12矩形をnative boundingBoxと0.01px以内で照合。cold3D描画の形状・素材・ACES/SRGB/MSAA・DPR、全90問/12方向、302実回転/5問/180秒、全5境界10枝、Q03全20回、trace/videoは不変です。THREE13を追加した各68件・計136件とverifyの最新head成功を必須とし、実結果・未確認・独立レビューは今回の記録とPR/Checksへ集約します。
+
+第3回[run38317568603](https://github.com/chameleonjp-lab/sekibanmawashi/actions/runs/38317568603)、head72137e2ccea2a2df357d4774176fd10c97acdb36は静的成功、両browser67初回成功/1失敗と同retry失敗、flaky/skip0、verify失敗でした。全THREE01–13/全RGBA byte一致/旧20中断/GPU解放/Q03全20回とT04/F05は成功。唯一のV01は初問のnative/DOM矩形差0.874pxを0.01px比較が検出し、全90問完走ではありません。親担当が従来native boundingBoxの全12読み取りを並列化し、属性/slot/styleだけ実DOMで一括観測、初問は逐次nativeとの全12×4値0.01px比較を保持します。ゲームsource/THREE testは同じfreeze SHAを維持し、各68件・verifyを次headで再実行します。独立レビュー・実結果・未確認は今回の記録とPR/Checksへ集約し、失敗を合格へ上書きしません。
 
 R5開始時の基準main: `0709e7ff2faaaf8b5e28e4038e60ca1872e118a5`（PR #9マージ後）
 R6開始時の基準main: PR #11 merge commit `dab3b9133d3b6ef5f4c88c433719192d64e413cd` / tree `6ff4ca684103cd0eb5265b62e89fb071f6b94784`
